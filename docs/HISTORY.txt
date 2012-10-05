@@ -1,0 +1,8 @@
+1.2.0                  2012-09-05
+---------------------------------
+- Add a make code for property, based on mode 11, like a Brasilian CPF.
+- Run the sql "alter-db-v1.2.0.sql on version 1.0.0.
+
+1.0.0                  2012-06-30
+---------------------------------
+- Version stable
