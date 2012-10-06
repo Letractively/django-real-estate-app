@@ -11,7 +11,7 @@
 		<h1> Add {{ model_name|title }} </h1>
 	
 		{% if message %} <p> {{ message }} </p> {% endif %}
-		<form method="POST" action="." enctype="multipart/form-data">
+		<form method="POST" action="." >
 			{% csrf_token %}
 			{{ form.as_p }}
 			<p> <input type="submit" value="Adicionar" /></p>

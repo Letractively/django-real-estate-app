@@ -4,4 +4,5 @@
 		$('.slug').hide();
 		initgmaps();
 	});
+
 })(django.jQuery)

@@ -1,3 +1,4 @@
+Fazer o cadastro de corretores no imóvel
 Problema do MultipleChoiceField que vem preenchido com checked ao usar uma custom manager.
 Problema do meio.mask com ie7.
 Fazer versão de css para telefone e tablets.

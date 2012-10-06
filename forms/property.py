@@ -4,8 +4,8 @@ from django.forms import DecimalField, CharField, ModelMultipleChoiceField, Mode
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 
-from real_estate_app.widgets import MoneyInputWidget, ZipInputWidget, CheckboxSelectMultipleCustom, AreaInputWidget, AjaxSelectMultipleInputWidget
-from real_estate_app.models import Property, AditionalThings, Realtor
+from real_estate_app.widgets import MoneyInputWidget, ZipInputWidget, CheckboxSelectMultipleCustom, AreaInputWidget
+from real_estate_app.models import Property, AditionalThings
 
 class PropertyAdminForm(ModelForm):
 	price = DecimalField(widget=MoneyInputWidget)
@@ -20,14 +20,6 @@ class PropertyAdminForm(ModelForm):
 									required=False,
 									widget=CheckboxSelectMultipleCustom
 	)
-	realtor_fk = ModelMultipleChoiceField(
-									queryset=Realtor.objects.all(),
-									required=False,
-									widget=AjaxSelectMultipleInputWidget(
-											model_fk=Realtor
-									)
-	)
-
 	private_area = DecimalField(widget=AreaInputWidget,required=False)
 
 	class Meta:
@@ -47,3 +39,4 @@ class PropertyAdminForm(ModelForm):
 			#raise forms.ValidationError("This field is required....")
 
 		#return address_key 
+

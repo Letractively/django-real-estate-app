@@ -6,9 +6,9 @@ from flatpages import *
 from files import *
 from portlets import *
 from urls import *
-from real_estate_app.models import Classification, StatusProperty, District, AditionalThings, \
-								   PositionOfSun, Realtor
+from real_estate_app.models import Classification, StatusProperty, District, AditionalThings, PositionOfSun 
 
 # autoregister admin Models
-for model in [Classification, StatusProperty, District, AditionalThings, PositionOfSun, Realtor]:
+for model in [Classification, StatusProperty, District, AditionalThings, PositionOfSun]:
 	site.register(model,ModelAdmin)
+

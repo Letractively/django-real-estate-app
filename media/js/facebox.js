@@ -89,9 +89,9 @@
       loadingImage : '/facebox/loading.gif',
       closeImage   : '/facebox/closelabel.png',
       imageTypes   : [ 'png', 'jpg', 'jpeg', 'gif' ],
-	    ajax_url     : false,
-	    type_field   : false,
-	    id           : false,
+	  ajax_url     : false,
+	  type_field   : false,
+	  id		   : false,
       faceboxHtml  : '\
     <div class="facebox" style="display:none;"> \
       <div class="popup"> \
@@ -194,8 +194,8 @@
     $('#'+$.facebox.settings.id+' .close').click(function(e){
 		e.preventDefault();
 		$.facebox.close($(this).parents(".facebox").attr("id"));
-    
-		if(settings.type_field != 'input' && ($.facebox.settings.ajax_url && $.facebox.settings.id != false || $.facebox.settings.ajax_url && $.facebox.settings.id != undefined) ) ajaxRefreshField(settings.ajax_url,$.facebox.settings.id);
+	
+		if($.facebox.settings.ajax_url && $.facebox.settings.id != false || $.facebox.settings.ajax_url && $.facebox.settings.id != undefined ) ajaxRefreshField( settings.ajax_url,$.facebox.settings.id);
 	})
     $('#'+$.facebox.settings.id+' .close_image').attr('src', $.facebox.settings.closeImage);
   }
@@ -378,9 +378,8 @@
 
     if ($('#'+$.facebox.settings.id+'_overlay.facebox_overlay').length == 0)
       $("body").append('<div id="'+$.facebox.settings.id+'_overlay" class="facebox_overlay facebox_hide"></div>')
+	var id = $.facebox.settings.id
 
-	  var id = $.facebox.settings.id
-    
     $('#'+id+'_overlay.facebox_overlay').attr("rel",id).hide().addClass("facebox_overlayBG")
       .css('opacity', $.facebox.settings.opacity)
       .click(function() { 

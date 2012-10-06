@@ -17,17 +17,9 @@ REAL_ESTATE_APP_SITE_NAME=getattr(settings,'REAL_ESTATE_SITE_NAME','')
 
 MANAGERS = getattr(settings,'MANAGERS')
 
-REAL_ESTATE_APP_AJAX_SEARCH = getattr(settings,
-									  'REAL_ESTATE_APP_AJAX_SEARCH',
-									  {'realtor': {
-									  				'search_fields':['name','last_name'],
-									  				'return_values':['name','last_name','photo','pk']
-									  			   },
-									  }
-)
-
-
 MANAGERS=list(MANAGERS)
 
 MIN_WIDTH=REAL_ESTATE_IMAGES_SIZE[0]
 MIN_HEIGHT=REAL_ESTATE_IMAGES_SIZE[1]
+
+
