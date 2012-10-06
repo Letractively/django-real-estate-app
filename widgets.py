@@ -1,22 +1,16 @@
 # -*- coding: utf-8 -*-
 from decimal import Decimal
-from itertools import chain, product
+from itertools import chain
 
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin import widgets
-from django.conf import settings 
-from django.core.urlresolvers import reverse, NoReverseMatch
-from django.forms.widgets import TextInput, Select, CheckboxSelectMultiple, CheckboxInput, SelectMultiple
-from django.forms.util import flatatt
-from django.template.loader import render_to_string
-from django.utils.safestring import mark_safe
-from django.utils import simplejson
 from django.utils.encoding import force_unicode
 from django.utils.html import escape, conditional_escape
-from django.utils.translation import ugettext_lazy as _
-
-from real_estate_app.conf.settings import MEDIA_PREFIX, REAL_ESTATE_APP_AJAX_SEARCH
-from real_estate_app.utils import AutoCompleteObject
-
+from django.forms.widgets import TextInput, Select, CheckboxSelectMultiple, CheckboxInput
+from django.forms.util import flatatt
+from django.conf import settings 
+from django.utils.safestring import mark_safe
+from django.core.urlresolvers import reverse, NoReverseMatch
 
 class MoneyInputWidget(TextInput):
 
@@ -161,80 +155,4 @@ class AreaInputWidget(TextInput):
 				
 			final_attrs['value'] = force_unicode(self._format_value(value))
 		return mark_safe(u'<input%s alt="area" /> m²' % flatatt(final_attrs) )
-
-
-class AjaxSelectMultipleInputWidget(SelectMultiple):
-	"""
-		This code is based on app django-ajax-selects
-	"""
-	def __init__(self, model_fk, show_help_text=False, help_text='',*args, **kwargs):
-		super(AjaxSelectMultipleInputWidget, self).__init__(*args, **kwargs)
-		self.show_help_text=show_help_text
-		self.help_text=help_text
-		self.model=model_fk
-		self.module_name=self.model._meta.module_name
-		try:
-			self.fields_show=REAL_ESTATE_APP_AJAX_SEARCH[self.module_name]['search_fields']
-		except KeyError:
-			raise u'You have to put on settings file the dictionary named REAL_ESTATE_APP_AJAX_SEARCH={"model":<list of fields>}'
-
-	def render(self,name, value, attrs=None, choices=()):
-		if value is None: value = []
-		
-		autocompleteobject=AutoCompleteObject(self.model)
-
-		if self.show_help_text: 
-			help_text=self.help_text
-		else:
-			help_text=''
-
-		final_attrs = self.build_attrs(attrs, name=name)
-		self.html_id = final_attrs.pop('id', name)
-
-		if value:
-			current_ids = "|" + "|".join( str(pk) for pk in value ) + "|" # |pk|pk| of current
-		else:
-			current_ids = "|"
-
-		related_url_facebox=reverse(
-			'admin:add_popup',
-			kwargs={
-				'model_name':self.module_name,
-				'app_label':'real_estate_app'
-		})
-
-		plugin_options = {
-			'source': reverse('admin:ajax_view',
-							  kwargs={
-							  		  'model_name':self.module_name,
-									  'app_label':'real_estate_app'
-					  }),
-			'initial': autocompleteobject.render(id__in=[str(v) for v in value]),
-			'fields':self.fields_show,
-			'ajax_url_facebox': related_url_facebox
-		}
-
-		context = {
-			'name':name,
-			'current':value,
-			'html_id':self.html_id,
-			'help_text':help_text,
-			'plugin_options':mark_safe(simplejson.dumps(plugin_options)),
-			'MEDIA_PREFIX': MEDIA_PREFIX,
-			'related_url_facebox':related_url_facebox,
-			'ADMIN_MEDIA_PREFIX':settings.ADMIN_MEDIA_PREFIX,
-			'add_text': _('Add Another'),
-			'search_value':_('Search for realtors.')
-
-		}
-
-		return mark_safe(render_to_string(
-										  ('real_estate_app/autocompleteselectmultiple.html',
-										   'admin/real_estate_app/autocompleteselectmultiple.html'),
-										   context)
-				)
-
-	def value_from_datadict(self, data, files, name):
-		return [long(val) for val in data.get(name,'').split('|') if val]
-
 

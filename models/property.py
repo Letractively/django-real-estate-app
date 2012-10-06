@@ -10,12 +10,10 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.localflavor.br.br_states import STATE_CHOICES
 from django.utils.safestring import mark_safe 
 
-from others import District, Classification, StatusProperty, AditionalThings, PositionOfSun
-from realtors import Realtor
+from others import District, Classification, StatusProperty, AditionalThings, PositionOfSun  
 from real_estate_app.manager import PropertyManager
 from real_estate_app.utils import make_dv
 
-# TODO: melhor import STATE_CHOICE based on LANGUAGE_CODE
 
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
@@ -220,15 +218,6 @@ class Property(models.Model):
 							default=GMAP_DEFAULT[1],
 							blank=True,
 							null=True
-	)
-
-	realtor_fk = models.ManyToManyField(
-						Realtor,
-						limit_choices_to={'logical_exclude':False},
-						blank=True,
-						null=True,
-						help_text=_('Entry the name of realtor. ex.: Jonh'),
-						verbose_name=_("Realtors")
 	)
 
 	def __unicode__(self):

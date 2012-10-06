@@ -34,7 +34,7 @@ def popup_add(request, app_label, model_name, obj_id=None, paginate_by=5,
 		raise PermissionDenied
 
 	if request.method == 'POST':
-		form =  ModelForm(request.POST,files=request.FILES)
+		form =  ModelForm(request.POST)
 		if form.is_valid():	
 				new_obj = form.save()
 				model_admin.log_addition(request, new_obj)
@@ -138,7 +138,7 @@ def popup_edit_delete(request, app_label, model_name, obj_id=None, paginate_by=5
 	else:	
 		
 		if request.method == 'POST':
-			form = ModelForm(request.POST, files=request.FILES, instance=obj) 	
+			form = ModelForm(request.POST, instance=obj) 	
 			if form.is_valid():
 					new_obj=form.save()
 					msg_change = model_admin.construct_change_message(request,form, None)

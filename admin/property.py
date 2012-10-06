@@ -20,7 +20,7 @@ class PropertyAdmin(RealEstateAppModelAdmin):
 	
 	fieldsets = (
 			(_('General Information'), {
-				'fields': ['address','slug','zip_code','description','price','state','district_fk','classification_fk','statusproperty_fk','realtor_fk']+BRAZIL,
+				'fields': ['address','slug','zip_code','description','price','state','district_fk','classification_fk','statusproperty_fk',]+BRAZIL,
 			}),
 			(_('Detailed Information'),{
 				'fields':('rooms','baths','garage','elevator','private_area','position_of_sun','under_contruction','furnishing','aditionalthings_fk',),
@@ -54,7 +54,6 @@ class PropertyAdmin(RealEstateAppModelAdmin):
 					MEDIA_PREFIX+"css/tabs.css",
 					MEDIA_PREFIX+"css/gmaps.css",
 					MEDIA_PREFIX+"css/change-list.css",
-					MEDIA_PREFIX+"css/autocomplete.css",
 			),
 		}
 		js = (MEDIA_PREFIX+"js/meio.mask.min.js",

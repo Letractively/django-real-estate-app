@@ -10,16 +10,13 @@ def admin_urls_wrapper(urls):
 		from django.conf.urls.defaults import patterns, url, include
 		custom_urls = patterns('',
 								url(r'^(?P<app_label>\w+)/(?P<model_name>\w+)/add_popup/$',
-									admin.site.admin_view(popup_add),
-									name='add_popup'
+									admin.site.admin_view(popup_add)
 								),
 								url(r'^(?P<app_label>\w+)/(?P<model_name>\w+)/add_popup/(?P<obj_id>\d+)/$',
-									admin.site.admin_view(popup_edit_delete),
-									name='delete_popup'
+									admin.site.admin_view(popup_edit_delete)
 								),
 								url(r'^(?P<app_label>\w+)/(?P<model_name>\w+)/ajax_view/$',
-									admin.site.admin_view(ajax_view_model),
-									name='ajax_view'
+									admin.site.admin_view(ajax_view_model)
 								),
 
 

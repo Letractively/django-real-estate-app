@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
-import operator
 from datetime import datetime
-
-from django.db.models import Max, Min, Q
+from django.db.models import Max, Min
 from django.views.decorators.csrf import requires_csrf_token
 from django.views.generic import list_detail
-from real_estate_app.models import Property, StatusProperty, District, Classification, AditionalThings
+from real_estate_app.models import Property, StatusProperty, District, Classification
 
-@requires_csrf_token
+@requires_csrf_token 
 def property_list(request, *args, **kwargs):
 	"""
 	A view wrapper around ``django.views.generic.list_detail.object_list``.
@@ -24,9 +22,8 @@ def property_list(request, *args, **kwargs):
 	
 	if request.POST:
 		queryset = kwargs['queryset']
+
 		post = request.POST.copy()
-		post['aditionalthings_fk']=[]
-		query_or=[]
 		for query in request.POST.items():
 			query=list(query)
 
@@ -54,19 +51,10 @@ def property_list(request, *args, **kwargs):
 
 				if type(query[0]) == unicode:	
 					query[0]=str(query[0])
-
-				if query[0].startswith('aditionalthings_fk'):
-					aditional=AditionalThings.objects.get(name=query[1])
-					query_or.append(Q(aditionalthings_fk=aditional))
-					post['aditionalthings_fk'].append(aditional.name)
-					
-				if not query[0].startswith('aditionalthings_fk'):
-					query=dict((query,))
-					queryset=queryset.filter(**query)
-
-		if query_or:
-			queryset=queryset.filter(reduce(operator.or_,query_or)).distinct()
-
+				
+				query=dict((query,))
+				queryset=queryset.filter(**query)
+		
 		kwargs['queryset']=queryset
 
 	return list_detail.object_list(request,extra_context={'post':post,'get':get}, *args, **kwargs)
