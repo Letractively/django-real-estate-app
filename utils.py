@@ -62,6 +62,7 @@ class AutoCompleteObject(object):
 		queryset = self.model.objects.all()
 
 		if self.fields_search and value:
+
 			query=[Q(**{'%s__icontains' %field: value}) for field in self.fields_search]
 			queryset=queryset.filter(reduce(operator.or_,query))
 

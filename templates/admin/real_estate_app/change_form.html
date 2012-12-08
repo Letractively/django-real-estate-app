@@ -53,20 +53,22 @@
     </p>
     {{ adminform.form.non_field_errors }}
 {% endif %}
-<div class="tabs-menu">
-<ul class="tabs">
-{% for fieldset in adminform %}
-<li  class="{% if forloop.first %}active {% endif %}
-{% for line in fieldset %}{% if line.errors %}errors {% endif%}{% endfor %}"><a href="#{{ fieldset.name|slugify }}">{{ fieldset.name }}</a></li>
-{% endfor %}
-{% for inline_admin_formset in inline_admin_formsets %}
-<li  class="{% for inline_admin_form in inline_admin_formset %}{% for fieldset in inline_admin_form %} {% for line in fieldset %}{% if line.errors %}{% if forloop.first %}errors{% endif %}{% endif%}{% endfor %}{% endfor %}{% endfor %}" ><a href="#{{ inline_admin_formset.formset.prefix }}-group">{{ inline_admin_formset.opts.verbose_name_plural|title }}</a></li>
-{% endfor %}
-</ul>
-</div>
+{% if not notabs %}
+  <div class="tabs-menu">
+  <ul class="tabs">
+  {% for fieldset in adminform %}
+  <li  class="{% if forloop.first %}active {% endif %}
+  {% for line in fieldset %}{% if line.errors %}errors {% endif%}{% endfor %}"><a href="#{{ fieldset.name|slugify }}">{{ fieldset.name }}</a></li>
+  {% endfor %}
+  {% for inline_admin_formset in inline_admin_formsets %}
+  <li  class="{% for inline_admin_form in inline_admin_formset %}{% for fieldset in inline_admin_form %} {% for line in fieldset %}{% if line.errors %}{% if forloop.first %}errors{% endif %}{% endif%}{% endfor %}{% endfor %}{% endfor %}" ><a href="#{{ inline_admin_formset.formset.prefix }}-group">{{ inline_admin_formset.opts.verbose_name_plural|title }}</a></li>
+  {% endfor %}
+  </ul>
+  </div>
+{% endif %}
 <div class="clear"> </div>
 {% for fieldset in adminform %}
-	{% ifequal fieldset.name 'MAPS'%}
+	{% ifequal fieldset.name 'MAPS' %}
 	  {% include "admin/real_estate_app/includes/fieldset-gmaps.html" %}
 	{% else %}
 	  {% include "admin/real_estate_app/includes/fieldset-custom.html" %}

@@ -23,7 +23,7 @@ class FilesAdmin(admin.ModelAdmin):
 		}
 		js =(
 		    MEDIA_PREFIX+'js/jquery.createtabs.js',
-			MEDIA_PREFIX+"js/load2.js",
+			MEDIA_PREFIX+"js/files-load.js",
 		)
 
 admin.site.register(Files, FilesAdmin)

@@ -11,9 +11,9 @@ django.jQuery(document).ready(function($){
 });
 </script>
 
-<div id="custom-{{ html_id }}" class="ui-helper-clearfix"
+<div id="custom-{{ html_id }}" class="ui-helper-clearfix">
 	<input type="text" name="{{ name }}" id="{{ html_id }}_text" rev="iframe|400" href="/admin/real_estate_app/realtor/add_popup" value="" {{ extra_attrs }} />
-	<a href="{{ related_url_facebox }}" class="add-another" id="{{ html_id }}" rel="facebox-input" rev="iframe|350" >
+	<a href="{{ related_url_facebox }}" class="add-another" id="{{ html_id }}" rel="facebox-input" rev="iframe|450" >
 		<img src="{{ ADMIN_MEDIA_PREFIX }}img/admin/icon_addlink.gif" width="10" height="10" alt="{{ add_text }}"/>
 	</a>
 </div>

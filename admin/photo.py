@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin 
 from real_estate_app.models import Photo
-from real_estate_app.forms.photo import PhotoAdminForm
+from real_estate_app.admin.forms.photo import PhotoAdminForm
 
 class PhotoInlineAdmin(admin.StackedInline):
 

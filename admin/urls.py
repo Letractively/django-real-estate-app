@@ -27,6 +27,6 @@ def admin_urls_wrapper(urls):
 		return custom_urls + urls
 	return get_urls
 
-admin_urls = admin_urls_wrapper(admin.site.get_urls())
-admin.site.get_urls = admin_urls 
+#admin_urls = admin_urls_wrapper(admin.site.get_urls())
+#admin.site.get_urls = admin_urls 
 admin.site.index_template='admin/index-custom.html'

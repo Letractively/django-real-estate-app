@@ -114,7 +114,7 @@ class CheckboxSelectMultipleCustom(CheckboxSelectMultiple):
 		if value is None: value = []
 		has_id = attrs and 'id' in attrs
 		final_attrs = self.build_attrs(attrs, name=name)
-		output.append(u'<a href="%s" class="add-another" id="id_%s" rel="facebox-check" rev="iframe|350" > ' %(related_url, name_db))
+		output.append(u'<a href="%s" class="add-another" id="id_%s" rel="facebox-check" rev="iframe|400" > ' %(related_url, name_db))
 		output.append(u'<img src="%simg/admin/icon_addlink.gif" width="10" height="10" alt="%s"/></a><br />' % (settings.ADMIN_MEDIA_PREFIX, _('Add Another')))
 
 		output.append(u'<ul id=id_%s style="float:left">' %name_db)
@@ -197,18 +197,18 @@ class AjaxSelectMultipleInputWidget(SelectMultiple):
 			current_ids = "|"
 
 		related_url_facebox=reverse(
-			'admin:add_popup',
-			kwargs={
-				'model_name':self.module_name,
-				'app_label':'real_estate_app'
-		})
+			'admin:real_estate_app_%s_add_popup' % self.module_name
+			# kwargs={
+			# 	'model_name':self.module_name,
+			# 	'app_label':'real_estate_app'}
+		)
 
 		plugin_options = {
-			'source': reverse('admin:ajax_view',
-							  kwargs={
-							  		  'model_name':self.module_name,
-									  'app_label':'real_estate_app'
-					  }),
+			'source': reverse('admin:real_estate_app_%s_ajax_view' % self.module_name
+							  # kwargs={
+							  # 		  'model_name':self.module_name,
+									#   'app_label':'real_estate_app'}
+					  ),
 			'initial': autocompleteobject.render(id__in=[str(v) for v in value]),
 			'fields':self.fields_show,
 			'ajax_url_facebox': related_url_facebox

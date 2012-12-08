@@ -74,7 +74,8 @@ class Realtor(models.Model):
 		tipo_pessoa = models.CharField(
 							u'Pessoa Física ou Jurídica',
 							max_length=3,
-							choices=TIPO_PESSOA
+							choices=TIPO_PESSOA,
+							default='PF'
 		)
 
 		creci = models.CharField(
@@ -82,18 +83,6 @@ class Realtor(models.Model):
 							max_length=10,
 							blank=True
 		)
-
-	name = models.CharField(
-							_('Name'),
-							max_length=30,
-							blank=True
-	)
-
-	last_name = models.CharField(
-							_('Last name'),
-							max_length=255,
-							blank=True
-	)
 
 	sex = models.CharField(
 							_('Sex'),
@@ -119,27 +108,45 @@ class Realtor(models.Model):
 	class Meta:
 		app_label = 'real_estate_app'
 		get_latest_by='username'
-		ordering=('name','last_name',)
+		ordering=('user',)
 		verbose_name=_('Realtor')
 		verbose_name_plural=_('Realtors')
 
-	def save(self):
-
-		if LANGUAGE_CODE in ('pt_BR','pt-br'):
-			if self.tipo_pessoa == 'PF':
-				self.razao_social, self.cnpj, self.responsavel = '','',''
-				self.username = self.cpf
-
-			if self.tipo_pessoa == 'PJ':
-				self.nome, self.sobrenome, self.cpf, self.rg, self.sexo = '','','','',''
-				self.username = self.cnpj
-		else:
-			self.username = self.user.email 
-
-		super(Realtor, self).save()
-
 	def __unicode__(self):
-		return u'%s %s' % (self.name, self.last_name)
+		return u'%s' % (self.name)
+
+	def get_first_name(self):
+		try:
+			return self.__name
+		except AttributeError:
+			try:
+				self.__name = self.user.first_name
+			except IndexError:
+				self.__name = self.user.email
+			return self.__name
+	first_name=property(get_first_name)
+
+	def get_last_name(self):
+		try:
+			return self.__name
+		except AttributeError:
+			try:
+				self.__name = self.user.last_name
+			except IndexError:
+				self.__name = self.user.email
+			return self.__name
+	last_name=property(get_last_name)
+
+	def get_user_name(self):
+		try:
+			return self.__name
+		except AttributeError:
+			try:
+				self.__name = self.user.first_name+' '+self.user.last_name
+			except IndexError:
+				self.__name = self.user.email
+			return self.__name
+	name=property(get_user_name)
 
 	def get_phones(self):
 		try:
@@ -178,50 +185,3 @@ class Realtor(models.Model):
 			return self.__address
 	
 	address=property(get_address)
-
-	# def __getattr__(self, name):
-	# 	"""
-	# 	## This code is from django-fleshin
-	# 	Deploys dynamic methods for on-demand thumbnails creation with any
-	# 	size.
-
-	# 	Syntax::
-
-	# 	get_image_[WIDTH]x[HEIGHT]_[METHOD]
-
-	# 	Where *WIDTH* and *HEIGHT* are the pixels of the new thumbnail and
-	# 	*METHOD* can be ``url`` or ``filename``.
-
-	# 	Example usage::
-
-	#     >>> user = UserProfile(foto="/tmp/example.jpg", ...)
-	#     >>> user.save()
-	#     >>> user.get_image_320x240_url()
-	#     >>> u"http://media.example.net/images/2008/02/26/example_320x240.jpg"
-	#     >>> user.get_image_320x240_filename()
-	#     >>> u"/srv/media/images/2008/02/26/example_320x240.jpg"
-	# 	"""
-	# 	match = re.match(GET_THUMB_PATTERN, name)
-
-	# 	width, height, method = match.groups()
-	# 	size = int(width), int(height)
-
-	# 	def get_image_thumbnail_filename():
-	# 		file, ext = path.splitext(self.photo.file.name)
-	# 		print file
-	# 		return file + '_%sx%s' % size + ext
-
-	# 	def get_image_thumbnail_url():
-	# 		url, ext = path.splitext(self.photo.url)
-	# 		return url + '_%sx%s' % size + ext
-
-	# 	thumbnail = get_image_thumbnail_filename()
-	# 	if not path.exists(thumbnail):
-	# 		img = Image.open(self.photo.file.name)
-	# 		img.thumbnail(size, Image.ANTIALIAS)
-	# 		img.save(thumbnail)
-
-	# 	if method == "url":
-	# 		return get_image_thumbnail_url
-	# 	elif method == "filename":
-	# 		return get_image_thumbnail_filename

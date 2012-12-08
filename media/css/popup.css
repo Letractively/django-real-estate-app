@@ -1,0 +1,8 @@
+.popup, #container {
+	min-width: 450px;
+	width: 450px;
+}
+
+#add_form_popup {
+	display:none;
+}

@@ -5,10 +5,11 @@ from property import *
 from flatpages import *
 from files import *
 from portlets import *
+from realtor import *
 from urls import *
 from real_estate_app.models import Classification, StatusProperty, District, AditionalThings, \
-								   PositionOfSun, Realtor
+								   PositionOfSun
 
 # autoregister admin Models
-for model in [Classification, StatusProperty, District, AditionalThings, PositionOfSun, Realtor]:
-	site.register(model,ModelAdmin)
+for model in [Classification, StatusProperty, District, AditionalThings, PositionOfSun]:
+	site.register(model,RealEstateAppPopUpModelAdmin)
