@@ -16,7 +16,7 @@ class UserAdminForm(PopUpModelForm):
     """
     A form that creates a user, with no privileges, from the given username and password.
     """
-    username=CharField(label=_('Username'), widget=HiddenInput,required=False)
+    username=CharField(widget=HiddenInput, required=False)
     
     first_name=CharField(label=_('First name'), required=True)
 
@@ -27,7 +27,7 @@ class UserAdminForm(PopUpModelForm):
     class Meta:
         model = User
         fields = ('username','first_name','last_name','email',)
-        #fields = ('first_name','last_name','email',)
+        
 
     def clean(self):
         super(UserAdminForm,self).clean()

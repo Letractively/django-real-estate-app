@@ -196,19 +196,10 @@ class AjaxSelectMultipleInputWidget(SelectMultiple):
 		else:
 			current_ids = "|"
 
-		related_url_facebox=reverse(
-			'admin:real_estate_app_%s_add_popup' % self.module_name
-			# kwargs={
-			# 	'model_name':self.module_name,
-			# 	'app_label':'real_estate_app'}
-		)
+		related_url_facebox=reverse('admin:real_estate_app_%s_add_popup' % self.module_name)
 
 		plugin_options = {
-			'source': reverse('admin:real_estate_app_%s_ajax_view' % self.module_name
-							  # kwargs={
-							  # 		  'model_name':self.module_name,
-									#   'app_label':'real_estate_app'}
-					  ),
+			'source': reverse('admin:real_estate_app_%s_ajax_view' % self.module_name),
 			'initial': autocompleteobject.render(id__in=[str(v) for v in value]),
 			'fields':self.fields_show,
 			'ajax_url_facebox': related_url_facebox

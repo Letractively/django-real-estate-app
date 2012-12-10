@@ -25,6 +25,7 @@ TIPO_PESSOA=(
 )
 
 def get_realtor_directory(instance, filename):
+		import pdb;pdb.set_trace()
 		return 'real_estate_app/photos/realtor/'+instance.name+'/'+datetime.now().strftime('%Y/%m/%d/')+'/'+filename
 
 

@@ -75,19 +75,19 @@ class AutoCompleteObject(object):
 
 		return queryset
 
+
 	def render(self,value='',**kwargs):
 		from django.utils.safestring import mark_safe
 		from django.template.loader import render_to_string
-		return [{
+		a= [{
 					'pk':model['pk'],
 					'real_value':' '.join([model[f] for f in self.return_values if not (f in ('pk','id') or f in self.image_fields)]),
 					'value': mark_safe(render_to_string(
 										  				('real_estate_app/autocompleteselectmultiple_response_ajax.html',
 									   	   				'admin/real_estate_app/autocompleteselectmultiple_response_ajax.html'
 									   	   				),
-									   	   				# Problema com ordenacao do dict
 									   	 				{
-									   	 					'model':model,
+									   	 					'model': self.forcePositionFieldsShow(model),
 									   	 					'image_fields':self.image_fields,
 									   	 					'MEDIA_PREFIX':MEDIA_PREFIX,
 									   	 					'MEDIA_URL':settings.MEDIA_URL
@@ -95,8 +95,22 @@ class AutoCompleteObject(object):
 							   			)
 					),
 				} for model in self.filter(value,**kwargs)]
+		
+		return a
 
 							
 
-	def getFieldsShow(self):
-		return self.return_values
+	def forcePositionFieldsShow(self,filter_values):
+		"""
+		This function is necessery because when you try to return a position values on dict, it's return a 
+		orded keys, not position key.
+		# TODO: Make a dict orded by position not by key.
+		"""
+		if isinstance(filter_values,dict):
+			tmp_fields_values=filter_values.items()
+			for ct, field in enumerate(self.return_values):
+				tmp_fields_values[ct]=(field,filter_values[field])
+			
+			return tmp_fields_values
+
+		raise "Error"

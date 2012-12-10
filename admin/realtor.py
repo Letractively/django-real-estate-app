@@ -12,12 +12,6 @@ from real_estate_app.conf.settings import MEDIA_PREFIX
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 
-fieldsets= (
-			(_('General Information'), {
-				'fields': ('first_name','last_name','email','sex','photo'),
-			}),
-)
-
 if LANGUAGE_CODE in ('pt_BR','pt-br'):
 	from real_estate_app.localflavor.br.admin.forms.realtor import realtor_br_fieldsets
 	fieldsets = realtor_br_fieldsets
@@ -28,20 +22,13 @@ class RealtorInlineAdmin(admin.StackedInline):
 	extra =1
 
 class RealtorAdmin(RealEstateAppRevertInlineModelAdmin):
- 	#fieldsets = fieldsets
+
 	revert_inlines = [RealtorInlineAdmin,]
 	revert_model = User
 	revert_form = UserAdminForm
 	class Media:
-		#MEDIA_PREFIX+"js/real_estate_app_popup.js",
 		js = (
 			MEDIA_PREFIX+"js/locale/pt_BR/realtor.js",
 		)
-
-
-
-
-
-
 
 admin.site.register(Realtor, RealtorAdmin)

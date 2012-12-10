@@ -40,7 +40,6 @@ This code is based on app django-ajax-selects
 				pk=ui.item.pk;
 				prev = $this.val();
 				if (!pk) {
-
 					$('a#'+id)
 					.facebox({'id':id,
 					          'ajax_url':options.ajax_url_facebox})

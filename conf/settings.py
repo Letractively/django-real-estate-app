@@ -22,8 +22,8 @@ MANAGERS = getattr(settings,'MANAGERS')
 REAL_ESTATE_APP_AJAX_SEARCH = getattr(settings,
 									  'REAL_ESTATE_APP_AJAX_SEARCH',
 									  {'realtor': {
-									  				'search_fields':['user__first_name'],
-									  				'return_values':['photo','pk','user__first_name','user__last_name']
+									  				'search_fields':['user__first_name','user__last_name',],
+									  				'return_values':['photo','pk','user__first_name','user__last_name',]
 									  			   },
 									  }
 )
