@@ -1,10 +1,7 @@
 # -*- coding: utf-8; -*-
 from django.contrib.auth.models import User
 from django.conf import settings
-from django import forms
-from django.forms import ModelForm, EmailField, CharField, ValidationError, HiddenInput
-from django.forms.formsets import formset_factory
-from django.forms.models import modelformset_factory 
+from django.forms import EmailField, CharField, ValidationError, HiddenInput
 from django.utils.translation import ugettext_lazy as _
 
 from real_estate_app.conf.settings import MEDIA_PREFIX
@@ -41,5 +38,5 @@ class UserAdminForm(PopUpModelForm):
             self.cleaned_data['username']=username
             return self.cleaned_data
 
-        raise forms.ValidationError(_("A user with that username already exists."))
+        raise ValidationError(_("A user with that username already exists."))
         

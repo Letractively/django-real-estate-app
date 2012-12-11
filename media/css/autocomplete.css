@@ -4,20 +4,22 @@
     background-position: right;
 }
 ul.ui-autocomplete {
-margin: 0;
-padding: 0;
-position: absolute;
-background-color: #FFFFFF;
-border: 1px solid black;
-width: 320px;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	background-color: #FFFFFF;
+	border: 1px solid black;
+	width: 320px;
+	color: #587596;
+	font-weight: bold;
 }
 ul.ui-autocomplete li {
     list-style-type: none;
 	padding: 0;
-	min-height: 50px;
+	min-height: 40px;
 	cursor: pointer;
 }
-ul.ui-autocomplete li:hover, #ui-active-menuitem {
+#ui-active-menuitem {
 	border: 1px solid #587596;
 	background-color:#7CA0C7;
 	color:#FFF;
@@ -30,7 +32,7 @@ ul.ui-autocomplete li a:hover {
 ul.ui-autocomplete li a {
 	display: block;
 	padding: 2px 3px;
-	min-height: 50px;
+	min-height: 40px;
 }
 
 .ui-helper-clearfix{
@@ -45,7 +47,7 @@ ul.ui-autocomplete li a {
 	position: relative;
 	margin: 0 3px 3px 0;
 	padding: 3px 20px 4px 8px;
-	min-height: 50px;
+	min-height: 40px;
 	font-weight: bold;
 }
 .ui-helper-clearfix span:hover {
@@ -53,7 +55,7 @@ ul.ui-autocomplete li a {
 }
 .ui-helper-clearfix span a {
 	position: absolute;
-	top:20px;
+	top:17px;
 	right: 8px;
 	font-weight: bold;
 	color: #003366;
@@ -61,9 +63,21 @@ ul.ui-autocomplete li a {
 .ui-helper-clearfix span a:hover {
 	color:white;
 }
-
 .ui-helper-clearfix span img {
 	border: 2px solid #EEEEEE;
 	background-color: white;
 }
-
+.last, ul.ui-autocomplete li.last {
+	font-weight: bold;
+	background-color: #DDDDDD;
+	text-align: center;
+	color: #587596;
+	border: 1px solid #AAAAAA;
+}
+ul.ui-autocomplete li.last:hover {
+	color: #FFF;
+	background-color:#7CA0C7;
+}
+ul.ui-autocomplete a img {
+	border: none;
+}

@@ -1,32 +1,16 @@
 from django.contrib.admin import ModelAdmin
-from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator, InvalidPage
 from django.core.exceptions import PermissionDenied
-from django.db.models import get_model
+from django.core import serializers
 from django.db import models, transaction
-from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response, get_list_or_404, get_object_or_404
-from django.template import RequestContext
+from django.forms.models import (modelform_factory)
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
-from django.utils.encoding import force_unicode
-from django.utils.safestring import mark_safe
-from django.utils.functional import update_wrapper
-from django.utils.translation import ugettext as _
+from django.utils.functional import curry
+from django.utils import simplejson
 from django.views.decorators.csrf import csrf_protect
 
-from django.forms.models import (modelform_factory, modelformset_factory)
-from django.utils.functional import curry
-from django.core import serializers
-from django.utils import simplejson
-
-
 from real_estate_app import widgets
-from real_estate_app.admin.forms.utils import create_popup_form
-from real_estate_app.admin.forms import UserAdminForm
-from real_estate_app.conf.settings import REAL_ESTATE_APP_AJAX_SEARCH, MEDIA_PREFIX
-from real_estate_app.models import Realtor
+from real_estate_app.conf.settings import MEDIA_PREFIX
 from real_estate_app.utils import AutoCompleteObject
 
 csrf_protect_m = method_decorator(csrf_protect)

@@ -21,7 +21,7 @@ This code is based on app django-ajax-selects
 	 					objects.push(val);
 	 				});
 	 				var add_link = '';
-	 				objects.push("Clique para dicionar");
+	 				//objects.push("Clique para dicionar");
 	 				add(objects);
 	 			});
 			}
@@ -75,7 +75,13 @@ This code is based on app django-ajax-selects
 				select: selectRealEstate,
 				change: changeRealEstate,
 				focus: itemFocus
-			})
+			}).data( "autocomplete" )._renderMenu = function( ul, items ) {
+				var that = this;
+            	$.each( items, function( index, item ) {
+                	that._renderItem( ul, item );
+            	});
+            	$(ul).append("<li class='ui-menu-item last' id='add_anoter' role='menuitem' onclick='django.jQuery(\"#"+id+"_add_icon\").facebox().trigger(\"click.facebox\");'><a class='ui-corner-all' tabindex='-1'> Clique para adicionar </a></li>");	
+		    };
 
 			$(".remove", document.getElementById("custom-"+id)).live("click", function(){  
 		    	$(this).parent().remove();  
@@ -83,9 +89,16 @@ This code is based on app django-ajax-selects
 	           	if($("#custom-"+id+" span").length === 0) {  
 		       		$text.css("top", 0);  
 	       		}                 
-	    	});  	
+	    	});
+
+	    	$("#add_anoter").live("click", function(){
+				$("#id_realtor_fk_add_icon").facebox().trigger('click.facebox');	
+			})
 			
 	    });
+
 	}
+	
+	
 
 })(django.jQuery)

@@ -1,7 +1,5 @@
 import operator
-from django.http import HttpResponse, Http404
 from django.core.exceptions import ImproperlyConfigured
-from django.utils import simplejson
 from django.conf import settings 
 from real_estate_app.conf.settings import REAL_ESTATE_APP_AJAX_SEARCH, MEDIA_PREFIX
 

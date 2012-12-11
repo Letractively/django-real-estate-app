@@ -13,3 +13,5 @@ from real_estate_app.models import Classification, StatusProperty, District, Adi
 # autoregister admin Models
 for model in [Classification, StatusProperty, District, AditionalThings, PositionOfSun]:
 	site.register(model,RealEstateAppPopUpModelAdmin)
+
+site.index_template='admin/index-custom.html'

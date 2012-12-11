@@ -1,10 +1,10 @@
 <div id="results-ajax">
 {% for field in model %}
 	{% if field.0 in image_fields and field.1 %}
-		<img width="50" height="50" src="{{ MEDIA_URL }}{{ field.1 }}" />
+		<img width="40" height="40" src="{{ MEDIA_URL }}{{ field.1 }}" />
 	{% endif %}
 	{% if field.0 in image_fields and not field.1 %}
-		<img width="50" height="50" src="{{ MEDIA_PREFIX }}img/unknow_user50x50.png" />
+		<img width="40" height="40" src="{{ MEDIA_PREFIX }}img/unknow_user50x50.png" />
 	{% endif %}
 	{% if field.0 != 'pk' and field.0 not in image_fields %}
 		{{ field.1 }}

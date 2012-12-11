@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 from decimal import Decimal
-from itertools import chain, product
+from itertools import chain
 
 from django.contrib.admin import widgets
 from django.conf import settings 
 from django.core.urlresolvers import reverse, NoReverseMatch
-from django.forms.widgets import TextInput, Select, CheckboxSelectMultiple, CheckboxInput, SelectMultiple
+from django.forms.widgets import TextInput, CheckboxSelectMultiple, CheckboxInput, SelectMultiple
 from django.forms.util import flatatt
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.utils import simplejson
 from django.utils.encoding import force_unicode
-from django.utils.html import escape, conditional_escape
+from django.utils.html import conditional_escape
 from django.utils.translation import ugettext_lazy as _
 
 from real_estate_app.conf.settings import MEDIA_PREFIX, REAL_ESTATE_APP_AJAX_SEARCH
