@@ -19,16 +19,30 @@ if LANGUAGE_CODE in ('pt_BR','pt-br'):
 
 class RealtorInlineAdmin(admin.StackedInline):
 	model = Realtor
-	extra =1
+	extra = 1
+	form = RealtorAdminForm
+	if LANGUAGE_CODE:
+		template = 'admin/real_estate_app/%s/edit_inline/stacked-realtor.html' % LANGUAGE_CODE
+
+
 
 class RealtorAdmin(RealEstateAppRevertInlineModelAdmin):
 
 	revert_inlines = [RealtorInlineAdmin,]
 	revert_model = User
 	revert_form = UserAdminForm
+
 	class Media:
-		js = (
-			MEDIA_PREFIX+"js/locale/pt_BR/realtor.js",
-		)
+
+		if LANGUAGE_CODE == 'pt-br':
+			css = {
+				'all':(
+					MEDIA_PREFIX+"css/tabs.css",
+				)
+			}
+
+			js = (
+				MEDIA_PREFIX+"js/locale/pt_BR/realtor.js",
+			)
 
 admin.site.register(Realtor, RealtorAdmin)

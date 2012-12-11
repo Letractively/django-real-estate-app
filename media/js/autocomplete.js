@@ -39,19 +39,13 @@ This code is based on app django-ajax-selects
 			function selectRealEstate(event, ui) {
 				pk=ui.item.pk;
 				prev = $this.val();
-				if (!pk) {
-					$('a#'+id)
-					.facebox({'id':id,
-					          'ajax_url':options.ajax_url_facebox})
-					.trigger('click.facebox');
-				}
-				else {
-					if (prev.indexOf("|"+pk+"|") == -1) {
+
+				if (prev.indexOf("|"+pk+"|") == -1) {
 						$this.val((prev ? prev : "|") + pk + "|");
 						addItem(ui.item, pk)
 						$text.val('');
-					}
 				}
+
 				return false
 			}
 
@@ -67,6 +61,10 @@ This code is based on app django-ajax-selects
 			if (options.initial) {
 				$.each(options.initial, function(i, its){
 						addItem(its,its.pk);
+						if (its.pk) {
+							prev = $this.val();
+						    $this.val((prev ? prev : "|") + its.pk + "|");
+						}
 				});
 			}
 
@@ -92,7 +90,7 @@ This code is based on app django-ajax-selects
 	    	});
 
 	    	$("#add_anoter").live("click", function(){
-				$("#id_realtor_fk_add_icon").facebox().trigger('click.facebox');	
+				$("#"+id+"_add_icon").facebox().trigger('click.facebox');	
 			})
 			
 	    });

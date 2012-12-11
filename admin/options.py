@@ -17,92 +17,6 @@ csrf_protect_m = method_decorator(csrf_protect)
 
 class FaceBoxModelAdmin(ModelAdmin):
 
-    def response_add(self, request, obj):
-        super(FaceBoxModelAdmin,self).response_add(request,obj)
-        return HttpResponseRedirect('../view_popup/')
-
-    def response_change(self,request,obj):
-        super(FaceBoxModelAdmin,self).response_change(request,obj)
-        return HttpResponseRedirect('../view_popup/')
-
-    def get_urls(self):
-
-        from django.conf.urls.defaults import patterns, url
-
-        urlpatterns = super(FaceBoxModelAdmin,self).get_urls()
-
-        info = self.model._meta.app_label, self.model._meta.module_name
-
-        custom_urls = patterns('',
-                                url(r'^add_popup/$',
-                                    self.add_view_popup,
-                                    name='%s_%s_add_popup' % info
-                                ),
-                                url(r'^edit_popup/(?P<obj_id>\d+)/$',
-                                    self.change_view_popup,
-                                    name='%s_%s_chage_popup' % info 
-                                ),
-                                url(r'^view_popup/$',
-                                    self.changelist_view_popup,
-                                    name='%s_%s_view_popup' % info
-                                ),
-                                url(r'^ajax_view/$',
-                                    self.get_item_model_fk,
-                                    name='%s_%s_ajax_view' % info
-                                ),
-
-        )
-
-        return custom_urls + urlpatterns
-
-    @csrf_protect_m
-    @transaction.commit_on_success
-    def add_view_popup(self, request, extra_context=None):
-        return super(FaceBoxModelAdmin,self).add_view(request,extra_context={'is_popup':True, 'notabs':True})
-
-    @csrf_protect_m
-    @transaction.commit_on_success
-    def change_view_popup(self, request, obj_id=None, extra_context=None):
-        return super(FaceBoxModelAdmin,self).change_view(request, obj_id, extra_context={'is_popup':True,'notabs':True})
-
-    @csrf_protect_m
-    def changelist_view_popup(self, request, extra_context=None):
-        return super(FaceBoxModelAdmin,self).changelist_view(request, extra_context={'is_popup':True,'notabs':True})
-
-    @csrf_protect_m 
-    def get_item_model_fk(self, request, extra_context=None):
-        """
-        Ajax interation to construct the select options
-        used a custom serialize how get some expecific fields.
-        """
-        q_value=''
-        opts=self.model._meta
-
-        model = self.model
-        queryset = model.objects.all()
-        module_name=opts.module_name
-        fields = [i.name for i in model._meta.fields]
-
-        if request.POST:
-            if request.POST.items():
-                for query in request.POST.items():
-                    if 'csrfmiddlewaretoken' not in query:
-                        query=dict((query,))
-                        queryset=queryset.filter(**query)
-        else:
-            if 'term' in request.GET:
-                q_value=request.GET['term']
-                return HttpResponse(
-                                    simplejson.dumps(
-                                        AutoCompleteObject(model).render(value=q_value)
-                                    )
-                                    ,mimetype="text/javascript")
-            else:
-                fields = (fields[1],)
-
-        json = serializers.serialize("json", queryset,fields=fields)
-        return HttpResponse(json, mimetype="text/javascript")
-
     def formfield_for_dbfield(self, db_field, **kwargs):
         """  
         Hook for specifying the form Field instance for a given database Field
@@ -154,6 +68,91 @@ class FaceBoxModelAdmin(ModelAdmin):
 class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
 
     list_per_page=5
+    def response_add(self, request, obj):
+        super(RealEstateAppPopUpModelAdmin,self).response_add(request,obj)
+        return HttpResponseRedirect('../view_popup/')
+
+    def response_change(self,request,obj):
+        super(RealEstateAppPopUpModelAdmin,self).response_change(request,obj)
+        return HttpResponseRedirect('../view_popup/')
+
+    def get_urls(self):
+
+        from django.conf.urls.defaults import patterns, url
+
+        urlpatterns = super(RealEstateAppPopUpModelAdmin,self).get_urls()
+
+        info = self.model._meta.app_label, self.model._meta.module_name
+
+        custom_urls = patterns('',
+                                url(r'^add_popup/$',
+                                    self.add_view_popup,
+                                    name='%s_%s_add_popup' % info
+                                ),
+                                url(r'^edit_popup/(?P<obj_id>\d+)/$',
+                                    self.change_view_popup,
+                                    name='%s_%s_chage_popup' % info 
+                                ),
+                                url(r'^view_popup/$',
+                                    self.changelist_view_popup,
+                                    name='%s_%s_view_popup' % info
+                                ),
+                                url(r'^ajax_view/$',
+                                    self.get_item_model_fk,
+                                    name='%s_%s_ajax_view' % info
+                                ),
+
+        )
+
+        return custom_urls + urlpatterns
+
+    @csrf_protect_m
+    @transaction.commit_on_success
+    def add_view_popup(self, request, extra_context=None):
+        return super(RealEstateAppPopUpModelAdmin,self).add_view(request,extra_context={'is_popup':True, 'notabs':True})
+
+    @csrf_protect_m
+    @transaction.commit_on_success
+    def change_view_popup(self, request, obj_id=None, extra_context=None):
+        return super(RealEstateAppPopUpModelAdmin,self).change_view(request, obj_id, extra_context={'is_popup':True,'notabs':True})
+
+    @csrf_protect_m
+    def changelist_view_popup(self, request, extra_context=None):
+        return super(RealEstateAppPopUpModelAdmin,self).changelist_view(request, extra_context={'is_popup':True,'notabs':True})
+
+    @csrf_protect_m 
+    def get_item_model_fk(self, request, extra_context=None):
+        """
+        Ajax interation to construct the select options
+        used a custom serialize how get some expecific fields.
+        """
+        q_value=''
+        opts=self.model._meta
+
+        model = self.model
+        queryset = model.objects.all()
+        module_name=opts.module_name
+        fields = [i.name for i in model._meta.fields]
+
+        if request.POST:
+            if request.POST.items():
+                for query in request.POST.items():
+                    if 'csrfmiddlewaretoken' not in query:
+                        query=dict((query,))
+                        queryset=queryset.filter(**query)
+        else:
+            if 'term' in request.GET:
+                q_value=request.GET['term']
+                return HttpResponse(
+                                    simplejson.dumps(
+                                        AutoCompleteObject(model).render(value=q_value)
+                                    )
+                                    ,mimetype="text/javascript")
+            else:
+                fields = (fields[1],)
+
+        json = serializers.serialize("json", queryset,fields=fields)
+        return HttpResponse(json, mimetype="text/javascript")
 
     class Media:
 
