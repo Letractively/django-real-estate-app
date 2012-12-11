@@ -1,46 +1,81 @@
 {% extends "admin/base_site.html" %}
-{% load i18n %}
-{% block extrastyle %}
-  {{ media }}
+{% load i18n admin_modify adminmedia %}
+
+{% block extrahead %}{{ block.super }}
+{% url admin:jsi18n as jsi18nurl %}
+<script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
+{{ media }}
+
 {% endblock %}
+
 
 {% block bodyclass %}change-list{% endblock %}
 
 {% block content %}
 	{% if not message_404 %}
+		<div id="popup-content">
 		<h1> Add {{ model_name|title }} </h1>
-	
 		{% if message %} <p> {{ message }} </p> {% endif %}
-		<form method="POST" action="." enctype="multipart/form-data">
-			{% csrf_token %}
-			{{ form.as_p }}
-			<p> <input type="submit" value="Adicionar" /></p>
-		</form>
-		{% if results_list %}
-			<table>
-			<thead>
-				<tr>
-					<td> {{ model_name|title }}</td>
-					<td> Edit </td>
-					<td> Delete </td>
-				</tr>
-			</thead>
-			<tbody>
-				{% for result in results_list %}
-					<tr>
-						<td> {{ result }} </td>
-						<td> <a href="{{ result.id }}/">Edit</a></td>
-						<td> <a href="{{ result.id }}/?action=delete">Delete</a></td>
-					</tr>
-				{% endfor %}	
-			</tbody>
-			</table>
-			{% if is_paginated %}
-				{% include "admin/real_estate_app/navigation.html" %}
+		    {% if action != 'edit' %}
+			<ul class="object-tools">
+				<li>
+					<a class="addlink" id="addpopup" href="#"> Adicionar </a>
+				</li>
+			</ul>
+			
+			<div id="add_form_popup">
+				<form method="POST" action="." enctype="multipart/form-data">
+					{% csrf_token %}
+					{{ form.as_p }}
+					{% if inlineformset %}
+							{{ inlineformset.as_p }}
+					{% endif %}
+
+					<p> <input type="submit" value="Adicionar" /></p>
+				</form>
+			</div>
+			<div id="list_view_popup">
+				{% if results_list %}
+				
+					<table>
+					<thead>
+						<tr>
+							<td> {{ model_name|title }}</td>
+							<td> Edit </td>
+							<td> Delete </td>
+						</tr>
+					</thead>
+					<tbody>
+						{% for result in results_list %}
+							<tr>
+								<td> {{ result }} </td>
+								<td> <a href="{{ result.id }}/">Edit</a></td>
+								<td> <a href="{{ result.id }}/?action=delete">Delete</a></td>
+							</tr>
+						{% endfor %}	
+					</tbody>
+					</table>
+					{% if is_paginated %}
+						{% include "admin/real_estate_app/navigation.html" %}
+					{% endif %}
+
+				{% else %}
+					{% trans "Your list is empty" %}
+				{% endif %}
+			</div>
+			{% else %}
+				<form method="POST" action="." enctype="multipart/form-data">
+					{% csrf_token %}
+					{{ form.as_p }}
+					{% if inlineformset %}
+							{{ inlineformset.as_p }}
+					{% endif %}
+
+					<p> <input type="submit" value="Adicionar" /></p>
+				</form>
 			{% endif %}
-		{% else %}
-			{% trans "Your list is empty" %}
-		{% endif %}
+
+		</div>
 	{% else %}
 		<h1> {{ message_404 }} </h1> 
 		<p> <a href="../"> volte para página anterior </a> </p>

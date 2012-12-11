@@ -37,12 +37,25 @@
 
 {% block content %}<div id="content-main">
 {% block object-tools %}
-{% if change %}{% if not is_popup %}
-  <ul class="object-tools"><li><a href="history/" class="historylink">{% trans "History" %}</a></li>
-  {% if has_absolute_url %}<li><a href="../../../r/{{ content_type_id }}/{{ object_id }}/" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif%}
+{% if change %}
+  {% if not is_popup %}
+    <ul class="object-tools"><li><a href="history/" class="historylink">{% trans "History" %}</a></li>
+    {% if has_absolute_url %}<li><a href="../../../r/{{ content_type_id }}/{{ object_id }}/" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif%}
+    </ul>
+  {% else %}
+  <ul class="object-tools">
+      <li><a href="../view_popup/" class="historylink">{% trans "Manage list" %}</a></li>
   </ul>
-{% endif %}{% endif %}
+  {% endif %}
+{% else %}
+  {% if is_popup %}
+  <ul class="object-tools">
+      <li><a href="../view_popup/" class="historylink">{% trans "Manage list" %}</a></li>
+  </ul>
+  {% endif %}
+{% endif %}
 {% endblock %}
+
 <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}{% block form_top %}{% endblock %}
 <div>
 {% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
@@ -53,20 +66,22 @@
     </p>
     {{ adminform.form.non_field_errors }}
 {% endif %}
-<div class="tabs-menu">
-<ul class="tabs">
-{% for fieldset in adminform %}
-<li  class="{% if forloop.first %}active {% endif %}
-{% for line in fieldset %}{% if line.errors %}errors {% endif%}{% endfor %}"><a href="#{{ fieldset.name|slugify }}">{{ fieldset.name }}</a></li>
-{% endfor %}
-{% for inline_admin_formset in inline_admin_formsets %}
-<li  class="{% for inline_admin_form in inline_admin_formset %}{% for fieldset in inline_admin_form %} {% for line in fieldset %}{% if line.errors %}{% if forloop.first %}errors{% endif %}{% endif%}{% endfor %}{% endfor %}{% endfor %}" ><a href="#{{ inline_admin_formset.formset.prefix }}-group">{{ inline_admin_formset.opts.verbose_name_plural|title }}</a></li>
-{% endfor %}
-</ul>
-</div>
+{% if not notabs %}
+  <div class="tabs-menu">
+  <ul class="tabs">
+  {% for fieldset in adminform %}
+  <li  class="{% if forloop.first %}active {% endif %}
+  {% for line in fieldset %}{% if line.errors %}errors {% endif%}{% endfor %}"><a href="#{{ fieldset.name|slugify }}">{{ fieldset.name }}</a></li>
+  {% endfor %}
+  {% for inline_admin_formset in inline_admin_formsets %}
+  <li  class="{% for inline_admin_form in inline_admin_formset %}{% for fieldset in inline_admin_form %} {% for line in fieldset %}{% if line.errors %}{% if forloop.first %}errors{% endif %}{% endif%}{% endfor %}{% endfor %}{% endfor %}" ><a href="#{{ inline_admin_formset.formset.prefix }}-group">{{ inline_admin_formset.opts.verbose_name_plural|title }}</a></li>
+  {% endfor %}
+  </ul>
+  </div>
+{% endif %}
 <div class="clear"> </div>
 {% for fieldset in adminform %}
-	{% ifequal fieldset.name 'MAPS'%}
+	{% ifequal fieldset.name 'MAPS' %}
 	  {% include "admin/real_estate_app/includes/fieldset-gmaps.html" %}
 	{% else %}
 	  {% include "admin/real_estate_app/includes/fieldset-custom.html" %}

@@ -21,7 +21,7 @@ This code is based on app django-ajax-selects
 	 					objects.push(val);
 	 				});
 	 				var add_link = '';
-	 				objects.push("Clique para dicionar");
+	 				//objects.push("Clique para dicionar");
 	 				add(objects);
 	 			});
 			}
@@ -39,20 +39,13 @@ This code is based on app django-ajax-selects
 			function selectRealEstate(event, ui) {
 				pk=ui.item.pk;
 				prev = $this.val();
-				if (!pk) {
 
-					$('a#'+id)
-					.facebox({'id':id,
-					          'ajax_url':options.ajax_url_facebox})
-					.trigger('click.facebox');
-				}
-				else {
-					if (prev.indexOf("|"+pk+"|") == -1) {
+				if (prev.indexOf("|"+pk+"|") == -1) {
 						$this.val((prev ? prev : "|") + pk + "|");
 						addItem(ui.item, pk)
 						$text.val('');
-					}
 				}
+
 				return false
 			}
 
@@ -68,6 +61,10 @@ This code is based on app django-ajax-selects
 			if (options.initial) {
 				$.each(options.initial, function(i, its){
 						addItem(its,its.pk);
+						if (its.pk) {
+							prev = $this.val();
+						    $this.val((prev ? prev : "|") + its.pk + "|");
+						}
 				});
 			}
 
@@ -76,7 +73,13 @@ This code is based on app django-ajax-selects
 				select: selectRealEstate,
 				change: changeRealEstate,
 				focus: itemFocus
-			})
+			}).data( "autocomplete" )._renderMenu = function( ul, items ) {
+				var that = this;
+            	$.each( items, function( index, item ) {
+                	that._renderItem( ul, item );
+            	});
+            	$(ul).append("<li class='ui-menu-item last' id='add_anoter' role='menuitem' onclick='django.jQuery(\"#"+id+"_add_icon\").facebox().trigger(\"click.facebox\");'><a class='ui-corner-all' tabindex='-1'> Clique para adicionar </a></li>");	
+		    };
 
 			$(".remove", document.getElementById("custom-"+id)).live("click", function(){  
 		    	$(this).parent().remove();  
@@ -84,9 +87,16 @@ This code is based on app django-ajax-selects
 	           	if($("#custom-"+id+" span").length === 0) {  
 		       		$text.css("top", 0);  
 	       		}                 
-	    	});  	
+	    	});
+
+	    	$("#add_anoter").live("click", function(){
+				$("#"+id+"_add_icon").facebox().trigger('click.facebox');	
+			})
 			
 	    });
+
 	}
+	
+	
 
 })(django.jQuery)

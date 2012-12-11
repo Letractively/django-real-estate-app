@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 from decimal import Decimal
-from itertools import chain, product
+from itertools import chain
 
 from django.contrib.admin import widgets
 from django.conf import settings 
 from django.core.urlresolvers import reverse, NoReverseMatch
-from django.forms.widgets import TextInput, Select, CheckboxSelectMultiple, CheckboxInput, SelectMultiple
+from django.forms.widgets import TextInput, CheckboxSelectMultiple, CheckboxInput, SelectMultiple
 from django.forms.util import flatatt
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.utils import simplejson
 from django.utils.encoding import force_unicode
-from django.utils.html import escape, conditional_escape
+from django.utils.html import conditional_escape
 from django.utils.translation import ugettext_lazy as _
 
 from real_estate_app.conf.settings import MEDIA_PREFIX, REAL_ESTATE_APP_AJAX_SEARCH
@@ -114,7 +114,7 @@ class CheckboxSelectMultipleCustom(CheckboxSelectMultiple):
 		if value is None: value = []
 		has_id = attrs and 'id' in attrs
 		final_attrs = self.build_attrs(attrs, name=name)
-		output.append(u'<a href="%s" class="add-another" id="id_%s" rel="facebox-check" rev="iframe|350" > ' %(related_url, name_db))
+		output.append(u'<a href="%s" class="add-another" id="id_%s" rel="facebox-check" rev="iframe|400" > ' %(related_url, name_db))
 		output.append(u'<img src="%simg/admin/icon_addlink.gif" width="10" height="10" alt="%s"/></a><br />' % (settings.ADMIN_MEDIA_PREFIX, _('Add Another')))
 
 		output.append(u'<ul id=id_%s style="float:left">' %name_db)
@@ -196,19 +196,10 @@ class AjaxSelectMultipleInputWidget(SelectMultiple):
 		else:
 			current_ids = "|"
 
-		related_url_facebox=reverse(
-			'admin:add_popup',
-			kwargs={
-				'model_name':self.module_name,
-				'app_label':'real_estate_app'
-		})
+		related_url_facebox=reverse('admin:real_estate_app_%s_add_popup' % self.module_name)
 
 		plugin_options = {
-			'source': reverse('admin:ajax_view',
-							  kwargs={
-							  		  'model_name':self.module_name,
-									  'app_label':'real_estate_app'
-					  }),
+			'source': reverse('admin:real_estate_app_%s_ajax_view' % self.module_name),
 			'initial': autocompleteobject.render(id__in=[str(v) for v in value]),
 			'fields':self.fields_show,
 			'ajax_url_facebox': related_url_facebox

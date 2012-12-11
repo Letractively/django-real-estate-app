@@ -8,9 +8,11 @@ from real_estate_app.widgets import MoneyInputWidget, ZipInputWidget, CheckboxSe
 from real_estate_app.models import Property, AditionalThings, Realtor
 
 class PropertyAdminForm(ModelForm):
+	
 	price = DecimalField(widget=MoneyInputWidget)
 
 	condominio = DecimalField(widget=MoneyInputWidget,required=False)
+
 	iptu = DecimalField(widget=MoneyInputWidget,required=False)
 	
 	zip_code = CharField(widget=ZipInputWidget,required=False)
@@ -32,18 +34,3 @@ class PropertyAdminForm(ModelForm):
 
 	class Meta:
 		model = Property
-
-	#def clean_address(self):
-		#address_key = self.cleaned_data['address']
-		#if address_key:
-		##	if self.Meta.model.get_by_key_name(slug_key):
-			#try:
-				#self.Meta.model.objects.get(slug=slugify(address_key))
-				#print dir(Property._meta)
-				#raise forms.ValidationError(_('Propertys with this address already exists.'))
-			#except Property.DoesNotExist:
-				#pass
-		#else:
-			#raise forms.ValidationError("This field is required....")
-
-		#return address_key 

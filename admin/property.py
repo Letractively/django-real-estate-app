@@ -2,12 +2,13 @@
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.contrib import admin 
-from options import RealEstateAppModelAdmin
-from real_estate_app.models import *
-from real_estate_app.forms import *
+from options import FaceBoxModelAdmin
+
+from real_estate_app.admin.forms import PropertyAdminForm
+from real_estate_app.admin.photo import PhotoInlineAdmin 
+from real_estate_app.admin.actions import duplicate_object, make_unpublished, make_published 
 from real_estate_app.conf.settings import MEDIA_PREFIX
-from photo import PhotoInlineAdmin 
-from actions import duplicate_object,make_unpublished,make_published 
+from real_estate_app.models import Property
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 
@@ -15,7 +16,7 @@ BRAZIL=[]
 if LANGUAGE_CODE=='pt-br':
 	BRAZIL=['condominio','iptu']
 
-class PropertyAdmin(RealEstateAppModelAdmin):
+class PropertyAdmin(FaceBoxModelAdmin):
 	search_fields = ['address','code_property']
 	
 	fieldsets = (
@@ -47,6 +48,7 @@ class PropertyAdmin(RealEstateAppModelAdmin):
 			PhotoInlineAdmin,
 	)
 	actions=[duplicate_object,make_unpublished,make_published]
+
 	class Media:
 		css = {
 			'all':(
@@ -66,7 +68,7 @@ class PropertyAdmin(RealEstateAppModelAdmin):
 		      MEDIA_PREFIX+'js/ajax_csrf.js',
 		      MEDIA_PREFIX+'js/real_estate_app_district.js',
 		      MEDIA_PREFIX+'js/jquery.createtabs.js',
-		      MEDIA_PREFIX+'js/load.js',
+		      MEDIA_PREFIX+'js/property-load.js',
 			  'http://maps.google.com/maps/api/js?sensor=true',
 		)
 

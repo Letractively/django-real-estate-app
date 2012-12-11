@@ -15,13 +15,15 @@ REAL_ESTATE_IMAGES_SIZE=getattr(settings,'REAL_ESTATE_IMAGES_SIZE',(626,286))
 
 REAL_ESTATE_APP_SITE_NAME=getattr(settings,'REAL_ESTATE_SITE_NAME','')
 
+EASY_MAPS_GOOGLE_KEY=getattr(settings,'EASY_MAPS_GOOGLE_KEY','')
+
 MANAGERS = getattr(settings,'MANAGERS')
 
 REAL_ESTATE_APP_AJAX_SEARCH = getattr(settings,
 									  'REAL_ESTATE_APP_AJAX_SEARCH',
 									  {'realtor': {
-									  				'search_fields':['name','last_name'],
-									  				'return_values':['name','last_name','photo','pk']
+									  				'search_fields':['user__first_name','user__last_name',],
+									  				'return_values':['photo','pk','user__first_name','user__last_name',]
 									  			   },
 									  }
 )

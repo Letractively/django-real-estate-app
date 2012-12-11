@@ -180,7 +180,7 @@ class Address(models.Model):
 					editable=False
 	)
 
-	realtor_fk = models.ForeignKey('real_estate_app.Realtor')
+	#realtor_fk = models.ForeignKey('real_estate_app.Realtor')
 
 	class Meta:	
 		app_label = 'real_estate_app'
@@ -206,7 +206,7 @@ class Phone(models.Model):
 					editable=False
 	)
 
-	realtor_fk = models.ForeignKey('real_estate_app.Realtor')
+	#realtor_fk = models.ForeignKey('real_estate_app.Realtor')
 	
 	def __unicode__(self):
 		return self.phone 
@@ -214,6 +214,6 @@ class Phone(models.Model):
 	class Meta:
 		app_label='real_estate_app'
 		get_latest_by='phone'
-		ordering=('phone','realtor_fk')
+		ordering=('phone',)
 		verbose_name=_('Phone')
 		verbose_name_plural=_('Phones')	

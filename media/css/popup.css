@@ -1,0 +1,29 @@
+.popup #content {
+	margin: 0 10px;
+}
+.popup, #container {
+	min-width: 450px;
+	width: 450px;
+}
+.popup #realtor_set-group {
+	border-left:none;
+	border-bottom:1px solid #CCCCCC ;
+	border-right:none;
+	border-top: none;
+}
+.popup .module {
+	border-top: 1px solid #CCCCCC;
+	border-left: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+}
+
+.popup .form-row {
+	padding: 5px 12px;
+}
+
+.popup .errors {
+	padding: 1px 12px;
+}
+.username {
+	display:none;
+}
