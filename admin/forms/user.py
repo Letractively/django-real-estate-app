@@ -26,17 +26,7 @@ class UserAdminForm(PopUpModelForm):
         fields = ('username','first_name','last_name','email',)
         
 
-    def clean(self):
-        super(UserAdminForm,self).clean()
+    def clean_username(self):
         username = self.data['email']
-        # if LANGUAGE_CODE in ('pt-br','pt_BR'):
-        #     username = self.data['CPF']
-        
-        try:
-            User.objects.get(username=username)
-        except User.DoesNotExist:
-            self.cleaned_data['username']=username
-            return self.cleaned_data
-
-        raise ValidationError(_("A user with that username already exists."))
+        return username
         

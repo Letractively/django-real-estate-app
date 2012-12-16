@@ -13,6 +13,14 @@ from real_estate_app import widgets
 from real_estate_app.conf.settings import MEDIA_PREFIX
 from real_estate_app.utils import AutoCompleteObject
 
+from django.contrib.admin.util import unquote
+from django.contrib.admin import helpers
+from django.utils.translation import ugettext as _
+from django.utils.encoding import force_unicode
+from django.utils.safestring import mark_safe
+from django.forms.formsets import all_valid
+
+
 csrf_protect_m = method_decorator(csrf_protect)
 
 class FaceBoxModelAdmin(ModelAdmin):
@@ -70,11 +78,11 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
     list_per_page=5
     def response_add(self, request, obj):
         super(RealEstateAppPopUpModelAdmin,self).response_add(request,obj)
-        return HttpResponseRedirect('../view_popup/')
+        return HttpResponseRedirect('../../popup/')
 
     def response_change(self,request,obj):
         super(RealEstateAppPopUpModelAdmin,self).response_change(request,obj)
-        return HttpResponseRedirect('../view_popup/')
+        return HttpResponseRedirect('../../popup/')
 
     def get_urls(self):
 
@@ -85,19 +93,19 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
         info = self.model._meta.app_label, self.model._meta.module_name
 
         custom_urls = patterns('',
-                                url(r'^add_popup/$',
+                                url(r'^popup/add/$',
                                     self.add_view_popup,
                                     name='%s_%s_add_popup' % info
                                 ),
-                                url(r'^edit_popup/(?P<obj_id>\d+)/$',
+                                url(r'^popup/(?P<object_id>\d+)/$',
                                     self.change_view_popup,
                                     name='%s_%s_chage_popup' % info 
                                 ),
-                                url(r'^view_popup/$',
+                                url(r'^popup/$',
                                     self.changelist_view_popup,
                                     name='%s_%s_view_popup' % info
                                 ),
-                                url(r'^ajax_view/$',
+                                url(r'^popup/ajax/$',
                                     self.get_item_model_fk,
                                     name='%s_%s_ajax_view' % info
                                 ),
@@ -113,8 +121,8 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
 
     @csrf_protect_m
     @transaction.commit_on_success
-    def change_view_popup(self, request, obj_id=None, extra_context=None):
-        return super(RealEstateAppPopUpModelAdmin,self).change_view(request, obj_id, extra_context={'is_popup':True,'notabs':True})
+    def change_view_popup(self, request, object_id=None, extra_context=None):
+        return super(RealEstateAppPopUpModelAdmin,self).change_view(request, object_id, extra_context={'is_popup':True,'notabs':True})
 
     @csrf_protect_m
     def changelist_view_popup(self, request, extra_context=None):
@@ -216,3 +224,103 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
         }
         defaults.update(kwargs)
         return modelform_factory(self.revert_model, **defaults)
+
+    @csrf_protect_m
+    @transaction.commit_on_success
+    def change_view_popup(self, request, object_id, extra_context=None):
+        "The 'change' admin view for this model."
+        model = self.model
+        opts = model._meta
+        if not extra_context :
+            extra_context = {'is_popup':True}
+
+        obj = self.get_object(request, unquote(object_id))
+        
+        revert_model_name = self.revert_model.__name__.lower()
+        if hasattr(obj,revert_model_name):
+            revert_obj = getattr(obj,revert_model_name)
+            obj = revert_obj
+        
+        
+        if not self.has_change_permission(request, obj):
+            raise PermissionDenied
+
+        if obj is None:
+            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % {'name': force_unicode(opts.verbose_name), 'key': escape(object_id)})
+
+        if request.method == 'POST' and "_saveasnew" in request.POST:
+            return self.add_view(request, form_url='../add/')
+
+        ModelForm = self.get_form(request, obj)
+        formsets = []
+        if request.method == 'POST':
+            form = ModelForm(request.POST, request.FILES, instance=obj)
+            if form.is_valid():
+                form_validated = True
+                new_object = self.save_form(request, form, change=True)
+            else:
+                form_validated = False
+                new_object = obj
+            prefixes = {}
+            for FormSet, inline in zip(self.get_formsets(request, new_object),
+                                       self.inline_instances):
+                prefix = FormSet.get_default_prefix()
+                prefixes[prefix] = prefixes.get(prefix, 0) + 1
+                if prefixes[prefix] != 1:
+                    prefix = "%s-%s" % (prefix, prefixes[prefix])
+                formset = FormSet(request.POST, request.FILES,
+                                  instance=new_object, prefix=prefix,
+                                  queryset=inline.queryset(request))
+
+                formsets.append(formset)
+
+            if all_valid(formsets) and form_validated:
+                self.save_model(request, new_object, form, change=True)
+                form.save_m2m()
+                for formset in formsets:
+                    self.save_formset(request, form, formset, change=True)
+
+                change_message = self.construct_change_message(request, form, formsets)
+                self.log_change(request, new_object, change_message)
+                return self.response_change(request, new_object)
+
+        else:
+            form = ModelForm(instance=obj)
+            prefixes = {}
+            for FormSet, inline in zip(self.get_formsets(request, obj), self.inline_instances):
+                prefix = FormSet.get_default_prefix()
+                prefixes[prefix] = prefixes.get(prefix, 0) + 1
+                if prefixes[prefix] != 1:
+                    prefix = "%s-%s" % (prefix, prefixes[prefix])
+                formset = FormSet(instance=obj, prefix=prefix,
+                                  queryset=inline.queryset(request))
+                formsets.append(formset)
+
+        adminForm = helpers.AdminForm(form, self.get_fieldsets(request, obj),
+            self.prepopulated_fields, self.get_readonly_fields(request, obj),
+            model_admin=self)
+        media = self.media + adminForm.media
+
+        inline_admin_formsets = []
+        for inline, formset in zip(self.inline_instances, formsets):
+            fieldsets = list(inline.get_fieldsets(request, obj))
+            readonly = list(inline.get_readonly_fields(request, obj))
+            inline_admin_formset = helpers.InlineAdminFormSet(inline, formset,
+                fieldsets, readonly, model_admin=self)
+            inline_admin_formsets.append(inline_admin_formset)
+            media = media + inline_admin_formset.media
+        
+        context = {
+            'title': _('Change %s') % force_unicode(opts.verbose_name),
+            'adminform': adminForm,
+            'object_id': object_id,
+            'original': obj,
+            'is_popup': "_popup" in request.REQUEST,
+            'media': mark_safe(media),
+            'inline_admin_formsets': inline_admin_formsets,
+            'errors': helpers.AdminErrorList(form, formsets),
+            'root_path': self.admin_site.root_path,
+            'app_label': opts.app_label,
+        }
+        context.update(extra_context or {})
+        return self.render_change_form(request, context, change=True, obj=obj)

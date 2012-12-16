@@ -4,7 +4,7 @@
 				var state=$(this).attr('value');
 				$.ajax({
 					type:"POST",
-					url:'/admin/real_estate_app/district/ajax_view/',
+					url:'/admin/real_estate_app/district/popup/ajax/',
 					data: {'state':state},
 					timeout: 5000,
 					dataType:"json",

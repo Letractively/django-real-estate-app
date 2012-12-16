@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.contrib import admin 
 from django.contrib.auth.models import User 
-
+from django.db import models, transaction
+from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.csrf import csrf_protect
 
 from options import RealEstateAppRevertInlineModelAdmin
 from real_estate_app.models import Realtor
@@ -11,6 +13,8 @@ from real_estate_app.admin.forms import RealtorAdminForm, UserAdminForm
 from real_estate_app.conf.settings import MEDIA_PREFIX
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
+
+csrf_protect_m = method_decorator(csrf_protect)
 
 if LANGUAGE_CODE in ('pt_BR','pt-br'):
 	from real_estate_app.localflavor.br.admin.forms.realtor import realtor_br_fieldsets

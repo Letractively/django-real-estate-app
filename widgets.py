@@ -56,10 +56,14 @@ class FaceBoxFieldWrapper(widgets.RelatedFieldWidgetWrapper):
 
 		try:
 			rev_url = reverse('admin:index') 
+
 			info = (rev_url, rel_to._meta.app_label, rel_to._meta.object_name.lower())
 
-			related_url = '%s%s/%s/add_popup' % info
-			ajax_url = '%s%s/%s/ajax_view/' %info
+			#related_url = reverse('admin:%s_%s_add_popup' % (rel_to._meta.app_label, rel_to._meta.object_name.lower()))
+			#ajax_url = reverse('admin:%s_%s_ajax_view/' % (rel_to._meta.app_label, rel_to._meta.object_name.lower()))
+
+			related_url = '%s%s/%s/popup/add/' % info
+			ajax_url = '%s%s/%s/popup/ajax/' %info
 
 			self.widget.choices = self.choices
 			output = [self.widget.render(name, value, *args, **kwargs)]
@@ -93,8 +97,10 @@ class CheckboxSelectMultipleCustom(CheckboxSelectMultiple):
 		name_db=name.strip('_fk')
 		rev_url = reverse('admin:index') 
 		info = (rev_url, 'real_estate_app', name_db)
-		related_url = '%s%s/%s/add_popup' % info
-		ajax_url = '%s%s/%s/ajax_view/' %info
+		#related_url = reverse('admin:%s_%s_add_popup' % ('real_estate_app', name_db))
+		#ajax_url = reverse('admin:%s_%s_ajax_view/' %('real_estate_app', name_db))
+		related_url = '%s%s/%s/popup/add/' % info
+		ajax_url = '%s%s/%s/popup/ajax/' %info
 
 		output =[]
 
