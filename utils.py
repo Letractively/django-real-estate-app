@@ -1,6 +1,8 @@
 import operator
+
 from django.core.exceptions import ImproperlyConfigured
-from django.conf import settings 
+from django.conf import settings
+
 from real_estate_app.conf.settings import REAL_ESTATE_APP_AJAX_SEARCH, MEDIA_PREFIX
 
 
@@ -35,9 +37,11 @@ class AutoCompleteObject(object):
 		self.model=model
 		self.module_name=self.model._meta.module_name
 		self.image_fields=[]
+		self.thumbnail=[]
 		try:
 			self.fields_search=REAL_ESTATE_APP_AJAX_SEARCH[self.module_name]['search_fields']
 			self.return_values=REAL_ESTATE_APP_AJAX_SEARCH[self.module_name]['return_values']
+			self.thumbnail_ajax=REAL_ESTATE_APP_AJAX_SEARCH[self.module_name]['thumbnail_ajax']
 		except KeyError:
 			raise ImproperlyConfigured("settings.REAL_ESTATE_APP_AJAX_SEARCH not configured correctly for %s." % self.module_name)
 
@@ -56,11 +60,9 @@ class AutoCompleteObject(object):
 	def filter(self,value='',**kwargs):
 		from django.db.models import Q
 
-
 		queryset = self.model.objects.all()
 
 		if self.fields_search and value:
-
 			query=[Q(**{'%s__icontains' %field: value}) for field in self.fields_search]
 			queryset=queryset.filter(reduce(operator.or_,query))
 
@@ -73,11 +75,13 @@ class AutoCompleteObject(object):
 
 		return queryset
 
-
 	def render(self,value='',**kwargs):
+		"""
+			This render a json format for jquery.ui.autocomplete plugin
+		"""
 		from django.utils.safestring import mark_safe
 		from django.template.loader import render_to_string
-		a= [{
+		return [{
 					'pk':model['pk'],
 					'real_value':' '.join([model[f] for f in self.return_values if not (f in ('pk','id') or f in self.image_fields)]),
 					'value': mark_safe(render_to_string(
@@ -92,11 +96,7 @@ class AutoCompleteObject(object):
 									   	 				}
 							   			)
 					),
-				} for model in self.filter(value,**kwargs)]
-		
-		return a
-
-							
+				} for model in self.filter(value,**kwargs)]					
 
 	def forcePositionFieldsShow(self,filter_values):
 		"""
@@ -104,10 +104,15 @@ class AutoCompleteObject(object):
 		orded keys, not position key.
 		# TODO: Make a dict orded by position not by key.
 		"""
+		from sorl.thumbnail import get_thumbnail
+
 		if isinstance(filter_values,dict):
 			tmp_fields_values=filter_values.items()
 			for ct, field in enumerate(self.return_values):
-				tmp_fields_values[ct]=(field,filter_values[field])
+				if field in self.image_fields and filter_values[field]:
+					tmp_fields_values[ct]=(field,get_thumbnail(filter_values[field],self.thumbnail_ajax, quality=99))
+				else:
+					tmp_fields_values[ct]=(field,filter_values[field])
 			
 			return tmp_fields_values
 

@@ -1,25 +1,25 @@
-from django.contrib.admin import ModelAdmin
+from django import template
+from django.contrib.admin import ModelAdmin, helpers
+from django.contrib.admin.util import unquote, get_deleted_objects
 from django.core.exceptions import PermissionDenied
 from django.core import serializers
-from django.db import models, transaction
+from django.db import models, transaction, router
+from django.forms.formsets import all_valid
 from django.forms.models import (modelform_factory)
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render_to_response
 from django.utils.decorators import method_decorator
 from django.utils.functional import curry
+from django.utils.translation import ugettext as _
+from django.utils.encoding import force_unicode
+from django.utils.safestring import mark_safe
 from django.utils import simplejson
 from django.views.decorators.csrf import csrf_protect
 
 from real_estate_app import widgets
+from real_estate_app.admin.actions import delete_selected_popup
 from real_estate_app.conf.settings import MEDIA_PREFIX
 from real_estate_app.utils import AutoCompleteObject
-
-from django.contrib.admin.util import unquote
-from django.contrib.admin import helpers
-from django.utils.translation import ugettext as _
-from django.utils.encoding import force_unicode
-from django.utils.safestring import mark_safe
-from django.forms.formsets import all_valid
-
 
 csrf_protect_m = method_decorator(csrf_protect)
 
@@ -76,6 +76,14 @@ class FaceBoxModelAdmin(ModelAdmin):
 class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
 
     list_per_page=5
+    actions=[delete_selected_popup,]
+
+    def get_actions(self,request):
+        actions = super(RealEstateAppPopUpModelAdmin, self).get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
+
     def response_add(self, request, obj):
         super(RealEstateAppPopUpModelAdmin,self).response_add(request,obj)
         return HttpResponseRedirect('../../popup/')
@@ -105,6 +113,10 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
                                     self.changelist_view_popup,
                                     name='%s_%s_view_popup' % info
                                 ),
+                                url(r'^popup/(?P<object_id>\d+)/delete/$',
+                                    self.delete_view_popup,
+                                    name='%s_%s_delete_popup' % info
+                                ),
                                 url(r'^popup/ajax/$',
                                     self.get_item_model_fk,
                                     name='%s_%s_ajax_view' % info
@@ -127,6 +139,11 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
     @csrf_protect_m
     def changelist_view_popup(self, request, extra_context=None):
         return super(RealEstateAppPopUpModelAdmin,self).changelist_view(request, extra_context={'is_popup':True,'notabs':True})
+
+    @csrf_protect_m
+    @transaction.commit_on_success
+    def delete_view_popup(self, request, object_id, extra_context=None):
+        return super(RealEstateAppPopUpModelAdmin,self).delete_view(request,object_id, extra_context={'is_popup':True,'notabs':True})
 
     @csrf_protect_m 
     def get_item_model_fk(self, request, extra_context=None):
@@ -324,3 +341,70 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
         }
         context.update(extra_context or {})
         return self.render_change_form(request, context, change=True, obj=obj)
+
+    @csrf_protect_m
+    @transaction.commit_on_success
+    def delete_view_popup(self, request, object_id, extra_context=None):    
+        "The 'delete' admin view for this model."
+        opts = self.model._meta
+        app_label = opts.app_label
+        if not extra_context :
+            extra_context = {'is_popup':True}
+        obj = self.get_object(request, unquote(object_id))
+
+        revert_model_name = self.revert_model.__name__.lower()
+        if hasattr(obj,revert_model_name):
+            revert_obj = getattr(obj,revert_model_name)
+            obj = revert_obj
+
+        if not self.has_delete_permission(request, obj):
+            raise PermissionDenied
+
+        if obj is None:
+            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % {'name': force_unicode(opts.verbose_name), 'key': escape(object_id)})
+
+        using = router.db_for_write(self.model)
+
+        # Populate deleted_objects, a data structure of all related objects that
+        # will also be deleted.
+        (deleted_objects, perms_needed, protected) = get_deleted_objects(
+            [obj], opts, request.user, self.admin_site, using)
+
+        if request.POST: # The user has already confirmed the deletion.
+            if perms_needed:
+                raise PermissionDenied
+            obj_display = force_unicode(obj)
+            self.log_deletion(request, obj, obj_display)
+            self.delete_model(request, obj)
+
+            self.message_user(request, _('The %(name)s "%(obj)s" was deleted successfully.') % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(obj_display)})
+
+            if not self.has_change_permission(request, None):
+                return HttpResponseRedirect("../../../../")
+            return HttpResponseRedirect("../../")
+
+        object_name = force_unicode(opts.verbose_name)
+
+        if perms_needed or protected:
+            title = _("Cannot delete %(name)s") % {"name": object_name}
+        else:
+            title = _("Are you sure?")
+
+        context = {
+            "title": title,
+            "object_name": object_name,
+            "object": obj,
+            "deleted_objects": deleted_objects,
+            "perms_lacking": perms_needed,
+            "protected": protected,
+            "opts": opts,
+            "root_path": self.admin_site.root_path,
+            "app_label": app_label,
+        }
+        context.update(extra_context or {})
+        context_instance = template.RequestContext(request, current_app=self.admin_site.name)
+        return render_to_response(self.delete_confirmation_template or [
+            "admin/%s/%s/delete_confirmation.html" % (app_label, opts.object_name.lower()),
+            "admin/%s/delete_confirmation.html" % app_label,
+            "admin/delete_confirmation.html"
+        ], context, context_instance=context_instance)

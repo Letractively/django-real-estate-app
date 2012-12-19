@@ -2,6 +2,9 @@
 import os
 
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
+from django.db.models import get_app
+
 
 MEDIA_PATH=os.path.join(os.path.abspath(os.path.dirname(__file__)),'..','media')
 
@@ -23,7 +26,8 @@ REAL_ESTATE_APP_AJAX_SEARCH = getattr(settings,
 									  'REAL_ESTATE_APP_AJAX_SEARCH',
 									  {'realtor': {
 									  				'search_fields':['user__first_name','user__last_name',],
-									  				'return_values':['photo','pk','user__first_name','user__last_name',]
+									  				'return_values':['photo','pk','user__first_name','user__last_name',],
+									  				'thumbnail_ajax':'40x40'
 									  			   },
 									  }
 )
@@ -33,3 +37,8 @@ MANAGERS=list(MANAGERS)
 
 MIN_WIDTH=REAL_ESTATE_IMAGES_SIZE[0]
 MIN_HEIGHT=REAL_ESTATE_IMAGES_SIZE[1]
+
+try:
+	import sorl.thumbnail
+except ImportError:
+	raise ImproperlyConfigured("You need install sorl-thumbnail app")

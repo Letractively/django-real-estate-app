@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-import re, Image
 from datetime import datetime
-from os import path
 
 from django.db import models
 from django.conf import settings
@@ -9,10 +7,9 @@ from django.contrib.auth.models import User
 from django.contrib.localflavor.br.br_states import STATE_CHOICES
 from django.utils.translation import ugettext_lazy as _
 
-from others import Phone, Address
+from real_estate_app.models.others import Phone, Address
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
-GET_THUMB_PATTERN = re.compile(r'^get_photo_(\d+)x(\d+)_(thumb_url|thumb_filename|resize_url)$')
 
 SEXO=(
 	(u'M',_('Masculino')),
