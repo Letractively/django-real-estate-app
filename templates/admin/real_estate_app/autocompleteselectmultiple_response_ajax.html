@@ -4,7 +4,7 @@
 		<img src="{{ field.1.url }}" />
 	{% endif %}
 	{% if field.0 in image_fields and not field.1 %}
-		<img width="40" height="40" src="{{ MEDIA_PREFIX }}img/unknow_user50x50.png" />
+		<img width="40" height="40" src="{{ MEDIA_PREFIX }}img/unknow_user40x40.png" />
 	{% endif %}
 	{% if field.0 != 'pk' and field.0 not in image_fields %}
 		{{ field.1 }}
