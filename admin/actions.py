@@ -1,12 +1,17 @@
 # -*- coding: utf-8; -*-
+import operator
+
 from django import template
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.admin import helpers
 from django.contrib.admin.util import get_deleted_objects, model_ngettext
 from django.db import router
+from django.db.models import Q
 from django.shortcuts import render_to_response
 from django.utils.encoding import force_unicode
 from django.utils.translation import ugettext_lazy as _
+
+from real_estate_app.models import Property
 
 def duplicate_object(modeladmin,request,queryset):
 	rows=[obj.clone() for obj in queryset]
@@ -60,22 +65,80 @@ def delete_selected_popup(modeladmin, request, queryset):
     deletable_objects, perms_needed, protected = get_deleted_objects(
         queryset, opts, request.user, modeladmin.admin_site, using)
 
+    disabled_objects=[]
     # The user has already confirmed the deletion.
     # Do the deletion and return a None to display the change list view again.
     if request.POST.get('post'):
+        query=[]
+        d=0
         if perms_needed:
             raise PermissionDenied
         n = queryset.count()
         if n:
             for obj in queryset:
                 obj_display = force_unicode(obj)
-                modeladmin.log_deletion(request, obj, obj_display)
-            queryset.delete()
-            modeladmin.message_user(request, _("Successfully deleted %(count)d %(items)s.") % {
-                "count": n, "items": model_ngettext(modeladmin.opts, n)
-            })
+                obj_fk = obj._meta.module_name+'_fk'
+                obj_name=obj._meta.module_name
+
+                try:
+                    if hasattr(Property,obj_fk) and not isinstance(obj,Property):
+                        Property.objects.get(**{obj_fk:obj.id})
+                        query.append( Q(**{'id': obj.id}) )
+                        modeladmin.log_change(request, obj,'Logical exclude object.')
+                except ObjectDoesNotExist:
+                    modeladmin.log_deletion(request, obj, obj_display)
+
+            # Exclude objects which has relation with Property to be deleted
+            if query:
+
+                disabled_objects=queryset.filter(reduce(operator.or_,query))
+                deletable_objects=queryset.exclude(reduce(operator.or_, query))
+
+                d=disabled_objects.count()
+                n=deletable_objects.count()
+                
+                disabled_objects.update(logical_exclude=True)
+                deletable_objects.delete()
+                
+
+            if queryset and not disabled_objects:
+                queryset.delete()
+                
+
+            if d >=1 and n >=1:
+                msg= _("Successfully deleted %(count)d and disabled %(count_two)d %(items_two)s.") % {
+                       "count": n, "items": model_ngettext(modeladmin.opts, n),
+                       "count_two": d, "items_two": model_ngettext(modeladmin.opts, d)
+                    }
+            elif d >=1 and n ==0:
+                msg= _("Successfully disebled %(count)d %(items)s.") % {
+                       "count": d, "items": model_ngettext(modeladmin.opts, d)
+                    }
+            else:
+                msg= _("Successfully deleted %(count)d %(items)s.") % {
+                       "count": n, "items": model_ngettext(modeladmin.opts, n)
+                    }
+
+            modeladmin.message_user(request,msg)
         # Return None to display the change list page again.
         return None
+    else:
+
+        query=[]
+        for obj in queryset:
+            obj_display = force_unicode(obj)
+            obj_fk = obj._meta.module_name+'_fk'
+            obj_name=obj._meta.module_name
+            if hasattr(Property,obj_fk) and not isinstance(obj,Property):
+                try:
+                    Property.objects.get(**{obj_fk:obj.id})
+                    query.append( Q(**{'id': obj.id}) )
+                except ObjectDoesNotExist:
+                    continue
+
+        if query:
+            disabled_objects=queryset.filter(reduce(operator.or_,query))
+            deletable_objects=queryset.exclude(reduce(operator.or_, query))
 
     if len(queryset) == 1:
         objects_name = force_unicode(opts.verbose_name)
@@ -98,7 +161,9 @@ def delete_selected_popup(modeladmin, request, queryset):
         "root_path": modeladmin.admin_site.root_path,
         "app_label": app_label,
         'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,
-        'is_popup':True
+        'is_popup':True,
+        'disabled_objects':[disabled_objects],
+        'queryset_obj_disabled':disabled_objects,
     }
 
     # Display the confirmation page

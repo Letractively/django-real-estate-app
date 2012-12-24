@@ -2,7 +2,7 @@
 {% load i18n l10n %}
 {% block extrastyle %}
   {{ block.super }}
-  <link href="{{ MEDIA_REAL_ESTATE }}/css/popup.css" type="text/css" rel="stylesheet"/>
+  {% if is_popup %}<link href="{{ MEDIA_REAL_ESTATE }}/css/popup.css" type="text/css" rel="stylesheet"/>{% endif %}
 {% endblock %}
 {% block breadcrumbs %}
 <div class="breadcrumbs">
@@ -33,10 +33,21 @@
         </ul>
     {% endif %}
 {% else %}
-    <p>{% blocktrans %}Are you sure you want to delete the selected {{ objects_name }}? All of the following objects and their related items will be deleted:{% endblocktrans %}</p>
-    {% for deletable_object in deletable_objects %}
-        <ul>{{ deletable_object|unordered_list }}</ul>
-    {% endfor %}
+    {% if deletable_objects %}
+        <p>{% blocktrans %}Are you sure you want to delete the selected {{ objects_name }}? All of the following objects and their related items will be deleted:{% endblocktrans %}</p>
+
+        {% for deletable_object in deletable_objects %}
+            <ul>{{ deletable_object|unordered_list }}</ul>
+        {% endfor %}
+    {% endif %}
+    {% if disabled_objects %}
+        <p> {% blocktrans %}Are you sure you want to disable the selected {{ objects_name }}? All of the following objects and their related items will be disabled:{% endblocktrans %} </p>
+
+        {% for disable_object in disabled_objects %}
+            <ul>{{ disable_object|unordered_list }}</ul>
+        {% endfor %}
+    {% endif %}
+
     <form action="" method="post">{% csrf_token %}
     <div>
     {% for obj in queryset %}

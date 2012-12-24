@@ -10,6 +10,10 @@
             {{ line.errors }}
             {% for field in line %}
                 <div{% if not line.fields|length_is:"1" %} class="field-box"{% endif %}>
+                    {% if field.field.name == "images" or field.field.name == "photo" %}
+                        <img width=100 heigth=100 src="{{ MEDIA_URL}}{{ field.field.value }}" />
+                    {% endif %}
+
                     {% if field.is_checkbox %}
                         {{ field.field }}{{ field.label_tag }}
                     {% else %}

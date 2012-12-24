@@ -75,7 +75,7 @@ class FaceBoxModelAdmin(ModelAdmin):
 
 class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
 
-    list_per_page=5
+    list_per_page=15
     actions=[delete_selected_popup,]
 
     def get_actions(self,request):

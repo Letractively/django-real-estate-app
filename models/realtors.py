@@ -8,6 +8,7 @@ from django.contrib.localflavor.br.br_states import STATE_CHOICES
 from django.utils.translation import ugettext_lazy as _
 
 from real_estate_app.models.others import Phone, Address
+from real_estate_app.manager import SelectFieldManager
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 
@@ -101,7 +102,9 @@ class Realtor(models.Model):
 					null=True,
 					editable=False
 	)
-							
+	
+	objects= SelectFieldManager()
+
 	class Meta:
 		app_label = 'real_estate_app'
 		get_latest_by='username'

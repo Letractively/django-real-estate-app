@@ -83,7 +83,7 @@ class FaceBoxFieldWrapper(widgets.RelatedFieldWidgetWrapper):
 				})
 			</script>''' % ('id_'+name, ajax_url) )
 			
-			output.append(u'<a href="%s" class="add-another" id="id_%s" rel="facebox-select" rev="iframe|400" > ' %(related_url, name))
+			output.append(u'<a href="%s" class="add-another" id="id_%s" rel="facebox-select" rev="iframe" > ' %(related_url, name))
 			output.append(u'<img src="%simg/admin/icon_addlink.gif" width="10" height="10" alt="%s"/></a>' % (settings.ADMIN_MEDIA_PREFIX, _('Add Another')))
 
 			return mark_safe(u''.join(output))
@@ -120,7 +120,7 @@ class CheckboxSelectMultipleCustom(CheckboxSelectMultiple):
 		if value is None: value = []
 		has_id = attrs and 'id' in attrs
 		final_attrs = self.build_attrs(attrs, name=name)
-		output.append(u'<a href="%s" class="add-another" id="id_%s" rel="facebox-check" rev="iframe|400" > ' %(related_url, name_db))
+		output.append(u'<a href="%s" class="add-another" id="id_%s" rel="facebox-check" rev="iframe" > ' %(related_url, name_db))
 		output.append(u'<img src="%simg/admin/icon_addlink.gif" width="10" height="10" alt="%s"/></a><br />' % (settings.ADMIN_MEDIA_PREFIX, _('Add Another')))
 
 		output.append(u'<ul id=id_%s style="float:left">' %name_db)

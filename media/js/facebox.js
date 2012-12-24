@@ -345,8 +345,9 @@
      } else if (href.match($.facebox.settings.imageTypesRegexp)) {
         fillFaceboxFromImage(href, klass)
      // iframe
-     } else if (rev.split('|')[0] == 'iframe') {
-	    fillFaceboxFromIframe(href, klass, rev.split('|')[1])
+     } else if ( rev == 'iframe' || rev.split('|')[0] == 'iframe') {
+        height = rev.split('|')[1] || getPageHeight()-(getPageHeight() / 3)
+	      fillFaceboxFromIframe(href, klass, height)
      // ajax
     } else {
 	    fillFaceboxFromAjax(href, klass)
@@ -354,7 +355,10 @@
   }
 
  function fillFaceboxFromIframe(href, klass, height) {
-    $.facebox.reveal('<iframe scrolling="no" marginwidth="0" width="500" height="' + height + '" frameborder="0" src="' + href + '" marginheight="0"></iframe>', klass)
+    if ( height )
+      $.facebox.reveal('<iframe scrolling="no" marginwidth="0" width="500" height="' + height + '" frameborder="0" src="' + href + '" marginheight="0"></iframe>', klass)
+    else
+      $.facebox.reveal('<iframe scrolling="no" marginwidth="0" width="500" frameborder="0" src="' + href + '" marginheight="0"></iframe>', klass)
   }
 
   function fillFaceboxFromImage(href, klass) {
