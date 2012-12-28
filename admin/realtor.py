@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from options import RealEstateAppRevertInlineModelAdmin
 from real_estate_app.models import Realtor
-from real_estate_app.admin.forms import RealtorAdminForm, UserAdminForm
+from real_estate_app.admin.forms import RealtorAdminForm, UserAdminForm, RealtorAdminFormSet
 from real_estate_app.conf.settings import MEDIA_PREFIX
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
@@ -15,7 +15,7 @@ LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 class RealtorInlineAdmin(admin.StackedInline):
 	model = Realtor
 	extra = 1
-	formset = RealtorAdminForm
+	formset = RealtorAdminFormSet
 	template = 'admin/real_estate_app/%s/edit_inline/stacked-realtor.html' % LANGUAGE_CODE
 
 	if LANGUAGE_CODE in ('pt_BR','pt-br'):

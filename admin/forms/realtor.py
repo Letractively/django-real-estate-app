@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 from django.conf import settings
-from django.forms import ModelForm, CharField, ValidationError
+from django.forms import ValidationError
 from django.forms.fields import EMPTY_VALUES
 from django.utils.translation import ugettext_lazy as _
 
@@ -11,12 +11,8 @@ LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 # utilizar formset
 from django.forms.models import BaseInlineFormSet
 
-# class RealtorAdminForm(ModelForm):
 
-# 	class Meta:
-# 		model = Realtor
-
-class RealtorAdminForm(BaseInlineFormSet):
+class RealtorAdminFormSet(BaseInlineFormSet):
 	
 	model = Realtor
 
@@ -35,7 +31,7 @@ class RealtorAdminForm(BaseInlineFormSet):
 			data = form.cleaned_data.copy()
 			
 			if LANGUAGE_CODE in ('pt_BR','pt-br'):
-
+				
 				if data.has_key('tipo_pessoa') and data.get('tipo_pessoa') == 'PF':
 					fields_check=['cpf','rg','ssp','creci']
 				elif data.has_key('tipo_pessoa') and data.get('tipo_pessoa') == 'PJ':
@@ -52,4 +48,4 @@ class RealtorAdminForm(BaseInlineFormSet):
 					return False
 					
 
-		return super(RealtorAdminForm,self).clean()
+		return super(RealtorAdminFormSet,self).clean()

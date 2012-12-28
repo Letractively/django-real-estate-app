@@ -246,6 +246,18 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
         }
         defaults.update(kwargs)
         return modelform_factory(self.revert_model, **defaults)
+    @csrf_protect_m
+    @transaction.commit_on_success
+    def add_view_popup(self, request, extra_context=None):
+        """
+            Custom add_view_popup for revert_model, because self.model must be a self.revert_model
+        """
+        self.model = self.revert_model
+        if isinstance(extra_context,dict):
+            extra_context.update({'is_popup':True, 'notabs':True})
+        else:
+            extra_context={'is_popup':True, 'notabs':True}
+        return super(RealEstateAppRevertInlineModelAdmin,self).add_view_popup(request,extra_context)
 
     @csrf_protect_m
     @transaction.commit_on_success

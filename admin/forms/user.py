@@ -23,11 +23,7 @@ class UserAdminForm(PopUpModelForm):
 
     class Meta:
         model = User
-        fields = ('username','first_name','last_name','email',)
-    
-    def clean(self):
-        import pdb;pdb.set_trace()
-        return super(UserAdminForm,self).clean()    
+        fields = ('username','first_name','last_name','email',)   
 
     def clean_username(self):
         username = self.data['email']
