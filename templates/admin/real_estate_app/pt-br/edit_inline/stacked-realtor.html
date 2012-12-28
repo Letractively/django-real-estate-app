@@ -5,15 +5,10 @@
 {{ inline_admin_formset.formset.non_form_errors }}
 
 {% for inline_admin_form in inline_admin_formset %}
-    <div class="inline-related{% if forloop.last %} empty-form last-related{% endif %}" id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
-      
-        <div class="tabs-menu">
-            <ul class="tabs">
-                <li class="active"> <a href="#pessoa_fisica"> Dados de pessoa física </a> </li>
-                <li > <a href="#pessoa_juridica">Dados de pessoa jurídica </a></li>
-            </ul>
-        </div>
-      
+    <div class="inline-related{% if forloop.last %} empty-form last-related{% endif %}" id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}"> 
+      <h3>
+        <b> {% trans 'Complement information' %}
+      </h3>
       {% if inline_admin_form.form.non_field_errors %}{{ inline_admin_form.form.non_field_errors }}{% endif %}
       <div class="clear"> </div>
       {% if not forloop.last %}

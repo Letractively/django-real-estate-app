@@ -4,7 +4,6 @@ from datetime import datetime
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.contrib.localflavor.br.br_states import STATE_CHOICES
 from django.utils.translation import ugettext_lazy as _
 
 from real_estate_app.models.others import Phone, Address
@@ -12,14 +11,9 @@ from real_estate_app.manager import SelectFieldManager
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 
-SEXO=(
-	(u'M',_('Masculino')),
-	(u'F',_('Feminino')),
-)
-
-TIPO_PESSOA=(
-	(u'PF',u'Pessoa Física'),
-	(u'PJ',u'Pessoa Jurídica'),
+SEX=(
+	(u'1',_('Male')),
+	(u'2',_('Female')),
 )
 
 def get_realtor_directory(instance, filename):
@@ -30,7 +24,31 @@ class Realtor(models.Model):
 
 	user = models.ForeignKey(User, unique=True)
 
+	sex = models.CharField(
+							_('Sex'),
+							max_length=1,
+							choices=SEX,
+							blank=True
+	)
+	
+	photo = models.ImageField(
+							_('photo'),
+							upload_to=get_realtor_directory,
+							max_length=255,
+							blank=True
+	)
+
+	logical_exclude = models.NullBooleanField(
+					_('Logical exclude'),
+					default=False,
+					null=True,
+					editable=False
+	)
+
 	if LANGUAGE_CODE in ('pt_BR','pt-br'):
+		from django.contrib.localflavor.br.br_states import STATE_CHOICES
+		from real_estate_app.localflavor.br import TIPO_PESSOA
+
 		cpf = models.CharField(
 								u'CPF',
 								max_length=17,
@@ -63,12 +81,6 @@ class Realtor(models.Model):
 							blank=True
 		)
 
-		responsavel = models.CharField(
-							u'Responsável',
-							max_length=250,
-							blank=True
-		)
-
 		tipo_pessoa = models.CharField(
 							u'Pessoa Física ou Jurídica',
 							max_length=3,
@@ -79,29 +91,7 @@ class Realtor(models.Model):
 		creci = models.CharField(
 							u'CRECI',
 							max_length=10,
-							blank=True
 		)
-
-	sex = models.CharField(
-							_('Sex'),
-							max_length=1,
-							choices=SEXO,
-							blank=True
-	)
-	
-	photo = models.ImageField(
-							_('photo'),
-							upload_to=get_realtor_directory,
-							max_length=255,
-							blank=True
-	)
-
-	logical_exclude = models.NullBooleanField(
-					_('Logical exclude'),
-					default=False,
-					null=True,
-					editable=False
-	)
 	
 	objects= SelectFieldManager()
 
@@ -113,7 +103,11 @@ class Realtor(models.Model):
 		verbose_name_plural=_('Realtors')
 
 	def __unicode__(self):
-		return u'%s' % (self.name)
+
+		if LANGUAGE_CODE in ('pt-br','pt_BR') and self.razao_social:
+			return u'%s' % (self.razao_social)
+				
+		return u'%s' % self.name
 
 	def get_first_name(self):
 		try:

@@ -84,7 +84,7 @@ def delete_selected_popup(modeladmin, request, queryset):
                     if hasattr(Property,obj_fk) and not isinstance(obj,Property):
                         Property.objects.get(**{obj_fk:obj.id})
                         query.append( Q(**{'id': obj.id}) )
-                        modeladmin.log_change(request, obj,'Logical exclude object.')
+                        modeladmin.log_change(request, obj,_('Logical exclude object.'))
                 except ObjectDoesNotExist:
                     modeladmin.log_deletion(request, obj, obj_display)
 

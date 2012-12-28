@@ -6,12 +6,13 @@ from django.core import serializers
 from django.db import models, transaction, router
 from django.forms.formsets import all_valid
 from django.forms.models import (modelform_factory)
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render_to_response
 from django.utils.decorators import method_decorator
-from django.utils.functional import curry
+from django.utils.functional import curry, update_wrapper
 from django.utils.translation import ugettext as _
 from django.utils.encoding import force_unicode
+from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils import simplejson
 from django.views.decorators.csrf import csrf_protect
@@ -27,10 +28,7 @@ class FaceBoxModelAdmin(ModelAdmin):
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         """  
-        Hook for specifying the form Field instance for a given database Field
-        instance.
-
-        If kwargs are given, they're passed to the form Field's constructor.
+        This is for create a widget FaceBoxFieldWrapper to add new itens on ModelAdmin.
         """
         request = kwargs.pop("request", None)
 
@@ -76,6 +74,7 @@ class FaceBoxModelAdmin(ModelAdmin):
 class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
 
     list_per_page=15
+
     actions=[delete_selected_popup,]
 
     def get_actions(self,request):
@@ -98,33 +97,39 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
 
         urlpatterns = super(RealEstateAppPopUpModelAdmin,self).get_urls()
 
+        def wrap(view):
+            def wrapper(*args, **kwargs):
+                return self.admin_site.admin_view(view)(*args, **kwargs)
+            return update_wrapper(wrapper, view)
+
         info = self.model._meta.app_label, self.model._meta.module_name
 
         custom_urls = patterns('',
                                 url(r'^popup/add/$',
-                                    self.add_view_popup,
+                                    wrap(self.add_view_popup),
                                     name='%s_%s_add_popup' % info
                                 ),
                                 url(r'^popup/(?P<object_id>\d+)/$',
-                                    self.change_view_popup,
+                                    wrap(self.change_view_popup),
                                     name='%s_%s_chage_popup' % info 
                                 ),
                                 url(r'^popup/$',
-                                    self.changelist_view_popup,
+                                    wrap(self.changelist_view_popup),
                                     name='%s_%s_view_popup' % info
                                 ),
                                 url(r'^popup/(?P<object_id>\d+)/delete/$',
-                                    self.delete_view_popup,
+                                    wrap(self.delete_view_popup),
                                     name='%s_%s_delete_popup' % info
                                 ),
                                 url(r'^popup/ajax/$',
-                                    self.get_item_model_fk,
+                                    wrap(self.get_item_model_fk),
                                     name='%s_%s_ajax_view' % info
                                 ),
 
         )
 
         return custom_urls + urlpatterns
+
 
     @csrf_protect_m
     @transaction.commit_on_success
@@ -245,7 +250,7 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
     @csrf_protect_m
     @transaction.commit_on_success
     def change_view_popup(self, request, object_id, extra_context=None):
-        "The 'change' admin view for this model."
+        "The 'change' admin view for reverted model."
         model = self.model
         opts = model._meta
         if not extra_context :
@@ -345,7 +350,7 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
     @csrf_protect_m
     @transaction.commit_on_success
     def delete_view_popup(self, request, object_id, extra_context=None):    
-        "The 'delete' admin view for this model."
+        "The 'delete' admin view for reverted model."
         opts = self.model._meta
         app_label = opts.app_label
         if not extra_context :
