@@ -134,21 +134,36 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
     @csrf_protect_m
     @transaction.commit_on_success
     def add_view_popup(self, request, extra_context=None):
-        return super(RealEstateAppPopUpModelAdmin,self).add_view(request,extra_context={'is_popup':True, 'notabs':True})
+        notabs = {'notabs':True}
+        try:
+            extra_context = extra_context.update(notabs)
+        except:
+            extra_context = notabs
+        return super(RealEstateAppPopUpModelAdmin,self).add_view(request, extra_context=extra_context)
 
     @csrf_protect_m
     @transaction.commit_on_success
     def change_view_popup(self, request, object_id=None, extra_context=None):
-        return super(RealEstateAppPopUpModelAdmin,self).change_view(request, object_id, extra_context={'is_popup':True,'notabs':True})
+        notabs = {'notabs':True}
+        try:
+            extra_context = extra_context.update(notabs)
+        except:
+            extra_context = notabs
+        return super(RealEstateAppPopUpModelAdmin,self).change_view(request, object_id, extra_context=extra_context)
 
     @csrf_protect_m
     def changelist_view_popup(self, request, extra_context=None):
-        return super(RealEstateAppPopUpModelAdmin,self).changelist_view(request, extra_context={'is_popup':True,'notabs':True})
+        notabs = {'notabs':True}
+        try:
+            extra_context = extra_context.update(notabs)
+        except:
+            extra_context = notabs
+        return super(RealEstateAppPopUpModelAdmin,self).changelist_view(request, extra_context=extra_context)
 
     @csrf_protect_m
     @transaction.commit_on_success
     def delete_view_popup(self, request, object_id, extra_context=None):
-        return super(RealEstateAppPopUpModelAdmin,self).delete_view(request,object_id, extra_context={'is_popup':True,'notabs':True})
+        return super(RealEstateAppPopUpModelAdmin,self).delete_view(request,object_id, extra_context=extra_context)
 
     @csrf_protect_m 
     def get_item_model_fk(self, request, extra_context=None):
@@ -218,7 +233,7 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
                     self.list_display_links = [name]
                     break
 
-        super(ModelAdmin,self).__init__()
+        #super(ModelAdmin,self).__init__()
 
     def get_form(self, request, obj=None, **kwargs):
         """
@@ -246,18 +261,108 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
         }
         defaults.update(kwargs)
         return modelform_factory(self.revert_model, **defaults)
+
     @csrf_protect_m
     @transaction.commit_on_success
-    def add_view_popup(self, request, extra_context=None):
-        """
-            Custom add_view_popup for revert_model, because self.model must be a self.revert_model
-        """
-        self.model = self.revert_model
-        if isinstance(extra_context,dict):
-            extra_context.update({'is_popup':True, 'notabs':True})
+    def add_view_popup(self, request, form_url='', extra_context=None):
+        "The 'add' admin view for this model."
+        model = self.model
+        opts = model._meta
+
+        notabs = {'notabs':True}
+        try:
+            extra_context = extra_context.update(notabs)
+        except:
+            extra_context = notabs
+
+        if not self.has_add_permission(request):
+            raise PermissionDenied
+
+        ModelForm = self.get_form(request)
+        formsets = []
+        if request.method == 'POST':
+            
+            form = ModelForm(request.POST, request.FILES)
+            if form.is_valid():
+                new_object = self.save_form(request, form, change=False)
+                form_validated = True
+            else:
+                form_validated = False
+                new_object = self.revert_model()
+
+            prefixes = {}
+
+            for FormSet, inline in zip(self.get_formsets(request), self.inline_instances):
+                prefix = FormSet.get_default_prefix()
+                prefixes[prefix] = prefixes.get(prefix, 0) + 1
+                if prefixes[prefix] != 1:
+                    prefix = "%s-%s" % (prefix, prefixes[prefix])
+
+                formset = FormSet(data=request.POST, files=request.FILES,
+                                  instance=new_object,
+                                  save_as_new="_saveasnew" in request.POST,
+                                  prefix=prefix, queryset=inline.queryset(request))
+                
+                formsets.append(formset)
+            if all_valid(formsets) and form_validated:
+                self.save_model(request, new_object, form, change=False)
+                form.save_m2m()
+                for formset in formsets:
+                    self.save_formset(request, form, formset, change=False)
+
+                self.log_addition(request, new_object)
+                return self.response_add(request, new_object)
         else:
-            extra_context={'is_popup':True, 'notabs':True}
-        return super(RealEstateAppRevertInlineModelAdmin,self).add_view_popup(request,extra_context)
+
+            # Prepare the dict of initial data from the request.
+            # We have to special-case M2Ms as a list of comma-separated PKs.
+            initial = dict(request.GET.items())
+            for k in initial:
+                try:
+                    f = opts.get_field(k)
+                except models.FieldDoesNotExist:
+                    continue
+                if isinstance(f, models.ManyToManyField):
+                    initial[k] = initial[k].split(",")
+            form = ModelForm(initial=initial)
+            prefixes = {}
+            for FormSet, inline in zip(self.get_formsets(request),
+                                       self.inline_instances):
+                prefix = FormSet.get_default_prefix()
+                prefixes[prefix] = prefixes.get(prefix, 0) + 1
+                if prefixes[prefix] != 1:
+                    prefix = "%s-%s" % (prefix, prefixes[prefix])
+                formset = FormSet(instance=self.revert_model(), prefix=prefix,
+                                  queryset=inline.queryset(request))
+                formsets.append(formset)
+
+        adminForm = helpers.AdminForm(form, list(self.get_fieldsets(request)),
+            self.prepopulated_fields, self.get_readonly_fields(request),
+            model_admin=self)
+        media = self.media + adminForm.media
+
+        inline_admin_formsets = []
+        for inline, formset in zip(self.inline_instances, formsets):
+            fieldsets = list(inline.get_fieldsets(request))
+            readonly = list(inline.get_readonly_fields(request))
+            inline_admin_formset = helpers.InlineAdminFormSet(inline, formset,
+                fieldsets, readonly, model_admin=self)
+            inline_admin_formsets.append(inline_admin_formset)
+            media = media + inline_admin_formset.media
+
+        context = {
+            'title': _('Add %s') % force_unicode(opts.verbose_name),
+            'adminform': adminForm,
+            'is_popup': "_popup" in request.REQUEST,
+            'show_delete': False,
+            'media': mark_safe(media),
+            'inline_admin_formsets': inline_admin_formsets,
+            'errors': helpers.AdminErrorList(form, formsets),
+            'root_path': self.admin_site.root_path,
+            'app_label': opts.app_label,
+        }
+        context.update(extra_context or {})
+        return self.render_change_form(request, context, form_url=form_url, add=True)
 
     @csrf_protect_m
     @transaction.commit_on_success
@@ -265,8 +370,11 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
         "The 'change' admin view for reverted model."
         model = self.model
         opts = model._meta
-        if not extra_context :
-            extra_context = {'is_popup':True}
+        notabs = {'notabs':True}
+        try:
+            extra_context = extra_context.update(notabs)
+        except:
+            extra_context = notabs
 
         obj = self.get_object(request, unquote(object_id))
         
@@ -365,8 +473,12 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
         "The 'delete' admin view for reverted model."
         opts = self.model._meta
         app_label = opts.app_label
-        if not extra_context :
-            extra_context = {'is_popup':True}
+        notabs = {'notabs':True}
+        try:
+            extra_context = extra_context.update(notabs)
+        except:
+            extra_context = notabs
+
         obj = self.get_object(request, unquote(object_id))
 
         revert_model_name = self.revert_model.__name__.lower()

@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from options import RealEstateAppRevertInlineModelAdmin
 from real_estate_app.models import Realtor
-from real_estate_app.admin.forms import RealtorAdminForm, UserAdminForm, RealtorAdminFormSet
+from real_estate_app.admin.forms import UserAdminForm, RealtorAdminFormSet
 from real_estate_app.conf.settings import MEDIA_PREFIX
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
@@ -37,8 +37,22 @@ class RealtorInlineAdmin(admin.StackedInline):
 class RealtorAdmin(RealEstateAppRevertInlineModelAdmin):
 
 	revert_inlines = [RealtorInlineAdmin,]
+	
 	revert_model = User
+	
 	revert_form = UserAdminForm
+	
+	model = Realtor
+
+	search_fields=['user__first_name','user__last_name','user__email']
+	
+	list_display = ['name','user']
+	
+	list_filter=['logical_exclude']
+
+	if LANGUAGE_CODE == 'pt-br':
+		list_display+=['tipo_pessoa','creci']
+		list_filter+=['tipo_pessoa']
 
 	class Media:
 

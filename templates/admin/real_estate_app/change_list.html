@@ -59,7 +59,8 @@
       {% if has_add_permission %}
         <ul class="object-tools">
           <li>
-            <a href="add/" class="addlink">
+
+            <a {% if is_popup %} href="add/?_popup=1" {% else %} href="add/" {% endif %} class="addlink">
               {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}
             </a>
           </li>

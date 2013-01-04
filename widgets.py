@@ -62,7 +62,7 @@ class FaceBoxFieldWrapper(widgets.RelatedFieldWidgetWrapper):
 			#related_url = reverse('admin:%s_%s_add_popup' % (rel_to._meta.app_label, rel_to._meta.object_name.lower()))
 			#ajax_url = reverse('admin:%s_%s_ajax_view/' % (rel_to._meta.app_label, rel_to._meta.object_name.lower()))
 
-			related_url = '%s%s/%s/popup/add/' % info
+			related_url = '%s%s/%s/popup/add/?_popup=1' % info
 			ajax_url = '%s%s/%s/popup/ajax/' %info
 
 			self.widget.choices = self.choices
@@ -99,7 +99,7 @@ class CheckboxSelectMultipleCustom(CheckboxSelectMultiple):
 		info = (rev_url, 'real_estate_app', name_db)
 		#related_url = reverse('admin:%s_%s_add_popup' % ('real_estate_app', name_db))
 		#ajax_url = reverse('admin:%s_%s_ajax_view/' %('real_estate_app', name_db))
-		related_url = '%s%s/%s/popup/add/' % info
+		related_url = '%s%s/%s/popup/add/?_popup=1' % info
 		ajax_url = '%s%s/%s/popup/ajax/' %info
 
 		output =[]
@@ -202,7 +202,7 @@ class AjaxSelectMultipleInputWidget(SelectMultiple):
 		else:
 			current_ids = "|"
 
-		related_url_facebox=reverse('admin:real_estate_app_%s_add_popup' % self.module_name)
+		related_url_facebox=reverse('admin:real_estate_app_%s_add_popup' % self.module_name)+'?_popup=1'
 
 		plugin_options = {
 			'source': reverse('admin:real_estate_app_%s_ajax_view' % self.module_name),

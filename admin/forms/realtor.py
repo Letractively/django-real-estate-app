@@ -20,7 +20,7 @@ class RealtorAdminFormSet(BaseInlineFormSet):
 		for field in fields:
 			if data.get(field) in EMPTY_VALUES:
 				form.errors[field]=form.error_class([_(u'This field is required.')])
-
+	
 	def clean(self):
 
 		for form in self.forms:
@@ -34,11 +34,11 @@ class RealtorAdminFormSet(BaseInlineFormSet):
 				
 				if data.has_key('tipo_pessoa') and data.get('tipo_pessoa') == 'PF':
 					fields_check=['cpf','rg','ssp','creci']
+					remove_values=['cnpj','razao_social']
 				elif data.has_key('tipo_pessoa') and data.get('tipo_pessoa') == 'PJ':
 					fields_check=['cnpj','razao_social','creci']
-				else:
-					fields_check=['cpf','rg','ssp','cnpj','razao_social','creci']
-
+					remove_values=['cpf','rg','ssp']
+				
 				try:
 					self.check_empty_fields(form,data,fields_check)
 				except:			

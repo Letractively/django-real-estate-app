@@ -52,8 +52,7 @@ class Realtor(models.Model):
 		cpf = models.CharField(
 								u'CPF',
 								max_length=17,
-								blank=True,
-								unique=True
+								blank=True
 		)
 	
 		rg = models.CharField(
@@ -132,6 +131,9 @@ class Realtor(models.Model):
 	last_name=property(get_last_name)
 
 	def get_user_name(self):
+		if LANGUAGE_CODE == 'pt-br' and self.tipo_pessoa == 'PJ':
+			self.__name=self.razao_social
+			return self.__name
 		try:
 			return self.__name
 		except AttributeError:

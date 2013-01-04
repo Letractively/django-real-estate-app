@@ -3,7 +3,6 @@
 }
 .popup, #container {
 	min-width: 470px;
-	width: 470px;
 }
 
 .popup .form-row {
@@ -30,7 +29,8 @@
 }
 ul.errorlist {
 	float: right;
-	 margin: 5px 0 0 !important;
+	margin: 5px 0 0 !important;
+	min-width: 149px;
 }
 .form-row select {
 	width: 157px;

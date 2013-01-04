@@ -43,8 +43,14 @@
     			show_pf_fields();
     		}
     	})
-
-    	hiden_pj_fields();
+    	$('.tipo_pessoa > div > select > option').each(function(){
+    		value=$(this).attr('selected') ? $(this).val() : false
+    		if (value == "PJ")
+    			hiden_pf_fields()
+    		else if (value == "PF")
+    			hiden_pj_fields()
+    	})
+    	
     	simulate_required_fields();
 
     });
