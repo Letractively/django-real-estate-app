@@ -7,7 +7,7 @@ from options import FaceBoxModelAdmin
 from real_estate_app.admin.forms import PropertyAdminForm
 from real_estate_app.admin.photo import PhotoInlineAdmin 
 from real_estate_app.admin.actions import duplicate_object, make_unpublished, make_published 
-from real_estate_app.conf.settings import MEDIA_PREFIX
+from real_estate_app.conf.settings import MEDIA_PREFIX as MEDIA_PREFIX_REAL_ESTATE
 from real_estate_app.models import Property
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
@@ -52,23 +52,23 @@ class PropertyAdmin(FaceBoxModelAdmin):
 	class Media:
 		css = {
 			'all':(
-					MEDIA_PREFIX+"css/facebox.css",
-					MEDIA_PREFIX+"css/tabs.css",
-					MEDIA_PREFIX+"css/gmaps.css",
-					MEDIA_PREFIX+"css/change-list.css",
-					MEDIA_PREFIX+"css/autocomplete.css",
+					MEDIA_PREFIX_REAL_ESTATE+"css/facebox.css",
+					MEDIA_PREFIX_REAL_ESTATE+"css/tabs.css",
+					MEDIA_PREFIX_REAL_ESTATE+"css/gmaps.css",
+					MEDIA_PREFIX_REAL_ESTATE+"css/change-list.css",
+					MEDIA_PREFIX_REAL_ESTATE+"css/autocomplete.css",
 			),
 		}
-		js = (MEDIA_PREFIX+"js/meio.mask.min.js",
-			  MEDIA_PREFIX+"js/facebox.js",
-			  MEDIA_PREFIX+"js/real_estate_app_masks.js",
-			  MEDIA_PREFIX+"js/real_estate_app_gmaps.js",
-			  MEDIA_PREFIX+'js/tiny_mce/tiny_mce.js',
-		      MEDIA_PREFIX+'js/tiny_mce/textarea.js',
-		      MEDIA_PREFIX+'js/ajax_csrf.js',
-		      MEDIA_PREFIX+'js/real_estate_app_district.js',
-		      MEDIA_PREFIX+'js/jquery.createtabs.js',
-		      MEDIA_PREFIX+'js/property-load.js',
+		js = (MEDIA_PREFIX_REAL_ESTATE+"js/meio.mask.min.js",
+			  MEDIA_PREFIX_REAL_ESTATE+"js/facebox.js",
+			  MEDIA_PREFIX_REAL_ESTATE+"js/real_estate_app_masks.js",
+			  MEDIA_PREFIX_REAL_ESTATE+'js/tiny_mce/tiny_mce.js',
+		      MEDIA_PREFIX_REAL_ESTATE+'js/tiny_mce/textarea.js',
+		      MEDIA_PREFIX_REAL_ESTATE+'js/ajax_csrf.js',
+		      MEDIA_PREFIX_REAL_ESTATE+'js/real_estate_app_district.js',
+		      MEDIA_PREFIX_REAL_ESTATE+'js/jquery.createtabs.js',
+		      MEDIA_PREFIX_REAL_ESTATE+'js/property-load.js',
+		      MEDIA_PREFIX_REAL_ESTATE+"js/real_estate_app_gmaps.js",
 			  'http://maps.google.com/maps/api/js?sensor=true',
 		)
 

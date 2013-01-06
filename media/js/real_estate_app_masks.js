@@ -4,7 +4,8 @@
 			'money': { mask: '99,999.999.999.999', type: 'reverse',defaultValue: '000'},
 			'zip_code': { mask: '99999-999'},
 			'decimal': {mask:'99.999999999999',type:'reverse'},
-			'area': {mask:'99,999.999.999.999',type:'reverse',defaultValue: '000'}
+			'area': {mask:'99,999.999.999.999',type:'reverse',defaultValue: '000'},
+			'phone':{mask:'+99 (999) 99999-9999'},
 		});
 
 		$('input:text').setMask();

@@ -6,7 +6,6 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
-from real_estate_app.models.others import Phone, Address
 from real_estate_app.manager import SelectFieldManager
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
@@ -28,6 +27,18 @@ class Realtor(models.Model):
 							_('Sex'),
 							max_length=1,
 							choices=SEX,
+							blank=True
+	)
+
+	phone = models.CharField(
+							_('Phone'),
+							max_length=20,
+							blank=True
+	)
+
+	celphone = models.CharField(
+							_('Celphone'),
+							max_length=20,
 							blank=True
 	)
 	
@@ -102,9 +113,6 @@ class Realtor(models.Model):
 		verbose_name_plural=_('Realtors')
 
 	def __unicode__(self):
-
-		if LANGUAGE_CODE in ('pt-br','pt_BR') and self.razao_social:
-			return u'%s' % (self.razao_social)
 				
 		return u'%s' % self.name
 

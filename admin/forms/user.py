@@ -29,11 +29,11 @@ class UserAdminForm(PopUpModelForm):
         username = self.data['email']
         return username
 
-    def clean_email(self):
-        username = self.cleaned_data["username"]
-        try:
-            User.objects.get(username=username)
-        except User.DoesNotExist:
-            return username
-        raise ValidationError(_("A user with that email already exists."))
+    # def clean_email(self):
+    #     username = self.cleaned_data["username"]
+    #     try:
+    #         User.objects.get(username=username)
+    #     except User.DoesNotExist:
+    #         return username
+    #     raise ValidationError(_("A user with that email already exists."))
         

@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from options import RealEstateAppRevertInlineModelAdmin
 from real_estate_app.models import Realtor
 from real_estate_app.admin.forms import UserAdminForm, RealtorAdminFormSet
-from real_estate_app.conf.settings import MEDIA_PREFIX
+from real_estate_app.conf.settings import MEDIA_PREFIX as MEDIA_PREFIX_REAL_ESTATE
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 
@@ -53,18 +53,24 @@ class RealtorAdmin(RealEstateAppRevertInlineModelAdmin):
 	if LANGUAGE_CODE == 'pt-br':
 		list_display+=['tipo_pessoa','creci']
 		list_filter+=['tipo_pessoa']
+		search_fields+=['creci']
 
 	class Media:
+
+		js = [
+				MEDIA_PREFIX_REAL_ESTATE+"js/meio.mask.min.js",
+				MEDIA_PREFIX_REAL_ESTATE+"js/real_estate_app_masks.js"
+		]
 
 		if LANGUAGE_CODE == 'pt-br':
 			css = {
 				'all':(
-					MEDIA_PREFIX+"css/tabs.css",
+					MEDIA_PREFIX_REAL_ESTATE+"css/tabs.css",
 				)
 			}
 
-			js = (
-				MEDIA_PREFIX+"js/locale/pt_BR/realtor.js",
-			)
+			js += [
+				MEDIA_PREFIX_REAL_ESTATE+"js/locale/pt_BR/realtor.js",
+			]
 
 admin.site.register(Realtor, RealtorAdmin)

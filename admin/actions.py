@@ -21,7 +21,7 @@ def duplicate_object(modeladmin,request,queryset):
 		msg=_("%s properties were") % rows 
 	modeladmin.message_user(request,_("%s successfully duplicate.") %msg)
 	
-duplicate_object.short_description=_("Duplicate selected record")
+duplicate_object.short_description=_("Duplicate selected %(verbose_name_plural)s")
 
 def make_unpublished(modeladmin,request,queryset):
 	rows=queryset.update(enable_publish=False)
@@ -31,7 +31,7 @@ def make_unpublished(modeladmin,request,queryset):
 		msg=_("%s properties were") %rows 
 	modeladmin.message_user(request,_("%s successfully marked unpublished.") %msg)
 
-make_unpublished.short_description=_("Unpublish selected record")
+make_unpublished.short_description=_("Unpublish selected %(verbose_name_plural)s")
 
 def make_published(modeladmin,request,queryset):
 	rows=queryset.update(enable_publish=True)
@@ -40,7 +40,22 @@ def make_published(modeladmin,request,queryset):
 	else:
 		msg=_("%s properties were") % rows
 	modeladmin.message_user(request,_("%s successfully marked published.") % msg)
-make_published.short_description=_("Publish selected record")
+make_published.short_description=_("Publish selected %(verbose_name_plural)s")
+
+def make_enabled(modeladmin,request,queryset):
+    objs=queryset.update(logical_exclude=False)
+    rows=objs
+    msg=_("Successfully enabled %(count)d %(items)s.") % {"count": rows, "items": model_ngettext(modeladmin.opts, rows)}
+    modeladmin.message_user(request, msg)
+make_enabled.short_description=_("Enable selected %(verbose_name_plural)s")
+
+def make_disabled(modeladmin,request,queryset):
+    objs=queryset.update(logical_exclude=True)
+    rows=objs
+    msg=_("Successfully disabled %(count)d %(items)s.") % {"count": rows, "items": model_ngettext(modeladmin.opts, rows)}
+    modeladmin.message_user(request, msg)
+make_disabled.short_description=_("Disable selected %(verbose_name_plural)s")
+
 
 def delete_selected_popup(modeladmin, request, queryset):
     """

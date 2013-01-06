@@ -1,13 +1,15 @@
 from django import template
+from django.conf import settings
 from django.contrib.admin import ModelAdmin, helpers
 from django.contrib.admin.util import unquote, get_deleted_objects
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core import serializers
 from django.db import models, transaction, router
 from django.forms.formsets import all_valid
 from django.forms.models import (modelform_factory)
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render_to_response
+from django.utils.datastructures import SortedDict
 from django.utils.decorators import method_decorator
 from django.utils.functional import curry, update_wrapper
 from django.utils.translation import ugettext as _
@@ -18,9 +20,10 @@ from django.utils import simplejson
 from django.views.decorators.csrf import csrf_protect
 
 from real_estate_app import widgets
-from real_estate_app.admin.actions import delete_selected_popup
-from real_estate_app.conf.settings import MEDIA_PREFIX
+from real_estate_app.admin.actions import delete_selected_popup, make_enabled, make_disabled
+from real_estate_app.conf.settings import MEDIA_PREFIX as MEDIA_PREFIX_REAL_ESTATE
 from real_estate_app.utils import AutoCompleteObject
+from real_estate_app.models import Property
 
 csrf_protect_m = method_decorator(csrf_protect)
 
@@ -75,10 +78,64 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
 
     list_per_page=15
 
-    actions=[delete_selected_popup,]
+    actions=[delete_selected_popup, make_enabled, make_disabled]
+
+    list_filter=['logical_exclude',]
+
+    def delete_model(self, request, obj):
+        obj_fk = obj._meta.module_name+'_fk'
+        obj_name=obj._meta.module_name
+
+        if hasattr(Property,obj_fk) and not isinstance(obj,Property):
+
+            try:
+                Property.objects.get(**{obj_fk:obj.id})
+                obj.logical_exclude=True
+                obj.save()
+                return _('The %(name)s "%(obj)s" was disabled successfully.')
+            except ObjectDoesNotExist:
+                pass
+
+        super(RealEstateAppPopUpModelAdmin,self).delete_model(request,obj)
+        return _('The %(name)s "%(obj)s" was deleted successfully.')
 
     def get_actions(self,request):
-        actions = super(RealEstateAppPopUpModelAdmin, self).get_actions(request)
+        """
+        This is a original get_actions with removed validation of IS_POPUP_VAR 
+        """
+        # If self.actions is explicitally set to None that means that we don't
+        # want *any* actions enabled on this page.
+        # REMOVE VALIDATION OF IS_POPUP_VAR
+        if self.actions is None:
+            return SortedDict()
+
+        actions = []
+
+        # Gather actions from the admin site first
+        for (name, func) in self.admin_site.actions:
+            description = getattr(func, 'short_description', name.replace('_', ' '))
+            actions.append((func, name, description))
+
+        # Then gather them from the model admin and all parent classes,
+        # starting with self and working back up.
+        for klass in self.__class__.mro()[::-1]:
+            class_actions = getattr(klass, 'actions', [])
+            # Avoid trying to iterate over None
+            if not class_actions:
+                continue
+            actions.extend([self.get_action(action) for action in class_actions])
+
+        # get_action might have returned None, so filter any of those out.
+        actions = filter(None, actions)
+
+        # Convert the actions into a SortedDict keyed by name
+        # and sorted by description.
+        actions.sort(key=lambda k: k[2].lower())
+        actions = SortedDict([
+            (name, (func, name, desc))
+            for func, name, desc in actions
+        ])
+
         if 'delete_selected' in actions:
             del actions['delete_selected']
         return actions
@@ -162,8 +219,69 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
 
     @csrf_protect_m
     @transaction.commit_on_success
-    def delete_view_popup(self, request, object_id, extra_context=None):
-        return super(RealEstateAppPopUpModelAdmin,self).delete_view(request,object_id, extra_context=extra_context)
+    def delete_view_popup(self, request, object_id, extra_context=None):  
+        "The 'delete' admin view for reverted model."
+        opts = self.model._meta
+        app_label = opts.app_label
+        notabs = {'notabs':True}
+        try:
+            extra_context = extra_context.update(notabs)
+        except:
+            extra_context = notabs
+
+        obj = self.get_object(request, unquote(object_id))
+
+        if not self.has_delete_permission(request, obj):
+            raise PermissionDenied
+
+        if obj is None:
+            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % {'name': force_unicode(opts.verbose_name), 'key': escape(object_id)})
+
+        using = router.db_for_write(self.model)
+
+        # Populate deleted_objects, a data structure of all related objects that
+        # will also be deleted.
+        (deleted_objects, perms_needed, protected) = get_deleted_objects(
+            [obj], opts, request.user, self.admin_site, using)
+
+        if request.POST: # The user has already confirmed the deletion.
+            if perms_needed:
+                raise PermissionDenied
+            obj_display = force_unicode(obj)
+            self.log_deletion(request, obj, obj_display)
+            msg=self.delete_model(request, obj)
+
+            self.message_user(request, msg % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(obj_display)})
+
+            if not self.has_change_permission(request, None):
+                return HttpResponseRedirect("../../../../")
+            return HttpResponseRedirect("../../")
+
+        object_name = force_unicode(opts.verbose_name)
+
+        if perms_needed or protected:
+            title = _("Cannot delete %(name)s") % {"name": object_name}
+        else:
+            title = _("Are you sure?")
+
+        context = {
+            "title": title,
+            "object_name": object_name,
+            "object": obj,
+            "deleted_objects": deleted_objects,
+            "perms_lacking": perms_needed,
+            "protected": protected,
+            "opts": opts,
+            "root_path": self.admin_site.root_path,
+            "app_label": app_label,
+        }
+        context.update(extra_context or {})
+        context_instance = template.RequestContext(request, current_app=self.admin_site.name)
+        return render_to_response(self.delete_confirmation_template or [
+            "admin/%s/%s/delete_confirmation.html" % (app_label, opts.object_name.lower()),
+            "admin/%s/delete_confirmation.html" % app_label,
+            "admin/delete_confirmation.html"
+        ], context, context_instance=context_instance)
 
     @csrf_protect_m 
     def get_item_model_fk(self, request, extra_context=None):
@@ -203,13 +321,14 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
 
         css = {
             'all':[
-                MEDIA_PREFIX+"css/popup.css",
+                MEDIA_PREFIX_REAL_ESTATE+"css/popup.css",
             ]
         }
 
         js = [
-            "/admin-media/js/jquery.min.js",
-            "/admin-media/js/jquery.init.js",
+            settings.ADMIN_MEDIA_PREFIX+"js/jquery.min.js",
+            settings.ADMIN_MEDIA_PREFIX+"js/jquery.init.js",
+            MEDIA_PREFIX_REAL_ESTATE+"js/real_estate_app_filter.js",
         ]
 
 class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
@@ -234,6 +353,21 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
                     break
 
         #super(ModelAdmin,self).__init__()
+    def delete_model(self, request, revert_obj,real_obj):
+        obj_fk = real_obj._meta.module_name+'_fk'
+        obj_name=real_obj._meta.module_name
+
+        if hasattr(Property,obj_fk) and not isinstance(revert_obj,Property):
+                try:
+                    Property.objects.get(**{obj_fk:real_obj.id})
+                    real_obj.logical_exclude=True
+                    real_obj.save()
+                    return _('The %(name)s "%(obj)s" was disabled successfully.')
+                except ObjectDoesNotExist:
+                   pass
+
+        super(RealEstateAppRevertInlineModelAdmin,self).delete_model(request,revert_obj)
+        return _('The %(name)s "%(obj)s" was deleted successfully.')
 
     def get_form(self, request, obj=None, **kwargs):
         """
@@ -484,6 +618,7 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
         revert_model_name = self.revert_model.__name__.lower()
         if hasattr(obj,revert_model_name):
             revert_obj = getattr(obj,revert_model_name)
+            real_obj = obj
             obj = revert_obj
 
         if not self.has_delete_permission(request, obj):
@@ -504,9 +639,9 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
                 raise PermissionDenied
             obj_display = force_unicode(obj)
             self.log_deletion(request, obj, obj_display)
-            self.delete_model(request, obj)
+            msg=self.delete_model(request, obj,real_obj)
 
-            self.message_user(request, _('The %(name)s "%(obj)s" was deleted successfully.') % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(obj_display)})
+            self.message_user(request, msg % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(obj_display)})
 
             if not self.has_change_permission(request, None):
                 return HttpResponseRedirect("../../../../")
