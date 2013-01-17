@@ -162,27 +162,26 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
         info = self.model._meta.app_label, self.model._meta.module_name
 
         custom_urls = patterns('',
-                                url(r'^popup/add/$',
+                                url(r'^add/$',
                                     wrap(self.add_view_popup),
                                     name='%s_%s_add_popup' % info
                                 ),
-                                url(r'^popup/(?P<object_id>\d+)/$',
+                                url(r'^(?P<object_id>\d+)/$',
                                     wrap(self.change_view_popup),
                                     name='%s_%s_chage_popup' % info 
                                 ),
-                                url(r'^popup/$',
+                                url(r'^/$',
                                     wrap(self.changelist_view_popup),
                                     name='%s_%s_view_popup' % info
                                 ),
-                                url(r'^popup/(?P<object_id>\d+)/delete/$',
+                                url(r'^(?P<object_id>\d+)/delete/$',
                                     wrap(self.delete_view_popup),
                                     name='%s_%s_delete_popup' % info
                                 ),
-                                url(r'^popup/ajax/$',
+                                url(r'^ajax/$',
                                     wrap(self.get_item_model_fk),
                                     name='%s_%s_ajax_view' % info
                                 ),
-
         )
 
         return custom_urls + urlpatterns

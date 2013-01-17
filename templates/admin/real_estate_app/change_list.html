@@ -61,7 +61,11 @@
           <li>
 
             <a {% if is_popup %} href="add/?_popup=1" {% else %} href="add/" {% endif %} class="addlink">
-              {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}
+              {% if not is_popup %}
+                {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}
+              {% else %}
+                {% blocktrans %}Add{% endblocktrans %}
+              {% endif %}
             </a>
           </li>
         </ul>
