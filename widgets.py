@@ -190,6 +190,7 @@ class AjaxSelectMultipleInputWidget(SelectMultiple):
 		self.help_text=help_text
 		self.model=model_fk
 		self.module_name=self.model._meta.module_name
+		
 		try:
 			self.fields_show=REAL_ESTATE_APP_AJAX_SEARCH[self.module_name]['search_fields']
 		except KeyError:
@@ -214,7 +215,7 @@ class AjaxSelectMultipleInputWidget(SelectMultiple):
 			current_ids = "|"
 
 		related_url_facebox=reverse('admin:real_estate_app_%s_add_popup' % self.module_name)+'?_popup=1'
-
+		
 		plugin_options = {
 			'source': reverse('admin:real_estate_app_%s_ajax_view' % self.module_name),
 			'initial': autocompleteobject.render(id__in=[str(v) for v in value]),

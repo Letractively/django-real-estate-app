@@ -142,11 +142,11 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
 
     def response_add(self, request, obj):
         super(RealEstateAppPopUpModelAdmin,self).response_add(request,obj)
-        return HttpResponseRedirect('../../popup/')
+        return HttpResponseRedirect('../')
 
     def response_change(self,request,obj):
         super(RealEstateAppPopUpModelAdmin,self).response_change(request,obj)
-        return HttpResponseRedirect('../../popup/')
+        return HttpResponseRedirect('../../')
 
     def get_urls(self):
 

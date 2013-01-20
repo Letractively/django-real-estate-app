@@ -9,24 +9,28 @@ from real_estate_app.models import Property, AditionalThings, Realtor
 
 class PropertyAdminForm(ModelForm):
 	
-	price = DecimalField(widget=MoneyInputWidget)
+	price = DecimalField(label=_('price'),widget=MoneyInputWidget)
 
 	condominio = DecimalField(widget=MoneyInputWidget,required=False)
 
 	iptu = DecimalField(widget=MoneyInputWidget,required=False)
 	
-	zip_code = CharField(widget=ZipInputWidget,required=False)
+	zip_code = CharField(label=_('Zip code'), widget=ZipInputWidget,required=False)
 
 	aditionalthings_fk = ModelMultipleChoiceField(
+									label=_('Aditional things'),
 									queryset=AditionalThings.objects.all(),
 									required=False,
 									widget=CheckboxSelectMultipleCustom
 	)
 	realtor_fk = ModelMultipleChoiceField(
+									label=_('Realtor'),
 									queryset=Realtor.objects.all(),
 									required=False,
 									widget=AjaxSelectMultipleInputWidget(
-											model_fk=Realtor
+											model_fk=Realtor,
+											help_text=_('Enter text to search.'),
+											show_help_text=True
 									)
 	)
 

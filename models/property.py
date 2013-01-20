@@ -290,7 +290,8 @@ class Property(models.Model):
 
 		from real_estate_app.models import Photo
 
-		new_kwargs = dict([(fld.name, getattr(self, fld.name)) for fld in self._meta.fields if fld.name != 'id']);
+		new_kwargs = dict([(fld.name, getattr(self, fld.name)) for fld in self._meta.fields if (fld.name != 'id' or fld.name != 'code_property')]);
+
 		slug_max=self._meta.get_field_by_name('slug')[0].max_length-5
 		if (len(new_kwargs['slug']) < slug_max):
 			new_kwargs['slug']+='-copy'
@@ -298,20 +299,25 @@ class Property(models.Model):
 			new_kwargs['slug']=new_kwargs['slug'][:slug_max]+'-copy'
 
 		obj=self.__class__.objects.create(**new_kwargs)
+		
 		[obj.aditionalthings_fk.add(_aditional) for _aditional in self.aditionalthings_fk.all()]
 		[obj.domain.add(_domain) for _domain in self.domain.all()]
-
-		for _photo in self.photos:
+		[obj.realtor_fk.add(_realtor) for _realtor in self.realtor_fk.all()]
+		
+		
+		for _photo in self.photos.all():
 			file_name='copy-'+_photo.photo.name.split('/')[-1:][0]
 			p=Photo(
-					album=obj,
-					description=_photo.description,
-					slug=slugify(_photo.slug+'-copy'),
-					image_destaque=_photo.image_destaque,
-					is_published=_photo.is_published,
-					pub_date=_photo.pub_date,
-					width=_photo.width,
-					height=_photo.height,
+						album=obj,
+						description=_photo.description,
+						slug=slugify(_photo.slug+'-copy'),
+						image_destaque=_photo.image_destaque,
+						is_published=_photo.is_published,
+						pub_date=_photo.pub_date,
+						width=_photo.width,
+						height=_photo.height,
 			)
 			p.photo.save(file_name,ContentFile(_photo.photo.file.read()))
 			p.save()
+
+		return obj
