@@ -15,12 +15,8 @@ from real_estate_app.models import Property
 
 def duplicate_object(modeladmin,request,queryset):
 	rows=[obj.clone() for obj in queryset]
-	if rows == 1:
-		msg=_("1 property was")
-	else:
-		msg=_("%s properties were") % rows 
-	modeladmin.message_user(request,_("%s successfully duplicate.") %msg)
-	
+	msg=_("Successfully duplicated %(count)d %(items)s") % {'count': len(rows), 'items': model_ngettext(modeladmin.opts,rows)} 
+	modeladmin.message_user(request, msg)
 duplicate_object.short_description=_("Duplicate selected %(verbose_name_plural)s")
 
 def make_unpublished(modeladmin,request,queryset):

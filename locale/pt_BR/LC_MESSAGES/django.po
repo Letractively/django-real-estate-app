@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-05 18:39-0200\n"
+"POT-Creation-Date: 2013-01-20 16:56-0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,105 +26,107 @@ msgstr "Entre pelo menos com um endereço de e-mail."
 msgid "%s is not a valid e-mail address."
 msgstr "%s este não é um endereço de e-mail válido"
 
-#: widgets.py:87 widgets.py:124 widgets.py:223
+#: widgets.py:98 widgets.py:135 widgets.py:235
 msgid "Add Another"
 msgstr "Adicionar"
 
-#: widgets.py:224
+#: widgets.py:236
 msgid "Search for realtors."
 msgstr "Buscar por corretores."
 
-#: admin/actions.py:19 admin/actions.py:29 admin/actions.py:39
-#, fuzzy
-msgid "1 property was"
-msgstr "1 imóviel foi"
-
-#: admin/actions.py:21 admin/actions.py:31 admin/actions.py:41
-#, python-format
-msgid "%s properties were"
-msgstr "%s imovéis foram"
-
-#: admin/actions.py:22
+#: admin/actions.py:18
 #, fuzzy, python-format
-msgid "%s successfully duplicate."
-msgstr "%s despublicado(s) com sucesso."
+msgid "Successfully duplicated %(count)d %(items)s"
+msgstr "Copiado com sucesso %(count)d %(items)s."
 
-#: admin/actions.py:24
+#: admin/actions.py:20
 #, fuzzy, python-format
 msgid "Duplicate selected %(verbose_name_plural)s"
 msgstr "Copiar %(verbose_name_plural)s selecionados."
 
-#: admin/actions.py:32
+#: admin/actions.py:25 admin/actions.py:35
+#, fuzzy
+msgid "1 property was"
+msgstr "1 imóviel foi"
+
+#: admin/actions.py:27 admin/actions.py:37
+#, python-format
+msgid "%s properties were"
+msgstr "%s imovéis foram"
+
+#: admin/actions.py:28
 #, python-format
 msgid "%s successfully marked unpublished."
 msgstr "%s despublicado(s) com sucesso."
 
-#: admin/actions.py:34
+#: admin/actions.py:30
 #, fuzzy, python-format
 msgid "Unpublish selected %(verbose_name_plural)s"
 msgstr "Despublicar %(verbose_name_plural)s selecionados."
 
-#: admin/actions.py:42
+#: admin/actions.py:38
 #, fuzzy, python-format
 msgid "%s successfully marked published."
 msgstr "%s publicado(s) com sucesso"
 
-#: admin/actions.py:43
+#: admin/actions.py:39
 #, fuzzy, python-format
 msgid "Publish selected %(verbose_name_plural)s"
 msgstr "Publicar %(verbose_name_plural)s selecionados."
 
-#: admin/actions.py:48
+#: admin/actions.py:44
 #, python-format
 msgid "Successfully enabled %(count)d %(items)s."
 msgstr "Habilitado %(count)d %(items)s com sucesso."
 
-#: admin/actions.py:50
+#: admin/actions.py:46
 #, python-format
 msgid "Enable selected %(verbose_name_plural)s"
 msgstr "Habilitar %(verbose_name_plural)s selecionados."
 
-#: admin/actions.py:55
+#: admin/actions.py:51
 #, python-format
 msgid "Successfully disabled %(count)d %(items)s."
 msgstr "Desabilitado %(count)d %(items)s com sucesso."
 
-#: admin/actions.py:57
+#: admin/actions.py:53
 #, python-format
 msgid "Disable selected %(verbose_name_plural)s"
 msgstr "Desabilitar %(verbose_name_plural)s selecionados."
 
-#: admin/actions.py:102
+#: admin/actions.py:98
 #, fuzzy
 msgid "Logical exclude object."
 msgstr "Exclusão lógica"
 
-#: admin/actions.py:124
+#: admin/actions.py:120
 #, python-format
 msgid ""
 "Successfully deleted %(count)d and disabled %(count_two)d %(items_two)s."
-msgstr "Removido com sucesso %(count)d e desabilitado com sucesso %(count_two)d %(items_two)s."
+msgstr ""
+"Removido com sucesso %(count)d e desabilitado com sucesso %(count_two)d "
+"%(items_two)s."
 
-#: admin/actions.py:129
+#: admin/actions.py:125
 #, fuzzy, python-format
 msgid "Successfully disebled %(count)d %(items)s."
 msgstr "Desabilitado com sucesso %(count)d %(items)s."
 
-#: admin/actions.py:133
+#: admin/actions.py:129
 #, fuzzy, python-format
 msgid "Successfully deleted %(count)d %(items)s."
 msgstr "Deletado com sucesso %(count)d %(items)s."
 
-#: admin/actions.py:164 admin/options.py:263 admin/options.py:653
+#: admin/actions.py:160 admin/options.py:262 admin/options.py:652
 #, python-format
 msgid "Cannot delete %(name)s"
-msgstr ""
+msgstr "Não foi possível deletar %(name)s"
 
-#: admin/actions.py:166 admin/options.py:265 admin/options.py:655
+#: admin/actions.py:162 admin/options.py:264 admin/options.py:654
 msgid "Are you sure?"
 msgstr ""
 
-#: admin/actions.py:191
+#: admin/actions.py:187
 #, python-format
 msgid "Delete selected %(verbose_name_plural)s"
 msgstr ""
@@ -133,27 +135,27 @@ msgstr ""
 msgid "files"
 msgstr "Arquivos"
 
-#: admin/options.py:95 admin/options.py:365
+#: admin/options.py:95 admin/options.py:364
 #, python-format
 msgid "The %(name)s \"%(obj)s\" was disabled successfully."
 msgstr "\"%(obj)s\" %(name)s: desabilitado com sucesso."
 
-#: admin/options.py:100 admin/options.py:370
+#: admin/options.py:100 admin/options.py:369
 #, python-format
 msgid "The %(name)s \"%(obj)s\" was deleted successfully."
 msgstr "\"%(obj)s\" %(name)s: deletado com sucesso."
 
-#: admin/options.py:238 admin/options.py:525 admin/options.py:628
+#: admin/options.py:237 admin/options.py:524 admin/options.py:627
 #, python-format
 msgid "%(name)s object with primary key %(key)r does not exist."
 msgstr ""
 
-#: admin/options.py:488
+#: admin/options.py:487
 #, fuzzy, python-format
 msgid "Add %s"
 msgstr "Adicionar %(name)s"
 
-#: admin/options.py:590
+#: admin/options.py:589
 #, fuzzy, python-format
 msgid "Change %s"
 msgstr "Editar"
@@ -190,6 +192,26 @@ msgstr ""
 msgid "No image!"
 msgstr "Não há imagem!"
 
+#: admin/forms/property.py:12 models/property.py:53
+msgid "price"
+msgstr "Preço"
+
+#: admin/forms/property.py:18
+msgid "Zip code"
+msgstr "CEP"
+
+#: admin/forms/property.py:21 models/others.py:123
+msgid "Aditional things"
+msgstr "Caracterização adicional do imóvel"
+
+#: admin/forms/property.py:27 models/realtors.py:112
+msgid "Realtor"
+msgstr "Corretor"
+
+#: admin/forms/property.py:32
+msgid "Enter text to search."
+msgstr ""
+
 #: admin/forms/realtor.py:22
 msgid "This field is required."
 msgstr ""
@@ -206,29 +228,25 @@ msgstr "Sobrenome"
 msgid "E-mail"
 msgstr ""
 
-#: admin/forms/user.py:38
-msgid "A user with that email already exists."
-msgstr "Já existe um usu[ario com este e-mail."
-
 #: forms/contact.py:7 forms/sendcontent.py:9 models/others.py:101
 msgid "Name"
 msgstr "Nome"
 
 #: forms/contact.py:10
 msgid "Mensage"
-msgstr ""
+msgstr "Mensagem"
 
 #: forms/contact.py:15 forms/sendcontent.py:13
 msgid "Validator"
-msgstr ""
+msgstr "Validador"
 
 #: forms/sendcontent.py:10
 msgid "To"
-msgstr ""
+msgstr "Para"
 
 #: forms/sendcontent.py:11
 msgid "From"
-msgstr ""
+msgstr "De"
 
 #: forms/sendcontent.py:12
 msgid "URL"
@@ -337,12 +355,11 @@ msgid "Enter with new district."
 msgstr "Entre com um novo bairro."
 
 #: models/others.py:16 models/others.py:54 models/others.py:80
-#: models/others.py:106 models/others.py:135 models/others.py:177
-#: models/others.py:203 models/realtors.py:42
+#: models/others.py:106 models/others.py:135 models/realtors.py:53
 msgid "Logical exclude"
 msgstr "Exclusão lógica"
 
-#: models/others.py:22 models/others.py:161 models/property.py:103
+#: models/others.py:22 models/property.py:103
 msgid "State"
 msgstr "Estado"
 
@@ -384,10 +401,6 @@ msgid "Enter with new aditional things to property. Ex.: Pool, Barbecue,..."
 msgstr ""
 "Entre com uma nova caracterização do imóvel. Ex.: Piscina, Churrasqueira,..."
 
-#: models/others.py:123
-msgid "Aditional things"
-msgstr "Caracterização adicional do imóvel"
-
 #: models/others.py:124
 msgid "Aditionals things"
 msgstr "Caracterizações adicionais do imóvel"
@@ -408,33 +421,11 @@ msgstr "Posição do sol"
 msgid "Positions of sun"
 msgstr "Posições do sol"
 
-#: models/others.py:156 models/others.py:189
-#, fuzzy
-msgid "Address"
-msgstr "Endereço"
-
-#: models/others.py:172
-msgid "Zip code"
-msgstr "CEP"
-
-#: models/others.py:190
-#, fuzzy
-msgid "Addresses"
-msgstr "Endereço"
-
-#: models/others.py:218
-msgid "Phone"
-msgstr "Telefone"
-
-#: models/others.py:219
-msgid "Phones"
-msgstr "Telefones"
-
 #: models/photo.py:28 models/photo.py:83
 msgid "photos"
 msgstr "Fotos"
 
-#: models/photo.py:32 models/photo.py:82 models/realtors.py:35
+#: models/photo.py:32 models/photo.py:82 models/realtors.py:46
 msgid "photo"
 msgstr "Foto"
 
@@ -497,10 +488,6 @@ msgstr "CEP"
 #: models/property.py:49
 msgid "Entry with ZIP of property"
 msgstr "Entre com o CEP do imóvel"
-
-#: models/property.py:53
-msgid "price"
-msgstr "Preço"
 
 #: models/property.py:56
 msgid "Entry with price of property"
@@ -616,7 +603,7 @@ msgstr "Entre com o site a ser publicado"
 msgid "Entry the name of realtor. ex.: Jonh"
 msgstr "Entre com o número de elevadores do imóvel"
 
-#: models/property.py:231 models/realtors.py:102
+#: models/property.py:231 models/realtors.py:113
 msgid "Realtors"
 msgstr "Corretores"
 
@@ -628,21 +615,26 @@ msgstr "Imóvel"
 msgid "Propetys"
 msgstr "Imóvies"
 
-#: models/realtors.py:15
+#: models/realtors.py:14
 msgid "Male"
 msgstr "Masculino"
 
-#: models/realtors.py:16
+#: models/realtors.py:15
 msgid "Female"
 msgstr "Feminino"
 
-#: models/realtors.py:28
+#: models/realtors.py:27
 msgid "Sex"
 msgstr "Sexo"
 
-#: models/realtors.py:101
-msgid "Realtor"
-msgstr "Corretor"
+#: models/realtors.py:34
+msgid "Phone"
+msgstr "Telefone"
+
+#: models/realtors.py:40
+#, fuzzy
+msgid "Celphone"
+msgstr "Telefone"
 
 #: templates/admin/index-custom.html:22
 #, python-format
@@ -657,6 +649,7 @@ msgstr "%(name)s"
 
 #: templates/admin/index-custom.html:34
 #: templates/admin/real_estate_app/change_form.html:34
+#: templates/admin/real_estate_app/change_list.html:73
 msgid "Add"
 msgstr "Adicionar"
 
@@ -686,7 +679,7 @@ msgstr "Conteúdo desconhecido"
 
 #: templates/admin/real_estate_app/app_index.html:8
 #: templates/admin/real_estate_app/change_form.html:31
-#: templates/admin/real_estate_app/change_list.html:42
+#: templates/admin/real_estate_app/change_list.html:48
 #: templates/admin/real_estate_app/delete_confirmation.html:14
 #: templates/admin/real_estate_app/delete_selected_confirmation_popup.html:9
 msgid "Home"
@@ -707,24 +700,20 @@ msgid "Manage list"
 msgstr "Gerenciar lista"
 
 #: templates/admin/real_estate_app/change_form.html:65
-#: templates/admin/real_estate_app/change_list.html:72
+#: templates/admin/real_estate_app/change_list.html:82
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
 msgstr[0] "Por-favor corriga o erro abaixo"
 msgstr[1] "Por-favor corriga os erros abaixo"
 
-#: templates/admin/real_estate_app/change_list.html:64
+#: templates/admin/real_estate_app/change_list.html:71
 #, python-format
 msgid "Add %(name)s"
 msgstr "Adicionar %(name)s"
 
-#: templates/admin/real_estate_app/change_list.html:83
+#: templates/admin/real_estate_app/change_list.html:93
 msgid "Filter"
 msgstr "Filtro"
-
-#: templates/admin/real_estate_app/content_popup.html:63
-msgid "Your list is empty"
-msgstr "A lista está vazia"
 
 #: templates/admin/real_estate_app/delete_confirmation.html:18
 msgid "Delete"
@@ -789,8 +778,8 @@ msgid ""
 "Are you sure you want to disable the selected %(objects_name)s? All of the "
 "following objects and their related items will be disabled:"
 msgstr ""
-"Você tem certeza que deseja DESABILITAR %(objects_name)s selecionados? Todos os "
-"seguintes objetos e suas relações serão desabilitadas:"
+"Você tem certeza que deseja DESABILITAR %(objects_name)s selecionados? Todos "
+"os seguintes objetos e suas relações serão desabilitadas:"
 
 #: templates/admin/real_estate_app/edit_inline/stacked.html:67
 #: templates/admin/real_estate_app/pt-br/edit_inline/stacked-realtor.html:71
@@ -807,6 +796,27 @@ msgstr "Remover"
 #, fuzzy
 msgid "Complement information"
 msgstr "Informações gerais"
+
+#, fuzzy
+#~ msgid "%s successfully duplicate."
+#~ msgstr "%s despublicado(s) com sucesso."
+
+#~ msgid "A user with that email already exists."
+#~ msgstr "Já existe um usu[ario com este e-mail."
+
+#, fuzzy
+#~ msgid "Address"
+#~ msgstr "Endereço"
+
+#, fuzzy
+#~ msgid "Addresses"
+#~ msgstr "Endereço"
+
+#~ msgid "Phones"
+#~ msgstr "Telefones"
+
+#~ msgid "Your list is empty"
+#~ msgstr "A lista está vazia"
 
 #~ msgid "Sucessfully additioned."
 #~ msgstr "Adicionado com sucesso"

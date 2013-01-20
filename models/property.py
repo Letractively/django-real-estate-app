@@ -276,13 +276,13 @@ class Property(models.Model):
 		else:
 			return mark_safe(u'')
 	
-	def save(self):
+	def save(self,*args,**kwargs):
 		if not self.code_property:
 			code_property=make_dv(''.join(random.sample('0123456789',6)),max_num=8)
 			if Property.objects.filter(code_property=code_property):
 				code_property=make_dv(''.join(random.sample('0123456789',6)),max_num=8)
 			self.code_property=code_property
-		super(Property,self).save()
+		super(Property,self).save(*args,**kwargs)
 
 	def clone(self):
 		from django.core.files.base import ContentFile
@@ -290,7 +290,7 @@ class Property(models.Model):
 
 		from real_estate_app.models import Photo
 
-		new_kwargs = dict([(fld.name, getattr(self, fld.name)) for fld in self._meta.fields if (fld.name != 'id' or fld.name != 'code_property')]);
+		new_kwargs = dict([(fld.name, getattr(self, fld.name)) for fld in self._meta.fields if fld.name not in ('id','code_property') ]);
 
 		slug_max=self._meta.get_field_by_name('slug')[0].max_length-5
 		if (len(new_kwargs['slug']) < slug_max):
@@ -304,10 +304,10 @@ class Property(models.Model):
 		[obj.domain.add(_domain) for _domain in self.domain.all()]
 		[obj.realtor_fk.add(_realtor) for _realtor in self.realtor_fk.all()]
 		
-		
-		for _photo in self.photos.all():
-			file_name='copy-'+_photo.photo.name.split('/')[-1:][0]
-			p=Photo(
+		if self.photos:
+			for _photo in self.photos:
+				file_name='copy-'+_photo.photo.name.split('/')[-1:][0]
+				p=Photo(
 						album=obj,
 						description=_photo.description,
 						slug=slugify(_photo.slug+'-copy'),
@@ -316,8 +316,7 @@ class Property(models.Model):
 						pub_date=_photo.pub_date,
 						width=_photo.width,
 						height=_photo.height,
-			)
-			p.photo.save(file_name,ContentFile(_photo.photo.file.read()))
-			p.save()
-
+				)
+				p.photo.save(file_name,ContentFile(_photo.photo.file.read()))
+				p.save()
 		return obj
