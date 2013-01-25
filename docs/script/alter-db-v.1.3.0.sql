@@ -6,3 +6,4 @@ CREATE TABLE "real_estate_app_property_realtor_fk" (
 );
 
 ALTER TABLE "real_estate_app_property_realtor_fk" ADD CONSTRAINT "property_id_refs_id_4e0dee74" FOREIGN KEY ("property_id") REFERENCES "real_estate_app_property" ("id") DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE real_estate_app_property ADD COLUMN "create_date" date;

@@ -35,6 +35,8 @@ class PropertyAdmin(FaceBoxModelAdmin):
 				'description':_('Mark on map the localization. p.s: use the right click to mark place when use zoom.'),
 			}),
 	)
+
+	date_hierarchy = 'date_init'
 	
 	list_display = ('code_property','address','state','district_fk', 'classification_fk','statusproperty_fk','date_init','date_end',)
 	
@@ -67,9 +69,7 @@ class PropertyAdmin(FaceBoxModelAdmin):
 		      MEDIA_PREFIX_REAL_ESTATE+'js/ajax_csrf.js',
 		      MEDIA_PREFIX_REAL_ESTATE+'js/real_estate_app_district.js',
 		      MEDIA_PREFIX_REAL_ESTATE+'js/jquery.createtabs.js',
-		      MEDIA_PREFIX_REAL_ESTATE+'js/property-load.js',
-		      MEDIA_PREFIX_REAL_ESTATE+"js/real_estate_app_gmaps.js",
-			  'http://maps.google.com/maps/api/js?sensor=true',
+		      MEDIA_PREFIX_REAL_ESTATE+"js/real_estate_app_filter.js",
 		)
 
 admin.site.register(Property, PropertyAdmin)

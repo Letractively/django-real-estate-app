@@ -17,6 +17,11 @@
   });
 })(django.jQuery);
 </script>
+  {% if opts.object_name.lower == 'property' %}
+    <script type="text/javascript" src="{{ MEDIA_REAL_ESTATE }}js/property-load.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_REAL_ESTATE }}js/real_estate_app_gmaps.js"></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+  {% endif %}
 {% endblock %}
 
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />
@@ -37,6 +42,7 @@
 
 {% block content %}<div id="content-main">
 {% block object-tools %}
+
 {% if change %}
   {% if not is_popup %}
     <ul class="object-tools"><li><a href="history/" class="historylink">{% trans "History" %}</a></li>

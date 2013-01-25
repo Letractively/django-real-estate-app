@@ -82,6 +82,15 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
 
     list_filter=['logical_exclude',]
 
+    def changelist_view(self,request,extra_context=None):
+        if not request.GET.has_key('logical_exclude__exact'):
+            get=request.GET.copy()
+            get['logical_exclude__exact']='0'
+            request.GET = get
+            request.META['QUERY_STRING']=request.GET.urlencode()
+
+        return super(RealEstateAppPopUpModelAdmin,self).changelist_view(request,extra_context=extra_context)
+
     def delete_model(self, request, obj):
         obj_fk = obj._meta.module_name+'_fk'
         obj_name=obj._meta.module_name
@@ -140,13 +149,80 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
             del actions['delete_selected']
         return actions
 
-    def response_add(self, request, obj):
-        super(RealEstateAppPopUpModelAdmin,self).response_add(request,obj)
-        return HttpResponseRedirect('../')
+    def response_add(self, request, obj, post_url_continue='../%s/'):
+        opts = obj._meta
+        pk_value = obj._get_pk_val()
+        post_url='../'
+        
+        msg = _('The %(name)s "%(obj)s" was added successfully.') % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(obj)}
+        # Here, we distinguish between different save types by checking for
+        # the presence of keys in request.POST.
+        if "_continue" in request.POST:
+            self.message_user(request, msg + ' ' + _("You may edit it again below."))
+            if "_popup" in request.POST:
+                post_url_continue += "?_popup=1"
+            return HttpResponseRedirect(post_url_continue % pk_value)
+
+        if "_popup" in request.POST:
+            post_url += "?pop=1"
+            return HttpResponseRedirect(post_url)
+        elif "_addanother" in request.POST:
+            self.message_user(request, msg + ' ' + (_("You may add another %s below.") % force_unicode(opts.verbose_name)))
+            return HttpResponseRedirect(request.path)
+        else:
+            self.message_user(request, msg)
+
+            # Figure out where to redirect. If the user has change permission,
+            # redirect to the change-list page for this object. Otherwise,
+            # redirect to the admin index.
+
+            if self.has_change_permission(request, None):
+                post_url = post_url
+            else:
+                post_url = '../../../'
+            return HttpResponseRedirect(post_url)
 
     def response_change(self,request,obj):
-        super(RealEstateAppPopUpModelAdmin,self).response_change(request,obj)
-        return HttpResponseRedirect('../../')
+        """
+        Determines the HttpResponse for the change_view stage.
+        """
+        opts = obj._meta
+
+        # Handle proxy models automatically created by .only() or .defer()
+        verbose_name = opts.verbose_name
+        if obj._deferred:
+            opts_ = opts.proxy_for_model._meta
+            verbose_name = opts_.verbose_name
+
+        pk_value = obj._get_pk_val()
+
+        msg = _('The %(name)s "%(obj)s" was changed successfully.') % {'name': force_unicode(verbose_name), 'obj': force_unicode(obj)}
+        if "_continue" in request.POST:
+            self.message_user(request, msg + ' ' + _("You may edit it again below."))
+            if "_popup" in request.REQUEST:
+                return HttpResponseRedirect(request.path + "?_popup=1")
+            else:
+                return HttpResponseRedirect(request.path)
+                
+        if "_popup" in request.POST:
+            return HttpResponseRedirect('../?pop=1')
+        elif "_saveasnew" in request.POST:
+            msg = _('The %(name)s "%(obj)s" was added successfully. You may edit it again below.') % {'name': force_unicode(verbose_name), 'obj': obj}
+            self.message_user(request, msg)
+            return HttpResponseRedirect("../%s/" % pk_value)
+        elif "_addanother" in request.POST:
+            self.message_user(request, msg + ' ' + (_("You may add another %s below.") % force_unicode(verbose_name)))
+            return HttpResponseRedirect("../add/")
+        else:
+            self.message_user(request, msg)
+            # Figure out where to redirect. If the user has change permission,
+            # redirect to the change-list page for this object. Otherwise,
+            # redirect to the admin index.
+            if self.has_change_permission(request, None):
+                return HttpResponseRedirect('../')
+            else:
+                return HttpResponseRedirect('../../../')
+        
 
     def get_urls(self):
 

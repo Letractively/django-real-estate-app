@@ -188,6 +188,11 @@ class Property(models.Model):
 							help_text=_('Entry with a end of date publicashion')
 	)
 
+	create_date = models.DateField(
+							_('Creation date'),
+							default=datetime.now(),
+							help_text=_('Entry with a init of date publicashion')
+	)
 	
 	description = models.TextField(
 							_('Description'),
