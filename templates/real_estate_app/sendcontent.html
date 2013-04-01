@@ -1,0 +1,30 @@
+{{% extends "real_estate_app/base.html" %}
+{% block content_main %}
+				<h1>Compartilhamento de conteúdo</h1>
+                    
+                    <form action="." method="post">
+			
+					{% csrf_token %}
+                    <label>Nome:</label>
+					<input name="name"  type="text"/>
+					{% if form.name.errors %} {{ form.name.errors }} {% endif %}
+					<br />
+					<label>De:</label>
+					<input name="from_email" type="text"/>
+					{% if form.from_email.errors %} {{ form.from_email.errors }} {% endif %}
+					<br />
+					<label>Para:</label>
+					<input name="to" type="text"/>
+					{% if form.to.errors %} {{ form.to.errors }} {% endif %}
+					<p> Os emails deverão ser separado por vírgula ","</p>
+					<input type="hidden" name="url" class="hidden" value="{% if form.url.value %}
+					{{ form.url.value }} {% endif %}" />
+					<br /> 
+					<label>Validador:</label>
+					{{ form.captcha }}
+					{% if form.captcha.errors %} {{ form.captcha.errors }} {% endif %}
+					<br />
+                    <input class="submit colour_darkest" name="" type="submit" />
+                   
+                    </form>
+{% endblock %}

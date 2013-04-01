@@ -5,7 +5,7 @@ from portlets import *
 from files import *
 from images import *
 from realtors import *
+from news import *
 
 __all__=('Phone','Address','Realtor','Photo','Property','StatusProperty','Classification', 'District',
-		 'Files','AditionalThings', 'PositionOfSun','PortletPropagandaImage',
-		 'Images')
+		 'Files','AditionalThings', 'PositionOfSun','PortletPropagandaImage','News','Images')

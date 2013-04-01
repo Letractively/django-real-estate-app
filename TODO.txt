@@ -1,3 +1,8 @@
+Melhorar a parte de portlet para suportar a propaganda.
+Revisar código real_estate_app_tags.py, para melhorar as classes semelhantes.
+Melhorar a busca da url dos feeds em feeds.py.
+Melhorar os exemplos.
+Fazer a reserva de chaves para cada imóvel com calendário.
 Problema do meio.mask com ie7.
 Criar a busca por geoprocessamento.
 Fazer versão de css para telefone e tablets.

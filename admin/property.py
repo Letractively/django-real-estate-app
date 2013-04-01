@@ -69,7 +69,6 @@ class PropertyAdmin(FaceBoxModelAdmin):
 		      MEDIA_PREFIX_REAL_ESTATE+'js/ajax_csrf.js',
 		      MEDIA_PREFIX_REAL_ESTATE+'js/real_estate_app_district.js',
 		      MEDIA_PREFIX_REAL_ESTATE+'js/jquery.createtabs.js',
-		      MEDIA_PREFIX_REAL_ESTATE+"js/real_estate_app_filter.js",
 		)
 
 admin.site.register(Property, PropertyAdmin)

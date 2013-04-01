@@ -1,0 +1,23 @@
+{% load i18n %}
+<p> &nbsp; </p>
+{% if portlet_title %}
+	<h2> {{ portlet_title }} </h2>
+{% endif %}
+
+{% if portlet_featured_obj %}
+	<p>
+		<strong><a href="{{ portlet_featured_obj.get_absolute_url }}">{{ portlet_featured_obj.title }} </a></strong> <br />
+		{{ portlet_featured_obj.content|striptags|safe|truncatewords:20 }}	
+		<a href="{{ portlet_featured_obj.get_absolute_url }}"> {% trans "Read more" %} </a>
+		<br />
+	</p>
+{% endif %}
+{% if portlet_objects %}
+	{% for obj in portlet_objects %}
+		<p>
+			<strong><a href="{{ obj.get_absolute_url }}">{{ obj.title }} </a></strong> <br />
+			{{ obj.content|striptags|safe|truncatewords:20 }} 
+			<a href="{{ obj.get_absolute_url }}"> {% trans "Read more" %} </a>
+		</p>
+	{% endfor %}
+{% endif %}

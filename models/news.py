@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from django.db.models import permalink
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.localflavor.br.br_states import STATE_CHOICES
+
 
 class News(models.Model):
 
@@ -31,11 +31,17 @@ class News(models.Model):
 	link = models.CharField(
 					_('Link'),
 					null=True,
-					blank=True
+					blank=True,
+					max_length=600,
 	)
 
 	pub_date = models.DateField(
-				default=datetime.now<Down>
+				default=datetime.now()
+	)
+
+	enable_publish = models.BooleanField(
+							_('Enable publish'), 
+							default=True
 	)
 
 	def __unicode__(self):
@@ -48,3 +54,8 @@ class News(models.Model):
 		verbose_name=_('News')
 		verbose_name_plural=_('News')
 
+	@permalink
+	def get_absolute_url(self):
+		return ('news-detail', None, {
+				'slug' : str(self.slug),
+				})

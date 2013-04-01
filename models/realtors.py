@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+import re, Image
 from datetime import datetime
+from os import path
 
 from django.db import models
 from django.conf import settings
@@ -14,6 +16,8 @@ SEX=(
 	(u'1',_('Male')),
 	(u'2',_('Female')),
 )
+
+GET_THUMB_PATTERN = re.compile(r'^get_photo_(\d+)x(\d+)_(thumb_url|thumb_filename|resize_url)$')
 
 def get_realtor_directory(instance, filename):
 		return 'real_estate_app/photos/realtor/'+instance.name+'/'+datetime.now().strftime('%Y/%m/%d/')+'/'+filename
@@ -63,7 +67,8 @@ class Realtor(models.Model):
 		cpf = models.CharField(
 								u'CPF',
 								max_length=17,
-								blank=True
+								blank=True,
+								unique=True
 		)
 	
 		rg = models.CharField(
@@ -111,6 +116,10 @@ class Realtor(models.Model):
 		ordering=('user',)
 		verbose_name=_('Realtor')
 		verbose_name_plural=_('Realtors')
+		
+		if LANGUAGE_CODE in ('pt_BR','pt-br'):
+			unique_together=[('rg','ssp'),('creci','ssp')]
+
 
 	def __unicode__(self):
 				
@@ -189,3 +198,83 @@ class Realtor(models.Model):
 			return self.__address
 	
 	address=property(get_address)
+
+
+	def __getattr__(self, name):
+		"""
+		Deploys dynamic methods for on-demand thumbnails creation with any
+		size.
+
+		Syntax::
+
+		get_photo_[WIDTH]x[HEIGHT]_[METHOD]
+
+		Where *WIDTH* and *HEIGHT* are the pixels of the new thumbnail and
+		*METHOD* can be ``url`` or ``filename``.
+
+		Example usage::
+
+	    >>> photo = Photo(photo="/tmp/example.jpg", ...)
+	    >>> photo.save()
+	    >>> photo.get_photo_320x240_url()
+	    >>> u"http://media.example.net/photos/2008/02/26/example_320x240.jpg"
+	    >>> photo.get_photo_320x240_filename()
+	    >>> u"/srv/media/photos/2008/02/26/example_320x240.jpg"
+		"""
+		match = re.match(GET_THUMB_PATTERN, name)
+		if match is None:
+			raise AttributeError, name
+		width, height, method = match.groups()
+		size = int(width), int(height)
+
+		def get_photo_thumbnail_filename():
+			file, ext = path.splitext(self.photo.file.name)
+			return file + '_%sx%s' % size + ext
+
+		def get_photo_thumbnail_url():
+			url, ext = path.splitext(self.photo.url)
+			return url + '_%sx%s' % size + ext	
+
+
+		def get_photo_thumbnail_resize_filename():
+			file, ext = path.splitext(self.photo.file.name)
+			return file + '_%sx%s_' % size + method + ext
+
+		def get_photo_thumbnail_resize_url():
+			url, ext = path.splitext(self.photo.url)
+			return url + '_%sx%s_' % size + method + ext	
+
+		if method == "thumb_url" or method=="thumb_filename":	
+			thumbnail = get_photo_thumbnail_filename()
+		else:
+			thumbnail = get_photo_thumbnail_resize_filename()
+
+		if not path.exists(thumbnail):
+			img = Image.open(self.photo.file.name)
+
+			if method =="thumb_url" or method == "thumb_filename":
+				img.thumbnail(size, Image.ANTIALIAS)
+				img.save(thumbnail)
+			else:
+				(img_width,img_height)=img.size
+				
+				wpercent=(size[0]/float(img_width))
+				HSIZE=int((float(img_height)*float(wpercent)))
+
+				y_crop=int((float((HSIZE/2.0))-float((size[1]/2.0))))
+				height_crop=(HSIZE-y_crop)				
+				
+				box=(0,y_crop,size[0],height_crop)
+
+				new_img = img.resize((size[0],HSIZE),Image.ANTIALIAS)
+
+				crop=new_img.crop(box)
+				crop.load()
+				crop.save(thumbnail)
+
+		if method == "thumb_url":
+			return get_photo_thumbnail_url
+		elif method == "resize_url":
+			return get_photo_thumbnail_resize_url
+		else:
+			return get_photo_thumbnail_filename

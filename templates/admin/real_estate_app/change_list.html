@@ -90,9 +90,11 @@
       {% block filters %}
         {% if cl.has_filters %}
           <div id="changelist-filter">
-            <h2><span>{% trans 'Filter' %}</span></h2>
+            <h2 id="filter"><span>{% trans 'Filter' %}</span></h2>
             <div id="changelist-filter-content">
+              <div id="loginForm">
               {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
+            </div>
             </div>
           </div>
         {% endif %}

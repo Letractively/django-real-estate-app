@@ -403,7 +403,6 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
         js = [
             settings.ADMIN_MEDIA_PREFIX+"js/jquery.min.js",
             settings.ADMIN_MEDIA_PREFIX+"js/jquery.init.js",
-            MEDIA_PREFIX_REAL_ESTATE+"js/real_estate_app_filter.js",
         ]
 
 class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):

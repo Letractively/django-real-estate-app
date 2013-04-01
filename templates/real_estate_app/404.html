@@ -1,0 +1,8 @@
+{% extends "real_estate_app/base.html" %}
+{% block content_main %}
+	<h1> Not found, error 404!</h1>
+	<p>
+	{% trans "You can return to <a href='javascript:history.go(-1)'>last page</a> or go to <a href='/'> home page</a>.<br /> Thanks," %}<br />
+	{{ SITE_TITLE|upper }}
+	</p>
+{% endblock %}

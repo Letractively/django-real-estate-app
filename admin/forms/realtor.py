@@ -38,9 +38,11 @@ class RealtorAdminFormSet(BaseInlineFormSet):
 				elif data.has_key('tipo_pessoa') and data.get('tipo_pessoa') == 'PJ':
 					fields_check=['cnpj','razao_social','creci']
 					remove_values=['cpf','rg','ssp']
-				
+				else:
+					fields_check=['cpf','rg','ssp','creci','cnpj','razao_social']
+					remove_values=[]
 				try:
-					self.check_empty_fields(form,data,fields_check)
+					self.check_empty_fields(form,data,fields_check)					
 				except:			
 					raise ValidationError('Ops... you try something wrong!')
 

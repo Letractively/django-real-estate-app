@@ -66,11 +66,16 @@ class RealtorAdmin(RealEstateAppRevertInlineModelAdmin):
 			css = {
 				'all':(
 					MEDIA_PREFIX_REAL_ESTATE+"css/tabs.css",
+					MEDIA_PREFIX_REAL_ESTATE+"css/jscrollpane.css",
+					MEDIA_PREFIX_REAL_ESTATE+"css/jscrollpane-custom.css",
 				)
 			}
 
 			js += [
 				MEDIA_PREFIX_REAL_ESTATE+"js/locale/pt_BR/realtor.js",
+				MEDIA_PREFIX_REAL_ESTATE+"js/jquery.mousewheel.js",
+		      	MEDIA_PREFIX_REAL_ESTATE+"js/jquery.jscrollpane.min.js",
+		      	MEDIA_PREFIX_REAL_ESTATE+"js/real_estate_app_popup_scroll.js"
 			]
 
 admin.site.register(Realtor, RealtorAdmin)

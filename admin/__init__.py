@@ -7,6 +7,7 @@ from files import *
 from portlets import *
 from realtor import *
 from urls import *
+from news import *
 from real_estate_app.models import Classification, StatusProperty, District, AditionalThings, \
 								   PositionOfSun
 

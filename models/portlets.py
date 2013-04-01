@@ -2,6 +2,54 @@ from datetime import datetime
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from real_estate_app.models.news import News
+
+TYPES=(
+	('news',_('News')),
+	('images',_('Images')),
+	('text',_('Text')),
+)
+
+class Portlet(models.Model):
+
+	title=models.CharField(
+			_('Title'),	
+			max_length=255,
+			help_text=_('Entry the title of propaganda')
+	)
+
+	featured=models.ForeignKey(
+							News,
+							help_text=_('Entry with a featured news'),
+							verbose_name=_('news'),
+							blank=True,
+							null=True
+	)
+
+	amount_featured = models.IntegerField(
+							_('Amount of featured news'),
+							help_text=_('Amount of featured news to display'),
+	)
+
+	type_portlet = models.CharField(
+							_('Tipo de portlet'),
+							max_length=10,
+							choices=TYPES,
+							blank=False,
+							default='news'
+	)
+
+
+	def __unicode__(self):
+		return u'%s' % self.title 
+
+	class Meta:
+		app_label     ='real_estate_app'
+		verbose_name  = _('Portlet News')
+		verbose_name_plural  = _('Portlet News')
+	
+
+
 class PortletPropagandaImage(models.Model):
 
 	title=models.CharField(

@@ -1,12 +1,9 @@
-#changelist-filter-content {
-	display: none;
-}
-
 #changelist-filter h2 {
     border-bottom: 1px solid #DDDDDD;
     font-size: 11px;
     padding: 2px 5px;
     height: 26px;
+    cursor: pointer;
 }
 #changelist-filter h2 span {
 	padding-right: 13px;

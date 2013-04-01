@@ -1,0 +1,39 @@
+{% extends "real_estate_app/base.html" %}
+{% load real_estate_app_tags %}
+
+{% block content_main %}
+<h1> News on default list </h1>
+<p>
+	{% for news in news_list %}
+	<p>
+		<strong>{{ news.title }}</strong> <br />
+		<p>
+		{{ news.content|safe|truncatewords:20 }}<br />
+		<a href="{{ news.get_absolute_url }}"> Read more</a>
+		</p>
+	</p>
+	{% endfor %}
+</p>
+<h1> Last 3 news from real_estate_app_tags </h1>
+{% get_news 3 as news_tags%}
+<pre>
+	get_news 3 as news_tags
+
+	for new in news_tags
+		new.title
+		new.content|safe|truncatewords:20
+	endfor
+</pre>
+<p>
+	{% for new in news_tags %}
+	<p>
+		<strong>{{ new.title }}</strong> <br />
+		<p>
+		{{ new.content|safe|truncatewords:20 }}<br />
+		<a href="{{ new.get_absolute_url }}"> Read more</a>
+		</p>
+	</p>
+	{% endfor %}
+</p>
+
+{% endblock %}
