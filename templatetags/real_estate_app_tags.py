@@ -271,8 +271,8 @@ class PortletNewsNode(template.Node):
 
 			context.update({
 				'portlet_objects':news,
-				'portlet_title':portlet_options.title,
-				'portlet_featured_obj': portlet_options.featured
+				'portlet_featured_obj': portlet_options.featured,
+				'portlet':portlet_options
 			})
 			
 		except ObjectDoesNotExist:

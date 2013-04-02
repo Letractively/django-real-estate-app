@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import url
+
 from real_estate_app.conf.settings import REAL_ESTATE_APP_NUM_LATEST
 from real_estate_app.feeds import PropertyFeed 
 
