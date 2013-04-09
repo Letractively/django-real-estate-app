@@ -32,6 +32,8 @@ REAL_ESTATE_APP_AJAX_SEARCH = getattr(settings,
 									  }
 )
 
+REAL_ESTATE_VIEWED_PRODUCTS = getattr(settings,'REAL_ESTATE_VIEWED_PRODUCTS',4)
+
 
 MANAGERS=list(MANAGERS)
 

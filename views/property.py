@@ -5,7 +5,9 @@ from datetime import datetime
 from django.db.models import Max, Min, Q
 from django.views.decorators.csrf import requires_csrf_token
 from django.views.generic import list_detail
+
 from real_estate_app.models import Property, StatusProperty, District, Classification, AditionalThings
+from real_estate_app.views.last_visited import receive_property_view
 
 @requires_csrf_token
 def property_list(request, *args, **kwargs):
@@ -77,4 +79,18 @@ def property_detail(request, *args, **kwargs):
 	A view wrapper around ``django.views.generic.list_detail.object_detail``.
 	"""
 	kwargs['queryset'] = Property.objects.all_enabled()
-	return list_detail.object_detail(request, *args, **kwargs)
+	response = list_detail.object_detail(request, *args, **kwargs)
+	
+	try:
+		proprety=Property.objects.get(slug=kwargs['slug'])
+		receive_property_view(
+			sender=proprety.__class__,
+			proprety=proprety,
+			user=request.user,
+			request=request,
+			response=response
+		)
+	except:
+		pass
+
+	return response

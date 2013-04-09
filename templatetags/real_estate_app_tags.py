@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, render_to_response
 from django.utils.safestring import mark_safe
 
 from real_estate_app.models import Photo, Property, District, StatusProperty, Classification, AditionalThings, Portlet, News
+from real_estate_app.views.last_visited import get_recently_viewed_proprety_ids
 
 register = template.Library()
 
@@ -325,6 +326,27 @@ def do_get_news(parser, token):
 	else:
 		raise template.TemplateSyntaxError, "'%s' tag takes one or two arguments: %s as [varname] %s [limit] as [varname]" % (bits[0],bits[0],bits[0])
 
+class LastedViewedProprety(template.Node):
+	def __init__(self, var_name):
+		self.var_name=var_name
+
+	def render(self, context):
+		request=context['request']
+		proprety_ids = get_recently_viewed_proprety_ids(request)
+		propretys = Property.objects.filter(id__in=proprety_ids)
+		context[self.var_name] = propretys
+		return ''
+
+def do_get_last_visited_proprety(parser, token):
+	
+	bits = token.contents.split()
+
+	if len(bits)==3:
+		if bits[1]!='as':
+			raise template.TemplateSyntaxError, "Firts argument to '%s' tag must be 'as'" % bits[0]
+		return LastedViewedProprety(var_name=bits[2])
+	else:
+		raise template.TemplateSyntaxError, "'%s' tag takes one or two arguments: %s as [varname]" % (bits[0],bits[0])
 
 register.tag('get_property_photo',do_get_property_photo)
 register.tag('get_propertys',do_get_property)
@@ -336,3 +358,4 @@ register.tag('get_select_classification_property',do_get_options_select_classifi
 register.tag('get_checked_aditional_things_property',do_get_options_checked_aditonal_things_property)
 register.tag('get_portlet_news',do_get_portlet_news)
 register.tag('get_news',do_get_news)
+register.tag('get_last_visited_proprety',do_get_last_visited_proprety)
