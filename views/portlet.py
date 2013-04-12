@@ -13,4 +13,5 @@ def portlet_create(request, *args, **kwargs):
 def portlet_edit(request, object_id=None, *args, **kwargs):
 	kwargs['object_id']=object_id
 	kwargs['form_class']=PortletAdminForm
+	kwargs["post_save_redirect"]=request.path
 	return update_object(request, *args, **kwargs)
