@@ -1,0 +1,47 @@
+{% extends "real_estate_app/base.html" %}
+{% load flatpages %}
+
+{% block content_main %}
+	{% if send %}
+		<p> {{ send|safe }} </p>
+	{% endif %}
+
+	{% if error %}
+			<p> {{ error|safe }} </p>
+	{% endif %}
+    				{% get_flatpages "/contact/" as contacts %}
+					{% if contacts %}
+
+						{% for contact in contacts %}
+							{% if user.is_authenticated %}
+								<a class="edit icon" href="/admin/flatpages/flatpage/{{ contact.id }}/" title="Editar">Editar</a>
+							{% endif %}
+
+							<h1>{{ contact.title }}</h1>
+							<p> {{ contact.content|safe }}</p>
+						{% endfor %}
+					{% else %}
+						<h1>Contate-nos</h1>
+					{% endif %}
+
+                    <form action="." method="post">
+					{% csrf_token %}
+                    <label>Nome:</label>
+					<input name="name" type="text" />
+					{% if form.name.errors %} {{ form.name.errors }} {% endif %}
+					<br />
+					<label>E-mail:</label>
+					<input name="from_email" type="text" />
+					<br />
+					{% if form.from_email.errors %} {{ form.from_email.errors }} {% endif %}
+                    <label>Mensagem:</label>
+					<textarea name="message"></textarea>
+					{% if form.message.errors %} {{ form.message.errors }} {% endif %}
+					<br />
+					<label>Validador:</label>
+					{{ form.captcha }}
+					{% if form.captcha.errors %} {{ form.captcha.errors }} {% endif %}
+					<br />
+                    <input name="" type="submit" />
+                    </form>
+{% endblock %}

@@ -1,0 +1,926 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-04-01 23:33-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: fields.py:23
+msgid "Enter at least one e-mail address."
+msgstr "Entre pelo menos com um endereço de e-mail."
+
+#: fields.py:27
+#, python-format
+msgid "%s is not a valid e-mail address."
+msgstr "%s este não é um endereço de e-mail válido"
+
+#: widgets.py:98 widgets.py:135 widgets.py:235
+msgid "Add Another"
+msgstr "Adicionar"
+
+#: widgets.py:236
+msgid "Search for realtors."
+msgstr "Buscar por corretores."
+
+#: admin/actions.py:18
+#, fuzzy, python-format
+msgid "Successfully duplicated %(count)d %(items)s"
+msgstr "Copiado com sucesso %(count)d %(items)s."
+
+#: admin/actions.py:20
+#, fuzzy, python-format
+msgid "Duplicate selected %(verbose_name_plural)s"
+msgstr "Copiar %(verbose_name_plural)s selecionados."
+
+#: admin/actions.py:25 admin/actions.py:35
+#, fuzzy
+msgid "1 property was"
+msgstr "1 imóviel foi"
+
+#: admin/actions.py:27 admin/actions.py:37
+#, python-format
+msgid "%s properties were"
+msgstr "%s imovéis foram"
+
+#: admin/actions.py:28
+#, python-format
+msgid "%s successfully marked unpublished."
+msgstr "%s despublicado(s) com sucesso."
+
+#: admin/actions.py:30
+#, fuzzy, python-format
+msgid "Unpublish selected %(verbose_name_plural)s"
+msgstr "Despublicar %(verbose_name_plural)s selecionados."
+
+#: admin/actions.py:38
+#, fuzzy, python-format
+msgid "%s successfully marked published."
+msgstr "%s publicado(s) com sucesso"
+
+#: admin/actions.py:39
+#, fuzzy, python-format
+msgid "Publish selected %(verbose_name_plural)s"
+msgstr "Publicar %(verbose_name_plural)s selecionados."
+
+#: admin/actions.py:44
+#, python-format
+msgid "Successfully enabled %(count)d %(items)s."
+msgstr "Habilitado %(count)d %(items)s com sucesso."
+
+#: admin/actions.py:46
+#, python-format
+msgid "Enable selected %(verbose_name_plural)s"
+msgstr "Habilitar %(verbose_name_plural)s selecionados."
+
+#: admin/actions.py:51
+#, python-format
+msgid "Successfully disabled %(count)d %(items)s."
+msgstr "Desabilitado %(count)d %(items)s com sucesso."
+
+#: admin/actions.py:53
+#, python-format
+msgid "Disable selected %(verbose_name_plural)s"
+msgstr "Desabilitar %(verbose_name_plural)s selecionados."
+
+#: admin/actions.py:98
+#, fuzzy
+msgid "Logical exclude object."
+msgstr "Exclusão lógica"
+
+#: admin/actions.py:120
+#, python-format
+msgid ""
+"Successfully deleted %(count)d and disabled %(count_two)d %(items_two)s."
+msgstr ""
+"Removido com sucesso %(count)d e desabilitado com sucesso %(count_two)d "
+"%(items_two)s."
+
+#: admin/actions.py:125
+#, fuzzy, python-format
+msgid "Successfully disebled %(count)d %(items)s."
+msgstr "Desabilitado com sucesso %(count)d %(items)s."
+
+#: admin/actions.py:129
+#, fuzzy, python-format
+msgid "Successfully deleted %(count)d %(items)s."
+msgstr "Deletado com sucesso %(count)d %(items)s."
+
+#: admin/actions.py:160 admin/options.py:338 admin/options.py:727
+#, python-format
+msgid "Cannot delete %(name)s"
+msgstr "Não foi possível deletar %(name)s"
+
+#: admin/actions.py:162 admin/options.py:340 admin/options.py:729
+msgid "Are you sure?"
+msgstr "Você tem certeza?"
+
+#: admin/actions.py:187
+#, python-format
+msgid "Delete selected %(verbose_name_plural)s"
+msgstr "Remover %(verbose_name_plural)s selecionado."
+
+#: admin/files.py:11 models/files.py:48
+msgid "files"
+msgstr "Arquivos"
+
+#: admin/news.py:11 models/news.py:54 models/news.py:55 models/portlets.py:8
+msgid "News"
+msgstr "Notícias"
+
+#: admin/news.py:14 admin/portlets.py:16 admin/property.py:29
+msgid "Publish"
+msgstr "Publicação"
+
+#: admin/options.py:104 admin/options.py:439
+#, python-format
+msgid "The %(name)s \"%(obj)s\" was disabled successfully."
+msgstr "\"%(obj)s\" %(name)s: desabilitado com sucesso."
+
+#: admin/options.py:109 admin/options.py:444
+#, python-format
+msgid "The %(name)s \"%(obj)s\" was deleted successfully."
+msgstr "\"%(obj)s\" %(name)s: deletado com sucesso."
+
+#: admin/options.py:157
+#, fuzzy, python-format
+msgid "The %(name)s \"%(obj)s\" was added successfully."
+msgstr "\"%(obj)s\" %(name)s: deletado com sucesso."
+
+#: admin/options.py:161 admin/options.py:201
+msgid "You may edit it again below."
+msgstr ""
+
+#: admin/options.py:170 admin/options.py:214
+#, python-format
+msgid "You may add another %s below."
+msgstr "Você pode adicionar %s."
+
+#: admin/options.py:199
+#, fuzzy, python-format
+msgid "The %(name)s \"%(obj)s\" was changed successfully."
+msgstr "\"%(obj)s\" %(name)s: desabilitado com sucesso."
+
+#: admin/options.py:210
+#, fuzzy, python-format
+msgid ""
+"The %(name)s \"%(obj)s\" was added successfully. You may edit it again below."
+msgstr "\"%(obj)s\" %(name)s: deletado com sucesso."
+
+#: admin/options.py:313 admin/options.py:599 admin/options.py:702
+#, python-format
+msgid "%(name)s object with primary key %(key)r does not exist."
+msgstr "%(name)s com a primary key %(key)r não existe."
+
+#: admin/options.py:562
+#, fuzzy, python-format
+msgid "Add %s"
+msgstr "Adicionar %(name)s"
+
+#: admin/options.py:664
+#, fuzzy, python-format
+msgid "Change %s"
+msgstr "Editar"
+
+#: admin/portlets.py:13
+msgid "Portlet image"
+msgstr "Portlet de Imagem"
+
+#: admin/property.py:23
+msgid "General Information"
+msgstr "Informações gerais"
+
+#: admin/property.py:26
+msgid "Detailed Information"
+msgstr "Informações detalhadas"
+
+#: admin/property.py:32
+msgid "MAPS"
+msgstr "MAPS"
+
+#: admin/property.py:35
+msgid ""
+"Mark on map the localization. p.s: use the right click to mark place when "
+"use zoom."
+msgstr ""
+"Marque a localização no map. obs.: Utilize o botão direito do mouse para "
+"marcar a localização do imóvel."
+
+#: admin/forms/photo.py:15
+msgid "No image!"
+msgstr "Não há imagem!"
+
+#: admin/forms/property.py:12 models/property.py:53
+msgid "price"
+msgstr "Preço"
+
+#: admin/forms/property.py:18
+msgid "Zip code"
+msgstr "CEP"
+
+#: admin/forms/property.py:21 models/others.py:123
+msgid "Aditional things"
+msgstr "Caracterização adicional do imóvel"
+
+#: admin/forms/property.py:27 models/realtors.py:117
+msgid "Realtor"
+msgstr "Corretor"
+
+#: admin/forms/property.py:32
+msgid "Enter text to search."
+msgstr "Entre com o texto para buscar"
+
+#: admin/forms/realtor.py:22
+msgid "This field is required."
+msgstr "Este campo é obrigatório."
+
+#: admin/forms/user.py:18
+msgid "First name"
+msgstr "Nome"
+
+#: admin/forms/user.py:20
+msgid "Last name"
+msgstr "Sobrenome"
+
+#: admin/forms/user.py:22 forms/contact.py:8
+msgid "E-mail"
+msgstr ""
+
+#: admin/forms/user.py:43
+msgid "A user with that email already exists."
+msgstr "Já existe um usu[ario com este e-mail."
+
+#: forms/contact.py:7 forms/sendcontent.py:9 models/others.py:101
+msgid "Name"
+msgstr "Nome"
+
+#: forms/contact.py:10
+msgid "Mensage"
+msgstr "Mensagem"
+
+#: forms/contact.py:15 forms/sendcontent.py:13
+msgid "Validator"
+msgstr "Validador"
+
+#: forms/sendcontent.py:10
+msgid "To"
+msgstr "Para"
+
+#: forms/sendcontent.py:11
+msgid "From"
+msgstr "De"
+
+#: forms/sendcontent.py:12
+msgid "URL"
+msgstr ""
+
+#: models/files.py:22 models/images.py:27 models/photo.py:42
+#: models/portlets.py:62 models/property.py:38
+msgid "slug"
+msgstr "slug"
+
+#: models/files.py:24 models/images.py:29 models/photo.py:44
+#: models/portlets.py:64 models/property.py:40
+msgid ""
+"Automatically built from the caption. A slug is a short label generally used "
+"in URLs."
+msgstr ""
+"Automaticamente construido pelo caption. O slug é curto geralmente usado em "
+"URLs"
+
+#: models/files.py:29 models/images.py:33 models/photo.py:58
+#: models/portlets.py:97
+msgid "date published"
+msgstr "Data de publicação"
+
+#: models/files.py:31 models/images.py:35 models/portlets.py:99
+msgid ""
+"Files in future dates are only published on \t\t                     correct "
+"date."
+msgstr ""
+"Arquivos com data futura serão publicados corretamente na data casdastrada"
+
+#: models/files.py:36
+msgid "Files"
+msgstr "Arquivos"
+
+#: models/files.py:47
+msgid "file"
+msgstr "Arquivo"
+
+#: models/images.py:40 models/images.py:52 models/portlets.py:9
+msgid "Images"
+msgstr "Imagens"
+
+#: models/images.py:51
+msgid "Image"
+msgstr "Imagem"
+
+#: models/marketing.py:7 models/news.py:14 models/portlets.py:16
+#: models/portlets.py:56
+msgid "Title"
+msgstr "Título"
+
+#: models/marketing.py:9 models/portlets.py:18 models/portlets.py:58
+msgid "Entry the title of propaganda"
+msgstr "Entre com o título da propaganda."
+
+#: models/marketing.py:12 models/portlets.py:74 models/property.py:198
+msgid "Description"
+msgstr "Descrição"
+
+#: models/marketing.py:15 models/portlets.py:77
+msgid "Entry with description of propaganda"
+msgstr "Entre com a descrição da propaganda"
+
+#: models/marketing.py:19 models/news.py:43 models/portlets.py:82
+#: models/property.py:212
+msgid "Enable publish"
+msgstr "Publicar no site."
+
+#: models/marketing.py:24 models/portlets.py:87 models/property.py:179
+msgid "Date of init published"
+msgstr "Data inicio de publicação"
+
+#: models/marketing.py:25 models/portlets.py:88 models/property.py:181
+#: models/property.py:194
+msgid "Entry with a init of date publicashion"
+msgstr "Entry com a data de início de publicação"
+
+#: models/marketing.py:29 models/portlets.py:92 models/property.py:185
+msgid "Date of end published"
+msgstr "Data do fim da publicação"
+
+#: models/marketing.py:30 models/portlets.py:93 models/property.py:188
+msgid "Entry with a end of date publicashion"
+msgstr "Entre com a data fim de publicação."
+
+#: models/news.py:21
+msgid "Slug"
+msgstr "slug"
+
+#: models/news.py:26
+msgid "Content"
+msgstr "Conteúdo"
+
+#: models/news.py:32 models/portlets.py:68
+msgid "Link"
+msgstr "Link"
+
+#: models/others.py:10 models/others.py:37 models/property.py:65
+msgid "District"
+msgstr "Bairro"
+
+#: models/others.py:12
+msgid "Enter with new district."
+msgstr "Entre com um novo bairro."
+
+#: models/others.py:16 models/others.py:54 models/others.py:80
+#: models/others.py:106 models/others.py:135 models/realtors.py:57
+msgid "Logical exclude"
+msgstr "Exclusão lógica"
+
+#: models/others.py:22 models/property.py:103
+msgid "State"
+msgstr "Estado"
+
+#: models/others.py:25 models/property.py:106
+msgid "State of that belongs to district"
+msgstr "Estado que o bairro pertence"
+
+#: models/others.py:38
+msgid "Districts"
+msgstr "Bairro"
+
+#: models/others.py:49 models/others.py:69 models/property.py:93
+msgid "Classification"
+msgstr "Classificação do imóvel"
+
+#: models/others.py:51
+msgid "Enter with new classification. Ex.: House, Build,..."
+msgstr "Entre com uma nova classificação. Ex.: Casa, Apartamento,..."
+
+#: models/others.py:70
+msgid "Classifications"
+msgstr "Classificações"
+
+#: models/others.py:75 models/others.py:95
+msgid "Status Property"
+msgstr "Estado do imóvel"
+
+#: models/others.py:77
+#, fuzzy
+msgid "Enter with new status. Ex.: Rent, Sale,..."
+msgstr "Entre com um novo estado do imovél. Ex.: Aluguel, Venda,..."
+
+#: models/others.py:96
+msgid "Status Propertys"
+msgstr "Estado dos imóveis"
+
+#: models/others.py:103
+msgid "Enter with new aditional things to property. Ex.: Pool, Barbecue,..."
+msgstr ""
+"Entre com uma nova caracterização do imóvel. Ex.: Piscina, Churrasqueira,..."
+
+#: models/others.py:124
+msgid "Aditionals things"
+msgstr "Caracterizações adicionais do imóvel"
+
+#: models/others.py:129
+msgid "Position"
+msgstr "Posição do sol"
+
+#: models/others.py:131
+msgid "Enter with a new position of sun of a property."
+msgstr "Entre com a nova posição do sol do imóvel."
+
+#: models/others.py:150 models/property.py:175
+msgid "Position of sun"
+msgstr "Posição do sol"
+
+#: models/others.py:151
+msgid "Positions of sun"
+msgstr "Posições do sol"
+
+#: models/photo.py:28 models/photo.py:83
+msgid "photos"
+msgstr "Fotos"
+
+#: models/photo.py:32 models/photo.py:82 models/realtors.py:50
+msgid "photo"
+msgstr "Foto"
+
+#: models/photo.py:39
+msgid "width"
+msgstr "Largura"
+
+#: models/photo.py:40
+msgid "height"
+msgstr "Tamanho"
+
+#: models/photo.py:51
+#, fuzzy
+msgid "Description of photo"
+msgstr "Descrição"
+
+#: models/photo.py:60
+msgid ""
+"Photos in future dates are only published on \t\t\t\t                    "
+"correct date."
+msgstr "Fotos com data no futuro serão publicadas somente na data correta."
+
+#: models/photo.py:65
+msgid "published"
+msgstr "Publicadas"
+
+#: models/portlets.py:10
+msgid "Text"
+msgstr "Texto"
+
+#: models/portlets.py:23
+#, fuzzy
+msgid "Entry with a featured news"
+msgstr "Entre com o site a ser publicado"
+
+#: models/portlets.py:24
+msgid "news"
+msgstr "noticias"
+
+#: models/portlets.py:30
+msgid "Amount of featured news"
+msgstr "Quantidade de objetos"
+
+#: models/portlets.py:31
+msgid "Amount of featured news to display"
+msgstr "Quantidade de objetos em destaque para ser apresentado"
+
+#: models/portlets.py:35
+msgid "Tipo de portlet"
+msgstr ""
+
+#: models/portlets.py:48 models/portlets.py:49
+#, fuzzy
+msgid "Portlet News"
+msgstr "Portlet de notícias"
+
+#: models/portlets.py:70
+msgid "Entry the link of propaganda"
+msgstr "Entre com o link da propaganda"
+
+#: models/portlets.py:110
+msgid "Portlet Image"
+msgstr "Portlet de imagem"
+
+#: models/portlets.py:111
+msgid "Portlet Images"
+msgstr "Portlet de imagens"
+
+#: models/property.py:26
+#, fuzzy
+msgid "code property"
+msgstr "1 imóviel foi"
+
+#: models/property.py:28
+msgid "Automatically built from utils."
+msgstr "Automaticamente construido do utils."
+
+#: models/property.py:32
+msgid "address"
+msgstr "Endereço"
+
+#: models/property.py:34
+msgid "Entry with address of property"
+msgstr "Entre com o endereço do imóvel"
+
+#: models/property.py:47
+msgid "ZIP"
+msgstr "CEP"
+
+#: models/property.py:49
+msgid "Entry with ZIP of property"
+msgstr "Entre com o CEP do imóvel"
+
+#: models/property.py:56
+msgid "Entry with price of property"
+msgstr "Entre com o preço do imóvel"
+
+#: models/property.py:64
+msgid "Entry with district of property"
+msgstr "Entre com o bairro do imóvel"
+
+#: models/property.py:76
+msgid "Entry with condominium of property"
+msgstr "Entre com o condomínio do imóvel"
+
+#: models/property.py:86
+msgid "Entry with IPUT of property"
+msgstr "Entre com o IPTU do imóvel"
+
+#: models/property.py:92
+msgid "Entry with classification of property"
+msgstr "Entre com a classificação do imóvel"
+
+#: models/property.py:98
+msgid "Entry with type of property"
+msgstr "Entre com o tipo do imóvel"
+
+#: models/property.py:99
+#, fuzzy
+msgid "Status"
+msgstr "Estado"
+
+#: models/property.py:112
+msgid "Entry with aditional things of property"
+msgstr "Entre com a caracterização adicional do imóvel"
+
+#: models/property.py:116
+msgid "Rooms"
+msgstr "Quartos"
+
+#: models/property.py:119
+msgid "Entry with numbers of room of property"
+msgstr "Entre com o número de quartos do imóvel"
+
+#: models/property.py:122
+msgid "Baths"
+msgstr "Banheiros"
+
+#: models/property.py:125
+msgid "Entry with numbers of bath of property"
+msgstr "Entre com o número de banheiros do imóvel"
+
+#: models/property.py:130
+msgid "Garage"
+msgstr "Garagem"
+
+#: models/property.py:133
+msgid "Entry with numbers of garage of property"
+msgstr "Entre com o número de garagens do imóvel"
+
+#: models/property.py:137
+msgid "Elevator"
+msgstr "Elevador"
+
+#: models/property.py:140
+msgid "Entry with numbers of elevator of property"
+msgstr "Entre com o número de elevadores do imóvel"
+
+#: models/property.py:144
+msgid "Furnishing"
+msgstr "Mobiliado"
+
+#: models/property.py:145
+msgid "Entry with this property is furnishing"
+msgstr "Entre se o imóvel é imobiliado"
+
+#: models/property.py:150
+msgid "Featured"
+msgstr "Destaque"
+
+#: models/property.py:151
+msgid "Entry with this property is published in featured images"
+msgstr "Entre se o imóvel será publicado na imagem destaque do site"
+
+#: models/property.py:156
+msgid "Under construction"
+msgstr "Imóvel em construção"
+
+#: models/property.py:157
+msgid "Entry with this property is under construction."
+msgstr "Entre se o imóvel está em construção"
+
+#: models/property.py:162
+msgid "Private area"
+msgstr "Área privada"
+
+#: models/property.py:167
+msgid "Set value in m²"
+msgstr "Digite o valor em m²"
+
+#: models/property.py:192
+msgid "Creation date"
+msgstr "Data de criação"
+
+#: models/property.py:201
+msgid "Entry with description of property"
+msgstr "Entre com a descrição do imóvel"
+
+#: models/property.py:207
+msgid "publish on"
+msgstr "Publicado em"
+
+#: models/property.py:208
+msgid "Entry with a site"
+msgstr "Entre com o site a ser publicado"
+
+#: models/property.py:235
+#, fuzzy
+msgid "Entry the name of realtor. ex.: Jonh"
+msgstr "Entre com o número de elevadores do imóvel"
+
+#: models/property.py:236 models/realtors.py:118
+msgid "Realtors"
+msgstr "Corretores"
+
+#: models/property.py:248
+msgid "Propety"
+msgstr "Imóvel"
+
+#: models/property.py:249
+msgid "Propetys"
+msgstr "Imóvies"
+
+#: models/realtors.py:16
+msgid "Male"
+msgstr "Masculino"
+
+#: models/realtors.py:17
+msgid "Female"
+msgstr "Feminino"
+
+#: models/realtors.py:31
+msgid "Sex"
+msgstr "Sexo"
+
+#: models/realtors.py:38
+msgid "Phone"
+msgstr "Telefone"
+
+#: models/realtors.py:44
+#, fuzzy
+msgid "Celphone"
+msgstr "Telefone"
+
+#: templates/admin/index-custom.html:22
+#, python-format
+msgid "Models available in the %(name)s application."
+msgstr "Modelos disponíveis na aplicação %(name)s."
+
+#: templates/admin/index-custom.html:23
+#: templates/admin/real_estate_app/app_index.html:10
+#, python-format
+msgid "%(name)s"
+msgstr "%(name)s"
+
+#: templates/admin/index-custom.html:34
+#: templates/admin/real_estate_app/change_form.html:39
+#: templates/admin/real_estate_app/change_list.html:73
+msgid "Add"
+msgstr "Adicionar"
+
+#: templates/admin/index-custom.html:40
+msgid "Change"
+msgstr "Editar"
+
+#: templates/admin/index-custom.html:51
+msgid "You don't have permission to edit anything."
+msgstr "Você não tem permissão de editar"
+
+#: templates/admin/index-custom.html:74
+msgid "Recent Actions"
+msgstr "Ações recentes"
+
+#: templates/admin/index-custom.html:75
+msgid "My Actions"
+msgstr "Minhas ações"
+
+#: templates/admin/index-custom.html:79
+msgid "None available"
+msgstr "Nenhum disponível"
+
+#: templates/admin/index-custom.html:93
+msgid "Unknown content"
+msgstr "Conteúdo desconhecido"
+
+#: templates/admin/real_estate_app/app_index.html:8
+#: templates/admin/real_estate_app/change_form.html:36
+#: templates/admin/real_estate_app/change_list.html:48
+#: templates/admin/real_estate_app/delete_confirmation.html:14
+#: templates/admin/real_estate_app/delete_selected_confirmation_popup.html:9
+msgid "Home"
+msgstr "Home"
+
+#: templates/admin/real_estate_app/change_form.html:48
+msgid "History"
+msgstr "Histórico"
+
+#: templates/admin/real_estate_app/change_form.html:49
+#: templates/admin/real_estate_app/edit_inline/stacked.html:9
+msgid "View on site"
+msgstr "Veja no site"
+
+#: templates/admin/real_estate_app/change_form.html:53
+#: templates/admin/real_estate_app/change_form.html:59
+msgid "Manage list"
+msgstr "Gerenciar lista"
+
+#: templates/admin/real_estate_app/change_form.html:71
+#: templates/admin/real_estate_app/change_list.html:82
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] "Por-favor corriga o erro abaixo"
+msgstr[1] "Por-favor corriga os erros abaixo"
+
+#: templates/admin/real_estate_app/change_list.html:71
+#, python-format
+msgid "Add %(name)s"
+msgstr "Adicionar %(name)s"
+
+#: templates/admin/real_estate_app/change_list.html:93
+msgid "Filter"
+msgstr "Filtro"
+
+#: templates/admin/real_estate_app/delete_confirmation.html:18
+msgid "Delete"
+msgstr "Deletar"
+
+#: templates/admin/real_estate_app/delete_confirmation.html:26
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would result in deleting "
+"related objects, but your account doesn't have permission to delete the "
+"following types of objects:"
+msgstr ""
+
+#: templates/admin/real_estate_app/delete_confirmation.html:34
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would require deleting the "
+"following protected related objects:"
+msgstr ""
+
+#: templates/admin/real_estate_app/delete_confirmation.html:42
+#, python-format
+msgid ""
+"Are you sure you want to delete the %(object_name)s \"%(escaped_object)s\"? "
+"All of the following related items will be deleted:"
+msgstr ""
+
+#: templates/admin/real_estate_app/delete_confirmation.html:47
+#: templates/admin/real_estate_app/delete_selected_confirmation_popup.html:58
+msgid "Yes, I'm sure"
+msgstr ""
+
+#: templates/admin/real_estate_app/delete_selected_confirmation_popup.html:12
+msgid "Delete multiple objects"
+msgstr ""
+
+#: templates/admin/real_estate_app/delete_selected_confirmation_popup.html:20
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would result in deleting related "
+"objects, but your account doesn't have permission to delete the following "
+"types of objects:"
+msgstr ""
+
+#: templates/admin/real_estate_app/delete_selected_confirmation_popup.html:28
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would require deleting the following "
+"protected related objects:"
+msgstr ""
+
+#: templates/admin/real_estate_app/delete_selected_confirmation_popup.html:37
+#, python-format
+msgid ""
+"Are you sure you want to delete the selected %(objects_name)s? All of the "
+"following objects and their related items will be deleted:"
+msgstr ""
+
+#: templates/admin/real_estate_app/delete_selected_confirmation_popup.html:44
+#, python-format
+msgid ""
+"Are you sure you want to disable the selected %(objects_name)s? All of the "
+"following objects and their related items will be disabled:"
+msgstr ""
+"Você tem certeza que deseja DESABILITAR %(objects_name)s selecionados? Todos "
+"os seguintes objetos e suas relações serão desabilitadas:"
+
+#: templates/admin/real_estate_app/real_estate_node_list.html:4
+#, fuzzy
+msgid "Edit portlet"
+msgstr "Editar portlet"
+
+#: templates/admin/real_estate_app/real_estate_node_list.html:11
+#: templates/admin/real_estate_app/real_estate_node_list.html:21
+msgid "Read more"
+msgstr "Leia mais"
+
+#: templates/admin/real_estate_app/real_estate_node_list.html:28
+#, fuzzy
+msgid "Add portlet"
+msgstr "Adicionar portlet"
+
+#: templates/admin/real_estate_app/edit_inline/stacked.html:67
+#: templates/admin/real_estate_app/pt-br/edit_inline/stacked-realtor.html:71
+#, python-format
+msgid "Add another %(verbose_name)s"
+msgstr "Adicione outro %(verbose_name)s"
+
+#: templates/admin/real_estate_app/edit_inline/stacked.html:70
+#: templates/admin/real_estate_app/pt-br/edit_inline/stacked-realtor.html:74
+msgid "Remove"
+msgstr "Remover"
+
+#: templates/admin/real_estate_app/pt-br/edit_inline/stacked-realtor.html:10
+#, fuzzy
+msgid "Complement information"
+msgstr "Informações gerais"
+
+#: templates/real_estate_app/404.html:5 templates/real_estate_app/500.html:5
+msgid ""
+"You can return to <a href='javascript:history.go(-1)'>last page</a> or go to "
+"<a href='/'> home page</a>.<br /> Thanks,"
+msgstr ""
+"Você pode retornar para <a href='javascript:history.go(-1)'>página anterior</"
+"a> ou vá para <a href='/'>página principal</a>.<br /> Obrigado,"
+
+#, fuzzy
+#~ msgid "%s successfully duplicate."
+#~ msgstr "%s despublicado(s) com sucesso."
+
+#, fuzzy
+#~ msgid "Address"
+#~ msgstr "Endereço"
+
+#, fuzzy
+#~ msgid "Addresses"
+#~ msgstr "Endereço"
+
+#~ msgid "Phones"
+#~ msgstr "Telefones"
+
+#~ msgid "Your list is empty"
+#~ msgstr "A lista está vazia"
+
+#~ msgid "Sucessfully additioned."
+#~ msgstr "Adicionado com sucesso"
+
+#~ msgid "Ops... you try simething wrong"
+#~ msgstr "Ops.. você tentou algo errado"
+
+#~ msgid "Sorry, but the number of the page you request don't exist"
+#~ msgstr "Desculpe, mas o número de paginas que você solicitou não existe"
+
+#~ msgid "Sorry, but the object you're requested didn't exist."
+#~ msgstr "Desculpe, mas o objeto que você solicitou não existe"
+
+#~ msgid "Sucessfully changed."
+#~ msgstr "Alterado com sucesso"
+
+#~ msgid "Mark on map the localization."
+#~ msgstr "Marque a localização no map"
+
+#~ msgid "The image must be %(width)sx%(height)s larger!"
+#~ msgstr "A imagem deve ter o tamanho mínimo de: %(width)sx%(height)s pixels"

@@ -1,0 +1,30 @@
+{% extends "real_estate_app/base.html" %}
+{% block content_main %}
+
+	{% if property_list %}
+	{% for property in property_list %}
+            <p>
+                <!-- property image -->
+				{% if property.photos %}
+					<img src="{{ property.get_random_photo.get_photo_125x91_resize_url }}" alt="Image"  width="125" height="91" />
+				{% endif %}
+                
+                {{ property.price|floatformat:2 }} <br />
+                {{ property.baths }} <br />
+                {{ property.rooms }} <br />
+                {{ property.garage }}<br />
+                {{ property.classification_fk }}<br />
+				{{ property.address }} <br /> 
+				{{ property.district_fk }}, {{ property.state }}<br />
+				{{ property.description|safe|truncatewords:35 }}<br />
+				<a href="{{ property.get_absolute_url }}">Mais detalhes</a>
+			</p>
+		{% endfor %}
+		{% else %}
+			<p >Desculpe, mas a pesquisa não retornou nenhum resultado.</p>
+		{% endif %}
+		{% if is_paginated %}
+			{# include "real_estate_app/pages/pagination.html" #}
+		{% endif %}
+
+{% endblock %}

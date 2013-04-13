@@ -1,0 +1,14 @@
+<html>
+	<body>
+		<h1> alo </h1>
+	{% load real_estate_app_tags %}	
+	{% for property in property_list %}
+		{{ property.address }}
+		<br />
+		{% get_property_photo property.id 10 as photos %}
+		{% for photo in photos %}
+		<img src="{{ photo.get_photo_320x240_url }}" />
+		{% endfor %}
+	{% endfor %}
+</body>
+</html>
