@@ -1,0 +1,17 @@
+#changelist-filter h2 {
+    border-bottom: 1px solid #DDDDDD;
+    font-size: 11px;
+    padding: 2px 5px;
+    height: 26px;
+    cursor: pointer;
+}
+#changelist-filter h2 span {
+	padding-right: 13px;
+}
+#changelist-filter h2.up span {
+	background: url("../img/arrow-up.gif") no-repeat scroll right 0.4em transparent;
+}
+
+#changelist-filter h2.down span {
+	background: url("../img/arrow-down.gif") no-repeat scroll right 0.4em transparent;
+} 
