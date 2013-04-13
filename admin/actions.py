@@ -11,7 +11,8 @@ from django.shortcuts import render_to_response
 from django.utils.encoding import force_unicode
 from django.utils.translation import ugettext_lazy as _
 
-from real_estate_app.models import Property
+from real_estate_app.models import Property, Realtor
+from real_estate_app.utils import format_link_callback
 
 def duplicate_object(modeladmin,request,queryset):
 	rows=[obj.clone() for obj in queryset]
@@ -77,6 +78,7 @@ def delete_selected_popup(modeladmin, request, queryset):
         queryset, opts, request.user, modeladmin.admin_site, using)
 
     disabled_objects=[]
+
     # The user has already confirmed the deletion.
     # Do the deletion and return a None to display the change list view again.
     if request.POST.get('post'):
@@ -85,7 +87,10 @@ def delete_selected_popup(modeladmin, request, queryset):
         if perms_needed:
             raise PermissionDenied
         n = queryset.count()
+
         if n:
+            # TODO: create a custom get_delete_objects to put
+            # all this validations.
             for obj in queryset:
                 obj_display = force_unicode(obj)
                 obj_fk = obj._meta.module_name+'_fk'
@@ -98,23 +103,34 @@ def delete_selected_popup(modeladmin, request, queryset):
                         modeladmin.log_change(request, obj,'%s' % _('Logical exclude object.'))
                 except ObjectDoesNotExist:
                     modeladmin.log_deletion(request, obj, obj_display)
-
+        
+            # TODO: create a custom get_delete_objects to put
+            # all this validations.
             # Exclude objects which has relation with Property to be deleted
             if query:
-
+                # Distinct object to deleted and disabled
                 disabled_objects=queryset.filter(reduce(operator.or_,query))
                 deletable_objects=queryset.exclude(reduce(operator.or_, query))
+
 
                 d=disabled_objects.count()
                 n=deletable_objects.count()
                 
+                # Disable all object was relation with Property
                 disabled_objects.update(logical_exclude=True)
-                deletable_objects.delete()
-                
+            else:
+                deletable_objects=queryset
 
-            if queryset and not disabled_objects:
-                queryset.delete()
-                
+            try:
+                # Check if the instance is Realtor models because we have to delete
+                # the django User models, when Realtor doesn't has active on Property
+                if isinstance(queryset[0],Realtor):
+                    for delete_obj in deletable_objects:
+                        delete_obj.user.delete()
+            except IndexError:
+                raise
+
+            deletable_objects.delete()
 
             if d >=1 and n >=1:
                 msg= _("Successfully deleted %(count)d and disabled %(count_two)d %(items_two)s.") % {
@@ -135,11 +151,19 @@ def delete_selected_popup(modeladmin, request, queryset):
         return None
     else:
 
+        # Get all object in queryset and check if this object has foreingkey in Property
+        # The way to use this delete you have to saw Realto models.
         query=[]
         for obj in queryset:
             obj_display = force_unicode(obj)
             obj_fk = obj._meta.module_name+'_fk'
             obj_name=obj._meta.module_name
+
+            # TODO: create a custom get_delete_objects to put
+            # all this validations.
+            if hasattr(obj,'user') and isinstance(obj,Realtor):
+                protected.append(format_link_callback(obj.user,modeladmin.admin_site))
+
             if hasattr(Property,obj_fk) and not isinstance(obj,Property):
                 try:
                     Property.objects.get(**{obj_fk:obj.id})
@@ -147,24 +171,47 @@ def delete_selected_popup(modeladmin, request, queryset):
                 except ObjectDoesNotExist:
                     continue
 
+        # TODO: create a custom get_delete_objects to put
+        # all this validations.
         if query:
             disabled_objects=queryset.filter(reduce(operator.or_,query))
             deletable_objects=queryset.exclude(reduce(operator.or_, query))
 
-    if len(queryset) == 1:
-        objects_name = force_unicode(opts.verbose_name)
+            if disabled_objects:
+                disabled_objects=[format_link_callback(obj,modeladmin.admin_site) for obj in disabled_objects]
+            if deletable_objects:
+                    deletable_objects=[format_link_callback(obj,modeladmin.admin_site) for obj in deletable_objects]
+
+
+    if (len(deletable_objects) == 1):
+        objects_name_delete = force_unicode(opts.verbose_name)
     else:
-        objects_name = force_unicode(opts.verbose_name_plural)
+        objects_name_delete = force_unicode(opts.verbose_name_plural)
+
+    if (disabled_objects and len(disabled_objects)==1):
+        objects_name_disable = force_unicode(opts.verbose_name)
+    elif disabled_objects:
+        objects_name_disable = force_unicode(opts.verbose_name_plural)
+    else:
+        objects_name_disable = ''
 
     if perms_needed or protected:
-        title = _("Cannot delete %(name)s") % {"name": objects_name}
+        title = _("Cannot delete %(name)s") % {"name": objects_name_delete.lower()}
     else:
         title = _("Are you sure?")
+    
+    if deletable_objects:
+        try:
+            deletable_objects=[format_link_callback(obj,modeladmin.admin_site) for obj in deletable_objects]
+        except:
+            pass
+
 
     context = {
         "title": title,
-        "objects_name": objects_name,
-        "deletable_objects": [deletable_objects],
+        "objects_name_delete": objects_name_delete,
+        "objects_name_disable": objects_name_disable,
+        "deletable_objects": deletable_objects ,
         'queryset': queryset,
         "perms_lacking": perms_needed,
         "protected": protected,
@@ -173,7 +220,7 @@ def delete_selected_popup(modeladmin, request, queryset):
         "app_label": app_label,
         'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,
         'is_popup':True,
-        'disabled_objects':[disabled_objects],
+        'disabled_objects': disabled_objects,
         'queryset_obj_disabled':disabled_objects,
     }
 

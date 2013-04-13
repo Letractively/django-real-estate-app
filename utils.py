@@ -1,10 +1,38 @@
 import operator
 
-from django.core.exceptions import ImproperlyConfigured
 from django.conf import settings
+from django.contrib.admin.util import quote
+from django.core.exceptions import ImproperlyConfigured
+from django.core.urlresolvers import reverse
+from django.utils.encoding import force_unicode, smart_unicode, smart_str
+from django.utils.html import escape
+from django.utils.safestring import mark_safe
+from django.utils.text import capfirst
 
 from real_estate_app.conf.settings import REAL_ESTATE_APP_AJAX_SEARCH, MEDIA_PREFIX
 
+def format_link_callback(obj,admin_site):
+        has_admin = obj.__class__ in admin_site._registry
+        opts = obj._meta
+
+        if has_admin:
+            admin_url = reverse('%s:%s_%s_change'
+                                % (admin_site.name,
+                                   opts.app_label,
+                                   opts.object_name.lower()),
+                                None, (quote(obj._get_pk_val()),))
+            p = '%s.%s' % (opts.app_label,
+                           opts.get_delete_permission())
+            # Display a link to the admin page.
+            return mark_safe(u'%s: <a href="%s">%s</a>' %
+                             (escape(capfirst(opts.verbose_name)),
+                              admin_url,
+                              escape(obj)))
+        else:
+            # Don't display link to edit, because it either has no
+            # admin or is edited inline.
+            return u'%s: %s' % (capfirst(opts.verbose_name),
+                                force_unicode(obj))
 
 def radomstring(max=10):
 	import random
@@ -66,7 +94,7 @@ class AutoCompleteObject(object):
 			query=[Q(**{'%s__icontains' %field: value}) for field in self.fields_search]
 			queryset=queryset.filter(reduce(operator.or_,query))
 
-		if kwargs and not value:
+		if kwargs:
 			queryset=queryset.filter(**kwargs)
 
 		if isinstance(self.return_values,(list,tuple)) and self.return_values:

@@ -368,7 +368,7 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
         opts=self.model._meta
 
         model = self.model
-        queryset = model.objects.all()
+        queryset = model.objects.all_enabled()
         module_name=opts.module_name
         fields = [i.name for i in model._meta.fields]
 
@@ -379,11 +379,12 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
                         query=dict((query,))
                         queryset=queryset.filter(**query)
         else:
+            # This is for ajax
             if 'term' in request.GET:
                 q_value=request.GET['term']
                 return HttpResponse(
                                     simplejson.dumps(
-                                        AutoCompleteObject(model).render(value=q_value)
+                                        AutoCompleteObject(model).render(value=q_value,logical_exclude__exact=False)
                                     )
                                     ,mimetype="text/javascript")
             else:
