@@ -11,7 +11,8 @@ from django.shortcuts import render_to_response
 from django.utils.encoding import force_unicode
 from django.utils.translation import ugettext_lazy as _
 
-from real_estate_app.models import Property, Realtor
+from real_estate_app.apps.propretys.models import Proprety
+from real_estate_app.apps.realtors.models import Realtor
 from real_estate_app.utils import format_link_callback
 
 def duplicate_object(modeladmin,request,queryset):
@@ -97,8 +98,8 @@ def delete_selected_popup(modeladmin, request, queryset):
                 obj_name=obj._meta.module_name
 
                 try:
-                    if hasattr(Property,obj_fk) and not isinstance(obj,Property):
-                        Property.objects.get(**{obj_fk:obj.id})
+                    if hasattr(Proprety,obj_fk) and not isinstance(obj,Proprety):
+                        Proprety.objects.get(**{obj_fk:obj.id})
                         query.append( Q(**{'id': obj.id}) )
                         modeladmin.log_change(request, obj,'%s' % _('Logical exclude object.'))
                 except ObjectDoesNotExist:
@@ -106,7 +107,7 @@ def delete_selected_popup(modeladmin, request, queryset):
         
             # TODO: create a custom get_delete_objects to put
             # all this validations.
-            # Exclude objects which has relation with Property to be deleted
+            # Exclude objects which has relation with Proprety to be deleted
             if query:
                 # Distinct object to deleted and disabled
                 disabled_objects=queryset.filter(reduce(operator.or_,query))
@@ -116,14 +117,14 @@ def delete_selected_popup(modeladmin, request, queryset):
                 d=disabled_objects.count()
                 n=deletable_objects.count()
                 
-                # Disable all object was relation with Property
+                # Disable all object was relation with Proprety
                 disabled_objects.update(logical_exclude=True)
             else:
                 deletable_objects=queryset
 
             try:
                 # Check if the instance is Realtor models because we have to delete
-                # the django User models, when Realtor doesn't has active on Property
+                # the django User models, when Realtor doesn't has active on Proprety
                 if isinstance(queryset[0],Realtor):
                     for delete_obj in deletable_objects:
                         delete_obj.user.delete()
@@ -151,7 +152,7 @@ def delete_selected_popup(modeladmin, request, queryset):
         return None
     else:
 
-        # Get all object in queryset and check if this object has foreingkey in Property
+        # Get all object in queryset and check if this object has foreingkey in Proprety
         # The way to use this delete you have to saw Realto models.
         query=[]
         for obj in queryset:
@@ -164,9 +165,9 @@ def delete_selected_popup(modeladmin, request, queryset):
             if hasattr(obj,'user') and isinstance(obj,Realtor):
                 protected.append(format_link_callback(obj.user,modeladmin.admin_site))
 
-            if hasattr(Property,obj_fk) and not isinstance(obj,Property):
+            if hasattr(Proprety,obj_fk) and not isinstance(obj,Proprety):
                 try:
-                    Property.objects.get(**{obj_fk:obj.id})
+                    Proprety.objects.get(**{obj_fk:obj.id})
                     query.append( Q(**{'id': obj.id}) )
                 except ObjectDoesNotExist:
                     continue

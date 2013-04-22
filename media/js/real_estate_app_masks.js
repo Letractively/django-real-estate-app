@@ -10,7 +10,7 @@
 
 		$('input:text').setMask();
 
-		$('#property_form').submit(function() {
+		$('#proprety_form').submit(function() {
 			django.jQuery('input:text').each(function (){
 				if (django.jQuery(this).attr('alt')==='money' || django.jQuery(this).attr('alt') === 'area') {
 					var val =django.jQuery(this).val();

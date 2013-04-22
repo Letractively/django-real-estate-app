@@ -1,8 +1,10 @@
 import operator
+from functools import wraps
 
 from django.conf import settings
 from django.contrib.admin.util import quote
 from django.core.exceptions import ImproperlyConfigured
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.utils.encoding import force_unicode, smart_unicode, smart_str
 from django.utils.html import escape
@@ -10,6 +12,23 @@ from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 
 from real_estate_app.conf.settings import REAL_ESTATE_APP_AJAX_SEARCH, MEDIA_PREFIX
+
+
+def alertemail(function):
+	#print 'alertemail: ',args, kwargs
+	@wraps(function)
+	def wrapper(self,*args,**kwargs):
+		function.func_globals['self']=self
+		print 'funtion: ', args, kwargs
+		return function(self,*args,**kwargs)
+	return wrapper
+	
+class A(object):
+	teste='Variavel teste'
+	@alertemail
+	def alo(self, tunts,puts):
+		print 'self.alo foi sem problemas'	
+	
 
 def format_link_callback(obj,admin_site):
         has_admin = obj.__class__ in admin_site._registry
@@ -41,22 +60,6 @@ def radomstring(max=10):
 	for i in random.sample(string,max):
 		a+=i
 	return a
-
-
-def make_dv(num,max_num=11,b_start=1):
-	dv1=0
-	for ct, n in enumerate(num,start=b_start):
-		dv1+=int(n)*ct
-
-	dv1=dv1%11
-
-	if dv1 == 10: dv1=0;
-
-	num=num+str(dv1)
-	if len(num) != max_num:
-		num=make_dv(num,max_num=max_num,b_start=0)
-	
-	return num or None
 
 class AutoCompleteObject(object):
 

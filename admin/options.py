@@ -23,7 +23,9 @@ from real_estate_app import widgets
 from real_estate_app.admin.actions import delete_selected_popup, make_enabled, make_disabled
 from real_estate_app.conf.settings import MEDIA_PREFIX as MEDIA_PREFIX_REAL_ESTATE
 from real_estate_app.utils import AutoCompleteObject
-from real_estate_app.models import Property
+
+from real_estate_app.apps.propretys.models import Proprety
+#TODO: make a wrapp function for delete elements with Proprety references.
 
 csrf_protect_m = method_decorator(csrf_protect)
 
@@ -95,10 +97,10 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
         obj_fk = obj._meta.module_name+'_fk'
         obj_name=obj._meta.module_name
 
-        if hasattr(Property,obj_fk) and not isinstance(obj,Property):
+        if hasattr(Proprety,obj_fk) and not isinstance(obj,Proprety):
 
             try:
-                Property.objects.get(**{obj_fk:obj.id})
+                Proprety.objects.get(**{obj_fk:obj.id})
                 obj.logical_exclude=True
                 obj.save()
                 return _('The %(name)s "%(obj)s" was disabled successfully.')
@@ -432,9 +434,9 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
         obj_fk = real_obj._meta.module_name+'_fk'
         obj_name=real_obj._meta.module_name
 
-        if hasattr(Property,obj_fk) and not isinstance(revert_obj,Property):
+        if hasattr(Proprety,obj_fk) and not isinstance(revert_obj,Proprety):
                 try:
-                    Property.objects.get(**{obj_fk:real_obj.id})
+                    Proprety.objects.get(**{obj_fk:real_obj.id})
                     real_obj.logical_exclude=True
                     real_obj.save()
                     return _('The %(name)s "%(obj)s" was disabled successfully.')
