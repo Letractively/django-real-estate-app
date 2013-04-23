@@ -6,22 +6,22 @@ from django.db.models import Max, Min, Q
 from django.views.decorators.csrf import requires_csrf_token
 from django.views.generic import list_detail
 
-from real_estate_app.apps.propretys.views import receive_proprety_view
-from real_estate_app.apps.propretys.models import Proprety, StatusProprety, District, Classification, AditionalThings
+from real_estate_app.apps.propertys.views import receive_property_view
+from real_estate_app.apps.propertys.models import Property, StatusProperty, District, Classification, AditionalThings
 
 @requires_csrf_token
-def proprety_list(request, *args, **kwargs):
+def property_list(request, *args, **kwargs):
 	"""
 	A view wrapper around ``django.views.generic.list_detail.object_list``.
 	"""
-	kwargs['queryset'] = Proprety.objects.all_enabled()
+	kwargs['queryset'] = Property.objects.all_enabled()
 	post={}
 	get={}
 
-	if request.GET and request.GET.get('statusProprety'):
+	if request.GET and request.GET.get('statusProperty'):
 		
-		status_id=StatusProprety.objects.filter(statusProprety=request.GET.get('statusProprety'))
-		kwargs['queryset'] = kwargs['queryset'].filter(statusProprety_fk=status_id)	
+		status_id=StatusProperty.objects.filter(statusProperty=request.GET.get('statusProperty'))
+		kwargs['queryset'] = kwargs['queryset'].filter(statusProperty_fk=status_id)	
 		get=request.GET
 	
 	if request.POST:
@@ -34,10 +34,10 @@ def proprety_list(request, *args, **kwargs):
 
 			if query[0] not in ('x','y','csrfmiddlewaretoken') and query[1] != 'any' and query[1] != 'Em qualquer lugar':
 
-				if query[0] == 'statusProprety_fk':
+				if query[0] == 'statusProperty_fk':
 					try:
-						query[1]=StatusProprety.objects.get(statusProprety=query[1])
-					except StatusProprety.DoesNotExist:
+						query[1]=StatusProperty.objects.get(statusProperty=query[1])
+					except StatusProperty.DoesNotExist:
 						pass
 
 				if query[0] == 'district_fk':
@@ -74,18 +74,18 @@ def proprety_list(request, *args, **kwargs):
 	return list_detail.object_list(request,extra_context={'post':post,'get':get}, *args, **kwargs)
 
 
-def proprety_detail(request, *args, **kwargs):
+def property_detail(request, *args, **kwargs):
 	"""
 	A view wrapper around ``django.views.generic.list_detail.object_detail``.
 	"""
-	kwargs['queryset'] = Proprety.objects.all_enabled()
+	kwargs['queryset'] = Property.objects.all_enabled()
 	response = list_detail.object_detail(request, *args, **kwargs)
 	
 	try:
-		proprety=Proprety.objects.get(slug=kwargs['slug'])
-		receive_proprety_view(
-			sender=proprety.__class__,
-			proprety=proprety,
+		property=Property.objects.get(slug=kwargs['slug'])
+		receive_property_view(
+			sender=property.__class__,
+			property=property,
 			user=request.user,
 			request=request,
 			response=response

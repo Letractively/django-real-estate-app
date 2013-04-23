@@ -13,7 +13,7 @@ LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 
 class VisitEvent(RealEstateAppBaseModel):
 	
-	proprety_fk = models.ForeignKey('propretys.Proprety')
+	property_fk = models.ForeignKey('propertys.Property')
 
 	visitor_fk = models.ForeignKey('visitcalendar.Visitor')
 
@@ -36,7 +36,7 @@ class VisitEvent(RealEstateAppBaseModel):
 		db_table  = 'real_estate_app_apps_visitcalendar_visitevent'
 		get_latest_by='date_visit'
 		ordering=('date_visit',)
-		verbose_name=_('Visit proprety')
+		verbose_name=_('Visit property')
 		verbose_name_plural=_('Visitors')
 
 	def __unicode__(self):

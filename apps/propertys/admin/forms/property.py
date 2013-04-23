@@ -4,11 +4,11 @@ from django.forms import DecimalField, CharField, ModelMultipleChoiceField, Mode
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 
-from real_estate_app.apps.propretys.models import Proprety, AditionalThings 
+from real_estate_app.apps.propertys.models import Property, AditionalThings 
 from real_estate_app.apps.realtors.models import Realtor
 from real_estate_app.widgets import MoneyInputWidget, ZipInputWidget, CheckboxSelectMultipleCustom, AreaInputWidget, AjaxSelectMultipleInputWidget
 
-class PropretyAdminForm(ModelForm):
+class PropertyAdminForm(ModelForm):
 	
 	price = DecimalField(label=_('price'),widget=MoneyInputWidget)
 
@@ -38,4 +38,4 @@ class PropretyAdminForm(ModelForm):
 	private_area = DecimalField(widget=AreaInputWidget,required=False)
 
 	class Meta:
-		model = Proprety
+		model = Property

@@ -5,7 +5,7 @@ from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, render_to_response
 from django.utils.safestring import mark_safe
 
-from real_estate_app.apps.propretys.models import District, StatusProprety, Classification, AditionalThings
+from real_estate_app.apps.propertys.models import District, StatusProperty, Classification, AditionalThings
 
 
 register = template.Library()
@@ -35,12 +35,12 @@ class SelectStatusFormNode(template.Node):
 		self.var_name=var_name
 
 	def render(self, context):
-		options = StatusProprety.objects.all().exclude(logical_exclude=True)
+		options = StatusProperty.objects.all().exclude(logical_exclude=True)
 
 		context[self.var_name] = options
 		return ''
 
-def do_get_options_select_statusproprety(parser, token):
+def do_get_options_select_statusproperty(parser, token):
 	bits = token.contents.split()
 	
 	if len(bits)==3:
@@ -60,7 +60,7 @@ class SelectClassificationFormNode(template.Node):
 		context[self.var_name] = options
 		return ''
 
-def do_get_options_select_classification_proprety(parser, token):
+def do_get_options_select_classification_property(parser, token):
 	bits = token.contents.split()
 	
 	if len(bits)==3:
@@ -80,7 +80,7 @@ class CheckedAditionalThingsFormNode(template.Node):
 		context[self.var_name] = options
 		return ''
 
-def do_get_options_checked_aditonal_things_proprety(parser, token):
+def do_get_options_checked_aditonal_things_property(parser, token):
 	bits = token.contents.split()
 	
 	if len(bits)==3:
@@ -93,6 +93,6 @@ def do_get_options_checked_aditonal_things_proprety(parser, token):
 
 
 register.tag('get_select_district',do_get_options_select_district)
-register.tag('get_select_statusproprety',do_get_options_select_statusproprety)
-register.tag('get_select_classification_proprety',do_get_options_select_classification_proprety)
-register.tag('get_checked_aditional_things_proprety',do_get_options_checked_aditonal_things_proprety)
+register.tag('get_select_statusproperty',do_get_options_select_statusproperty)
+register.tag('get_select_classification_property',do_get_options_select_classification_property)
+register.tag('get_checked_aditional_things_property',do_get_options_checked_aditonal_things_property)

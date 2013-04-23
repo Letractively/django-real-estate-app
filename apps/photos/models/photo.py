@@ -15,15 +15,15 @@ GET_THUMB_PATTERN = re.compile(r'^get_photo_(\d+)x(\d+)_(thumb_url|thumb_filenam
 
 def get_album(instance, filename):
 
-	if instance.album_proprety is None:
+	if instance.album_property is None:
 		return 'real_estate_app/photos/'+datetime.now().strftime('%Y/%m/%d/')+filename
 	else:
-		return 'real_estate_app/photos/'+instance.album_proprety.slug+datetime.now().strftime('/%Y/%m/%d/')+filename
+		return 'real_estate_app/photos/'+instance.album_property.slug+datetime.now().strftime('/%Y/%m/%d/')+filename
 
 class Photo(models.Model):
 	
-	album_proprety = models.ForeignKey(
-		 'propretys.Proprety',
+	album_property = models.ForeignKey(
+		 'propertys.Property',
 	     verbose_name=_('photos'), 
 	)
 
@@ -163,7 +163,7 @@ class Photo(models.Model):
 	@permalink
 	def get_absolute_url(self):
 		return ('apps-photos', None, {
-				'album': str(self.album_proprety.slug),
+				'album': str(self.album_property.slug),
 				'slug' : str(self.slug),
 				})
 

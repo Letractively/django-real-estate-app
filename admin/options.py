@@ -24,8 +24,8 @@ from real_estate_app.admin.actions import delete_selected_popup, make_enabled, m
 from real_estate_app.conf.settings import MEDIA_PREFIX as MEDIA_PREFIX_REAL_ESTATE
 from real_estate_app.utils import AutoCompleteObject
 
-from real_estate_app.apps.propretys.models import Proprety
-#TODO: make a wrapp function for delete elements with Proprety references.
+from real_estate_app.apps.propertys.models import Property
+#TODO: make a wrapp function for delete elements with Property references.
 
 csrf_protect_m = method_decorator(csrf_protect)
 
@@ -97,10 +97,10 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
         obj_fk = obj._meta.module_name+'_fk'
         obj_name=obj._meta.module_name
 
-        if hasattr(Proprety,obj_fk) and not isinstance(obj,Proprety):
+        if hasattr(Property,obj_fk) and not isinstance(obj,Property):
 
             try:
-                Proprety.objects.get(**{obj_fk:obj.id})
+                Property.objects.get(**{obj_fk:obj.id})
                 obj.logical_exclude=True
                 obj.save()
                 return _('The %(name)s "%(obj)s" was disabled successfully.')
@@ -434,9 +434,9 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
         obj_fk = real_obj._meta.module_name+'_fk'
         obj_name=real_obj._meta.module_name
 
-        if hasattr(Proprety,obj_fk) and not isinstance(revert_obj,Proprety):
+        if hasattr(Property,obj_fk) and not isinstance(revert_obj,Property):
                 try:
-                    Proprety.objects.get(**{obj_fk:real_obj.id})
+                    Property.objects.get(**{obj_fk:real_obj.id})
                     real_obj.logical_exclude=True
                     real_obj.save()
                     return _('The %(name)s "%(obj)s" was disabled successfully.')
@@ -508,7 +508,7 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
                 prefixes[prefix] = prefixes.get(prefix, 0) + 1
                 if prefixes[prefix] != 1:
                     prefix = "%s-%s" % (prefix, prefixes[prefix])
-
+                
                 formset = FormSet(data=request.POST, files=request.FILES,
                                   instance=new_object,
                                   save_as_new="_saveasnew" in request.POST,

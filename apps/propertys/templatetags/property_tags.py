@@ -7,7 +7,7 @@ from django.utils.safestring import mark_safe
 
 from real_estate_app.apps.portlets.models import Portlet
 from real_estate_app.apps.newspapers.models import  News
-from real_estate_app.apps.propretys.models import Proprety, District, StatusProprety, Classification, AditionalThings
+from real_estate_app.apps.propertys.models import Property, District, StatusProperty, Classification, AditionalThings
 from real_estate_app.apps.photos.models import Photo
 
 
@@ -18,7 +18,7 @@ class RealEstateNode(template.Node):
 		self.real_estate_node_template="admin/real_estate_app/real_estate_node_list.html"
         
 
-class PropretyAlbumNode(template.Node):
+class PropertyAlbumNode(template.Node):
 	def __init__(self, var_name, obj_id=None ,num=None):
 		self.var_name=var_name
 		self.id = obj_id
@@ -34,7 +34,7 @@ class PropretyAlbumNode(template.Node):
 			obj = template.resolve_variable(self.id, context)
 
 		if self.id:
-			photo = Photo.objects.filter(album_proprety=int(obj))
+			photo = Photo.objects.filter(album_property=int(obj))
 			
 		else:
 			photo = Photo.objects.all()
@@ -42,28 +42,28 @@ class PropretyAlbumNode(template.Node):
 		context[self.var_name] = photo[:self.num]
 		return ''
 
-def do_get_proprety_photo(parser, token):
+def do_get_property_photo(parser, token):
 
 	bits = token.contents.split()
 	if len(bits) == 5:
 		if bits[3] != 'as':
 			raise template.TemplateSyntaxError, "Second argument to '%s' tag must be 'as'" % bits[0]
-		return PropretyAlbumNode(obj_id=bits[1],num=bits[2], var_name=bits[4])
+		return PropertyAlbumNode(obj_id=bits[1],num=bits[2], var_name=bits[4])
 	if len(bits) == 6:
 		if bits[2] != 'from':
 			raise template.TemplateSyntaxError, "Second argument to '%s' tag must be 'from'" % bits[0]
 		if bits[4] != 'as':
 			raise template.TemplateSyntaxError, "Fourth argument to '%s' tag must be 'as'" % bits[0]
-		return PropretyAlbumNode(num=bits[1], var_name=bits[5], obj_id=bits[3])
+		return PropertyAlbumNode(num=bits[1], var_name=bits[5], obj_id=bits[3])
 
 	elif len(bits)==3:
 		if bits[1]!='as':
 			raise template.TemplateSyntaxError, "Firts argument to '%s' tag must be 'as'" % bits[0]
-		return PropretyAlbumNode(var_name=bits[2])
+		return PropertyAlbumNode(var_name=bits[2])
 	else:
 		raise template.TemplateSyntaxError, "'%s' tag takes one or two arguments: %s as [varname] %s [limit] as [varname]" % (bits[0],bits[0],bits[0])
 
-class PropretyRandomNode(template.Node):
+class PropertyRandomNode(template.Node):
 	def __init__(self, var_name ,num=None):
 		self.var_name=var_name
 
@@ -73,29 +73,29 @@ class PropretyRandomNode(template.Node):
 			self.num = None
 
 	def render(self, context):
-		propretys = Proprety.objects.all_enabled().exclude(featured=True).order_by('?')
+		propertys = Property.objects.all_enabled().exclude(featured=True).order_by('?')
 
-		context[self.var_name] = propretys[:self.num]
+		context[self.var_name] = propertys[:self.num]
 		return ''
 
 
-def do_get_proprety(parser, token):
+def do_get_property(parser, token):
 
 	bits = token.contents.split()
 
 	if len(bits) == 4:
 		if bits[2] != 'as':
 			raise template.TemplateSyntaxError, " Second argument to '%s' tag must be 'as'" % bits[0]
-		return PropretyRandomNode(num=bits[1], var_name=bits[3])
+		return PropertyRandomNode(num=bits[1], var_name=bits[3])
 
 	elif len(bits)==3:
 		if bits[1]!='as':
 			raise template.TemplateSyntaxError, "Firts argument to '%s' tag must be 'as'" % bits[0]
-		return PropretyRandomNode(var_name=bits[2])
+		return PropertyRandomNode(var_name=bits[2])
 	else:
 		raise template.TemplateSyntaxError, "'%s' tag takes one or two arguments: %s as [varname] %s [limit] as [varname]" % (bits[0],bits[0],bits[0])
 
-class PropretyDestaqueNode(template.Node):
+class PropertyDestaqueNode(template.Node):
 	def __init__(self, var_name ,num=None):
 		self.var_name=var_name
 
@@ -105,29 +105,29 @@ class PropretyDestaqueNode(template.Node):
 			self.num = None
 
 	def render(self, context):
-		propretys = Proprety.objects.all_destaque().order_by('?')
+		propertys = Property.objects.all_destaque().order_by('?')
 
-		context[self.var_name] = propretys[:self.num]
+		context[self.var_name] = propertys[:self.num]
 		return ''
 
 
-def do_get_propretys_destaque(parser, token):
+def do_get_propertys_destaque(parser, token):
 
 	bits = token.contents.split()
 
 	if len(bits) == 4:
 		if bits[2] != 'as':
 			raise template.TemplateSyntaxError, " Second argument to '%s' tag must be 'as'" % bits[0]
-		return PropretyDestaqueNode(num=bits[1], var_name=bits[3])
+		return PropertyDestaqueNode(num=bits[1], var_name=bits[3])
 
 	elif len(bits)==3:
 		if bits[1]!='as':
 			raise template.TemplateSyntaxError, "Firts argument to '%s' tag must be 'as'" % bits[0]
-		return PropretyDestaqueNode(var_name=bits[2])
+		return PropertyDestaqueNode(var_name=bits[2])
 	else:
 		raise template.TemplateSyntaxError, "'%s' tag takes one or two arguments: %s as [varname] %s [limit] as [varname]" % (bits[0],bits[0],bits[0])
 
-class PropretyPhotoDestaqueNode(template.Node):
+class PropertyPhotoDestaqueNode(template.Node):
 	def __init__(self, var_name, obj_id=None ,num=None):
 		self.var_name=var_name
 		self.id = obj_id
@@ -142,7 +142,7 @@ class PropretyPhotoDestaqueNode(template.Node):
 			obj = template.resolve_variable(self.id, context)
 
 		if self.id:
-			photo = Photo.objects.filter(album_proprety=int(obj)).filter(image_destaque=True)
+			photo = Photo.objects.filter(album_property=int(obj)).filter(image_destaque=True)
 			#photo = Photo.objects.filter(album=int(obj)).filter(image_featured=True)
 			
 		else:
@@ -152,28 +152,28 @@ class PropretyPhotoDestaqueNode(template.Node):
 		context[self.var_name] = photo[:self.num]
 		return ''
 
-def do_get_proprety_photo_destaque(parser, token):
+def do_get_property_photo_destaque(parser, token):
 
 	bits = token.contents.split()
 	if len(bits) == 5:
 		if bits[3] != 'as':
 			raise template.TemplateSyntaxError, "Second argument to '%s' tag must be 'as'" % bits[0]
-		return PropretyPhotoDestaqueNode(obj_id=bits[1],num=bits[2], var_name=bits[4])
+		return PropertyPhotoDestaqueNode(obj_id=bits[1],num=bits[2], var_name=bits[4])
 	if len(bits) == 6:
 		if bits[2] != 'from':
 			raise template.TemplateSyntaxError, "Second argument to '%s' tag must be 'from'" % bits[0]
 		if bits[4] != 'as':
 			raise template.TemplateSyntaxError, "Fourth argument to '%s' tag must be 'as'" % bits[0]
-		return PropretyPhotoDestaqueNode(num=bits[1], var_name=bits[5], obj_id=bits[3])
+		return PropertyPhotoDestaqueNode(num=bits[1], var_name=bits[5], obj_id=bits[3])
 
 	elif len(bits)==3:
 		if bits[1]!='as':
 			raise template.TemplateSyntaxError, "Firts argument to '%s' tag must be 'as'" % bits[0]
-		return PropretyDestaqueNode(var_name=bits[2])
+		return PropertyDestaqueNode(var_name=bits[2])
 	else:
 		raise template.TemplateSyntaxError, "'%s' tag takes one or two arguments: %s as [varname] %s [limit] as [varname]" % (bits[0],bits[0],bits[0])
 
-register.tag('get_proprety_photo',do_get_proprety_photo)
-register.tag('get_propretys',do_get_proprety)
-register.tag('get_propretys_destaque',do_get_propretys_destaque)
-register.tag('get_proprety_photo_destaque',do_get_proprety_photo_destaque)
+register.tag('get_property_photo',do_get_property_photo)
+register.tag('get_propertys',do_get_property)
+register.tag('get_propertys_destaque',do_get_propertys_destaque)
+register.tag('get_property_photo_destaque',do_get_property_photo_destaque)

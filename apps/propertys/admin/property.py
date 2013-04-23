@@ -3,8 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.contrib import admin 
 
-from forms import PropretyAdminForm
-from real_estate_app.apps.propretys.models import Proprety
+from forms import PropertyAdminForm
+from real_estate_app.apps.propertys.models import Property
 from real_estate_app.apps.photos.admin import PhotoInlineAdmin 
 
 from real_estate_app.admin.actions import duplicate_object, make_unpublished, make_published 
@@ -18,12 +18,12 @@ BRAZIL=[]
 if LANGUAGE_CODE=='pt-br':
 	BRAZIL=['condominio','iptu']
 
-class PropretyAdmin(FaceBoxModelAdmin):
+class PropertyAdmin(FaceBoxModelAdmin):
 	search_fields = ['address','code_property']
 	
 	fieldsets = (
 			(_('General Information'), {
-				'fields': ['address','slug','zip_code','description','price','state','district_fk','classification_fk','statusproprety_fk','realtor_fk']+BRAZIL,
+				'fields': ['address','slug','zip_code','description','price','state','district_fk','classification_fk','statusproperty_fk','realtor_fk']+BRAZIL,
 			}),
 			(_('Detailed Information'),{
 				'fields':('rooms','baths','garage','elevator','private_area','position_of_sun','under_contruction','furnishing','aditionalthings_fk',),
@@ -40,13 +40,13 @@ class PropretyAdmin(FaceBoxModelAdmin):
 
 	date_hierarchy = 'date_init'
 	
-	list_display = ('code_property','address','state','district_fk', 'classification_fk','statusproprety_fk','date_init','date_end',)
+	list_display = ('code_property','address','state','district_fk', 'classification_fk','statusproperty_fk','date_init','date_end',)
 	
-	list_filter = ('classification_fk','statusproprety_fk','enable_publish')
+	list_filter = ('classification_fk','statusproperty_fk','enable_publish')
 	
 	prepopulated_fields = {'slug': ('address',)}
 	
-	form = PropretyAdminForm 
+	form = PropertyAdminForm 
 
 	inlines = (
 			PhotoInlineAdmin,
@@ -73,4 +73,4 @@ class PropretyAdmin(FaceBoxModelAdmin):
 		      MEDIA_PREFIX_REAL_ESTATE+'js/jquery.createtabs.js',
 		)
 
-admin.site.register(Proprety, PropretyAdmin)
+admin.site.register(Property, PropertyAdmin)

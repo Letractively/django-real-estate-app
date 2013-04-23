@@ -8,7 +8,7 @@ TYPES=(
 	('newspapers.news',_('News')),
 	('marketing.marketingobject',_('Marketing Object')),
 	('real_estate_files.files',_('File')),
-	('propretys.proprety',_('Proprety')),
+	('propertys.property',_('Property')),
 )
 
 class Portlet(models.Model):

@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.localflavor.br.br_states import STATE_CHOICES
 
 from real_estate_app.managers import SelectFieldManager
-from real_estate_app.apps.propretys.manager import DistrictSelectFieldManager
+from real_estate_app.apps.propertys.manager import DistrictSelectFieldManager
 
 
 class District(models.Model):
@@ -33,8 +33,8 @@ class District(models.Model):
 		return u'%s - %s' % (self.district, self.state)
 
 	class Meta:	
-		app_label = 'propretys'
-		db_table  = 'real_estate_app_apps_propretys_district'
+		app_label = 'propertys'
+		db_table  = 'real_estate_app_apps_propertys_district'
 		get_latest_by='district'
 		ordering=('district',)
 		verbose_name=_('District')
@@ -66,17 +66,17 @@ class Classification(models.Model):
 		return self.classification 
 
 	class Meta:	
-		app_label = 'propretys'
-		db_table  = 'real_estate_app_apps_propretys_classification'
+		app_label = 'propertys'
+		db_table  = 'real_estate_app_apps_propertys_classification'
 		get_latest_by='classification'
 		ordering=('classification',)
 		verbose_name=_('Classification')
 		verbose_name_plural=_('Classifications')
 
 
-class StatusProprety(models.Model):
-	statusproprety=models.CharField(
-					_('Status Proprety'),
+class StatusProperty(models.Model):
+	statusproperty=models.CharField(
+					_('Status Property'),
 					max_length=100,
 					help_text=_('Enter with new status. Ex.: Rent, Sale,...')
 	)
@@ -90,22 +90,22 @@ class StatusProprety(models.Model):
 	objects = SelectFieldManager() 
 
 	def __unicode__(self):
-		return self.statusproprety 
+		return self.statusproperty 
 
 	class Meta:	
-		app_label = 'propretys'
-		db_table  = 'real_estate_app_apps_propretys_status_proprety'
-		get_latest_by='statusproprety'
-		ordering=('statusproprety',)
-		verbose_name=_('Status Proprety')
-		verbose_name_plural=_('Status Propretys')
+		app_label = 'propertys'
+		db_table  = 'real_estate_app_apps_propertys_status_property'
+		get_latest_by='statusproperty'
+		ordering=('statusproperty',)
+		verbose_name=_('Status Property')
+		verbose_name_plural=_('Status Propertys')
 
 class AditionalThings(models.Model):
 
 	name=models.CharField(
 						_('Name'),
 						max_length=255,
-						help_text=_('Enter with new aditional things to proprety. Ex.: Pool, Barbecue,...')
+						help_text=_('Enter with new aditional things to property. Ex.: Pool, Barbecue,...')
 	)
 	logical_exclude = models.NullBooleanField(
 					_('Logical exclude'),
@@ -122,8 +122,8 @@ class AditionalThings(models.Model):
 		return self.name
 
 	class Meta:	
-		app_label = 'propretys'
-		db_table  = 'real_estate_app_apps_propretys_aditionalthings'
+		app_label = 'propertys'
+		db_table  = 'real_estate_app_apps_propertys_aditionalthings'
 		get_latest_by='name'
 		ordering=('name',)
 		verbose_name=_('Aditional things')
@@ -134,7 +134,7 @@ class PositionOfSun(models.Model):
 	position=models.CharField(
 						_('Position'),
 						max_length=255,
-						help_text=_('Enter with a new position of sun of a proprety.')
+						help_text=_('Enter with a new position of sun of a property.')
 	)
 
 	logical_exclude = models.NullBooleanField(
@@ -150,8 +150,8 @@ class PositionOfSun(models.Model):
 		return self.position 
 
 	class Meta:	
-		app_label = 'propretys'
-		db_table  = 'real_estate_app_apps_propretys_position_of_sun'
+		app_label = 'propertys'
+		db_table  = 'real_estate_app_apps_propertys_position_of_sun'
 		get_latest_by='position'
 		ordering=('position',)
 		verbose_name=_('Position of sun')

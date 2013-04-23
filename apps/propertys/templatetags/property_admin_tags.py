@@ -3,12 +3,12 @@ from datetime import datetime, timedelta
 from django import template
 from django.conf import settings
 from django.db.models import Q
-from real_estate_app.apps.propretys.models import Proprety, District, StatusProprety
+from real_estate_app.apps.propertys.models import Property, District, StatusProperty
 from real_estate_app.apps.photos.models import Photo
 
 register = template.Library()
 
-class PropretyWillExpiredNode(template.Node):
+class PropertyWillExpiredNode(template.Node):
         def __init__(self, var_name, num=None):
                 self.var_name= var_name
 
@@ -19,7 +19,7 @@ class PropretyWillExpiredNode(template.Node):
 
         def render(self,context):
                 last_days = datetime.now()+timedelta(days=5)
-                propertys = Proprety.objects.all_enabled().filter(Q(date_end__lte=last_days))
+                propertys = Property.objects.all_enabled().filter(Q(date_end__lte=last_days))
                 context[self.var_name] = propertys[:self.num]
                 return ''
 
@@ -29,12 +29,12 @@ def do_get_property_expired(parser,token):
         if len(bits) == 4:
                 if bits[2] != 'as':
                         raise template.TemplateSyntaxError, " Second argument to '%s' tag must be 'as'" % bits[0]
-                return PropretyWillExpiredNode(num=bits[1], var_name=bits[3])
+                return PropertyWillExpiredNode(num=bits[1], var_name=bits[3])
 
         elif len(bits)==3:
                 if bits[1]!='as':
                         raise template.TemplateSyntaxError, "Firts argument to '%s' tag must be 'as'" % bits[0]
-                return PropretyWillExpiredNode(var_name=bits[2])
+                return PropertyWillExpiredNode(var_name=bits[2])
         else:
                 raise template.TemplateSyntaxError, "'%s' tag takes one or two arguments: %s as [varname] %s [limit] as [varname]" % (bits[0],bits[0],bits[0])
 

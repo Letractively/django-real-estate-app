@@ -19,9 +19,9 @@ class VisitEventCalendarAdmin(admin.ModelAdmin):
 	
 	date_hierarchy = 'date_visit'
 	
-	#list_display = ('code_property','address','state','district_fk', 'classification_fk','statusproprety_fk','date_init','date_end',)
+	#list_display = ('code_property','address','state','district_fk', 'classification_fk','statusproperty_fk','date_init','date_end',)
 	
-	#list_filter = ('classification_fk','statusproprety_fk','enable_publish')
+	#list_filter = ('classification_fk','statusproperty_fk','enable_publish')
 	
 	#prepopulated_fields = {'slug': ('visitor_first_name','visitor_last_name','date_visit')}
 	

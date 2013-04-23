@@ -9,9 +9,9 @@ visitcalendar_list = url(
     name   = 'visitcalendar-list'
 )
 
-visitcalendar_list_proprety_visit = url(
+visitcalendar_list_property_visit = url(
 	regex  = '^calendar/(?P<slug>[-\w]+)/$',
-	view   = 'real_estate_app.apps.visitcalendar.views.visitcalendar_list_proprety_visit',
+	view   = 'real_estate_app.apps.visitcalendar.views.visitcalendar_list_property_visit',
 	kwargs = dict(info_dict),
 	name   = 'visitcalendar-detail'
 )
@@ -38,7 +38,7 @@ visitcalendar_create_object = url (
 )
 
 visitcalendar_update_object = url (
-    regex  = '^calendar/(?P<proprety_slug>[-\w]+)/(?P<slug>[-\w]+)/edit/$',
+    regex  = '^calendar/(?P<property_slug>[-\w]+)/(?P<slug>[-\w]+)/edit/$',
     view   = 'real_estate_app.apps.visitcalendar.views.visitcalendar_update_object',
     kwargs = dict(slug_field='slug', post_save_redirect='../../'),
     name   = 'visitcalendar-create-object'

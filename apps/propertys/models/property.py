@@ -10,9 +10,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.localflavor.br.br_states import STATE_CHOICES
 from django.utils.safestring import mark_safe 
 
-from fields import District, Classification, StatusProprety, AditionalThings, PositionOfSun
-from real_estate_app.apps.propretys.manager import PropretyManager
-from real_estate_app.apps.propretys.utils import make_dv
+from fields import District, Classification, StatusProperty, AditionalThings, PositionOfSun
+from real_estate_app.apps.propertys.manager import PropertyManager
+from real_estate_app.apps.propertys.utils import make_dv
 from real_estate_app.apps.realtors.models import Realtor
 
 # TODO: better import STATE_CHOICE based on LANGUAGE_CODE
@@ -20,7 +20,7 @@ from real_estate_app.apps.realtors.models import Realtor
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 GMAP_DEFAULT=getattr(settings,'GMAP_DEFAULT',('-15.793905','-47.882395'))
 
-class Proprety(models.Model):
+class Property(models.Model):
 	code_property=models.CharField(
 							_('code property'),
 							max_length=8,
@@ -91,8 +91,8 @@ class Proprety(models.Model):
 							help_text=_('Entry with classification of property'),
 							verbose_name=_("Classification")
 	)
-	statusproprety_fk = models.ForeignKey(
-							StatusProprety,
+	statusproperty_fk = models.ForeignKey(
+							StatusProperty,
 							limit_choices_to ={'logical_exclude':False},
 							help_text=_('Entry with type of property'),
 							verbose_name=_("Status")
@@ -238,11 +238,11 @@ class Proprety(models.Model):
 	def __unicode__(self):
 		return self.address
 
-	objects = PropretyManager()
+	objects = PropertyManager()
 
 	class Meta:
-		app_label = 'propretys'
-		db_table  = 'real_estate_app_apps_propretys_proprety'
+		app_label = 'propertys'
+		db_table  = 'real_estate_app_apps_propertys_property'
 		get_latest_by='address'
 		ordering=('address',)
 		verbose_name=_('Propety')
@@ -264,7 +264,7 @@ class Proprety(models.Model):
 	photos=property(_get_all_photos)
 
 	def _get_absolute_url(self):
-		return ('proprety-detail',None, {
+		return ('property-detail',None, {
 				'slug' : str(self.slug),
 				})
 	get_absolute_url=permalink(_get_absolute_url)
@@ -284,10 +284,10 @@ class Proprety(models.Model):
 	def save(self,*args,**kwargs):
 		if not self.code_property:
 			code_property=make_dv(''.join(random.sample('0123456789',6)),max_num=8)
-			if Proprety.objects.filter(code_property=code_property):
+			if Property.objects.filter(code_property=code_property):
 				code_property=make_dv(''.join(random.sample('0123456789',6)),max_num=8)
 			self.code_property=code_property
-		super(Proprety,self).save(*args,**kwargs)
+		super(Property,self).save(*args,**kwargs)
 
 	def clone(self):
 		from django.core.files.base import ContentFile

@@ -15,7 +15,7 @@ feeds_news = {
 }
 
 newspapers_info = {'queryset':News.objects.all(),}
-sitemap_info = {'proprety':GenericSitemap(newspapers_info,priority=0.8),}
+sitemap_info = {'property':GenericSitemap(newspapers_info,priority=0.8),}
 
 newspapers_list = url(
     regex  = '^news/$',
@@ -34,7 +34,7 @@ newspapers_detail = url(
 feeds_newspapers_url = url(
 	regex  = '^news/rss/$',
 	view   = NewsFeed(),
-	name   = 'proprety-feeds'
+	name   = 'property-feeds'
 )
 
 newspapers_sitemap = url(
