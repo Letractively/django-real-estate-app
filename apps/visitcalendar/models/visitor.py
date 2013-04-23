@@ -80,12 +80,7 @@ class Visitor(RealEstateAppBaseModel):
 		verbose_name_plural=_('Visitors')
 
 	def __unicode__(self):
-		try:
-			return '%s: %s' % (self.visitor, self.date_visit.strftime(settings.DATETIME_INPUT_FORMATS[0]))
-		except IndexError:
-			return '%s: %s' % (self.visitor, self.date_visit.strftime('%Y-%m-%d %H:%M:%S'))
-		else:
-			raise
+			return u'%s' % self.visitor
 
 	def _visitor(self):
 		return self.visitor_first_name+' '+self.visitor_last_name

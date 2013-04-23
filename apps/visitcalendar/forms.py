@@ -12,17 +12,18 @@ class VisitorForm(forms.ModelForm):
 
 	class Meta:
 		model=Visitor
+		exclude=('create_date','enable_publish',)
 
 class VisitEventForm(forms.ModelForm):
 
 	class Meta:
 		model = VisitEvent
-		exclude = ('slug','create_date','enable_publish')
+		exclude = ('slug','create_date','enable_publish','visitor_fk')
 
-	# def save(self):
-	# 	data=self.data.copy()
-	# 	self.instance.slug=slugify(data['visitor_first_name']+data['visitor_last_name']+data['date_visit'])
-	# 	return super(VisitEventForm,self).save()
+	def save(self,commit=True):
+	  	data=self.data.copy()
+	  	self.instance.slug=slugify(data['date_visit'])
+	  	return super(VisitEventForm,self).save(commit)
 
 	def __init__(self, *args, **kwargs):
 

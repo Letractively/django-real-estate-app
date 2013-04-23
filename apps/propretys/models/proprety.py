@@ -264,7 +264,7 @@ class Proprety(models.Model):
 	photos=property(_get_all_photos)
 
 	def _get_absolute_url(self):
-		return ('property-detail',None, {
+		return ('proprety-detail',None, {
 				'slug' : str(self.slug),
 				})
 	get_absolute_url=permalink(_get_absolute_url)

@@ -17,10 +17,17 @@ visitcalendar_list_proprety_visit = url(
 )
 
 visitcalendar_list_json = url(
-	regex  = '^calendar/json(/(?P<slug>[-\w]+)/|/)$',
+	regex  = '^calendar/json/(?P<slug>[-\w]+)/$',
     view   = 'real_estate_app.apps.visitcalendar.views.visitcalendar_list_json',
     kwargs = dict(info_dict),
     name   = 'visitcalendar-list-json'
+)
+
+visitcalendar_list_json_index = url(
+    regex  = '^calendar/json/$',
+    view   = 'real_estate_app.apps.visitcalendar.views.visitcalendar_list_json',
+    kwargs = dict(info_dict),
+    name   = 'visitcalendar-list-json-index'
 )
 
 visitcalendar_create_object = url (

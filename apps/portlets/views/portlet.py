@@ -7,6 +7,7 @@ from real_estate_app.apps.photos.models import Photo
 @permission_required('real_estate_app.add_portlet',login_url='/admin/')
 def portlet_create(request, *args, **kwargs):
 	kwargs['form_class']=PortletAdminForm
+	kwargs['post_save_redirect']=request.path
 	return create_object(request, *args, **kwargs)
 
 @permission_required('real_estate_app.change_portlet',login_url='/admin/')
