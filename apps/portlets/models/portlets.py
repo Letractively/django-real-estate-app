@@ -5,10 +5,10 @@ from django.utils.translation import ugettext_lazy as _
 from real_estate_app.apps.newspapers.models import News
 
 TYPES=(
-	('newspapers.news',_('News')),
-	('marketing.marketingobject',_('Marketing Object')),
-	('real_estate_files.files',_('File')),
-	('propertys.property',_('Property')),
+	('newspapers.News',_('News')),
+	('marketing.MarketingObject',_('Marketing Object')),
+	('real_estate_files.Files',_('File')),
+	('propertys.Property',_('Property')),
 )
 
 class Portlet(models.Model):
