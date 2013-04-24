@@ -1,0 +1,18 @@
+<script type="text/javascript">
+django.jQuery(document).ready(function($){
+	$('#{{ html_id }}').autocompleteselectmutiple({{ plugin_options|safe }})
+    
+});
+</script>
+
+<div id="custom-{{ html_id }}" class="ui-helper-clearfix">
+	<input type="text" name="{{ name }}" id="{{ html_id }}_text" rev="iframe" href="{{ related_url_facebox }}" value="" {{ extra_attrs }} />
+</div>
+
+<input type="hidden" name="{{name}}" id="{{ html_id }}" value="{{ current_ids }}" />
+<script type="text/javascript" src='{{ MEDIA_PREFIX }}/js/jquery-ui-1.8.custom.min.js'></script>
+<script type="text/javascript" src="{{ MEDIA_PREFIX }}/js/autocomplete.js"
+></script>
+{# django admin adds the help text. this is for use outside of the admin #}
+{% block help %}{% if help_text %}<p class="help">{{help_text}}</p>{% endif %}{% endblock %}
+{{ inline }}

@@ -40,7 +40,7 @@ def create_object(request, model=None, template_name=None,
             formset = formset_class(request.POST, request.FILES)
             if formset.is_valid() and form.is_valid():
                 new_object=form.save()
-                
+                # TODO: Better this generic create_object
                 obj=formset.save(commit=False)
                 obj.visitor_fk=new_object
                 formset.save()

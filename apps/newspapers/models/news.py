@@ -57,6 +57,6 @@ class News(models.Model):
 
 	@permalink
 	def get_absolute_url(self):
-		return ('news-detail', None, {
+		return ('newspapers-detail', None, {
 				'slug' : str(self.slug),
 				})

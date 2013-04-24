@@ -179,13 +179,66 @@ class AreaInputWidget(TextInput):
 			final_attrs['value'] = force_unicode(self._format_value(value))
 		return mark_safe(u'<input%s alt="area" /> m²' % flatatt(final_attrs) )
 
-
-class AjaxSelectMultipleInputWidget(SelectMultiple):
+class AjaxInputWidget(TextInput):
 	"""
 		This code is based on app django-ajax-selects
 	"""
 	def __init__(self, model_fk, show_help_text=False, help_text='',*args, **kwargs):
-		super(AjaxSelectMultipleInputWidget, self).__init__(*args, **kwargs)
+		super(AjaxInputWidget, self).__init__(*args, **kwargs)
+		self.show_help_text=show_help_text
+		self.help_text=help_text
+		self.model=model_fk
+		self.module_name=self.model._meta.module_name
+		self.apps=self.model._meta.app_label
+
+		try:
+			self.fields_show=REAL_ESTATE_APP_AJAX_SEARCH[self.module_name]['search_fields']
+		except KeyError:
+			raise Exception('You have to put on settings file the dictionary named REAL_ESTATE_APP_AJAX_SEARCH={"model":<list of fields>}')
+
+	def render(self,name, value, attrs=None, choices=()):
+		if value is None: value = []
+		
+		autocompleteobject=AutoCompleteObject(self.model)
+
+		if self.show_help_text: 
+			help_text=self.help_text
+		else:
+			help_text=''
+
+		final_attrs = self.build_attrs(attrs, name=name)
+		self.html_id = final_attrs.pop('id', name)
+		
+		plugin_options = {
+			'source': reverse('%s_%s_ajax_view' % (self.apps,self.module_name)),
+			#'initial': autocompleteobject.render(id__in=str(value)),
+			'fields':self.fields_show,
+		}
+		
+		context = {
+			'name':name,
+			'current':value,
+			'html_id':self.html_id,
+			'help_text':help_text,
+			'plugin_options':mark_safe(simplejson.dumps(plugin_options)),
+			'MEDIA_PREFIX': MEDIA_PREFIX,
+			'ADMIN_MEDIA_PREFIX':settings.ADMIN_MEDIA_PREFIX,
+			'search_value':_('Search...')
+
+		}
+
+		return mark_safe(render_to_string(
+										  ('real_estate_app/autocompleteinput.html',
+										   'admin/real_estate_app/autocompleteinput.html'),
+										   context)
+				)
+
+class AdminAjaxSelectMultipleInputWidget(SelectMultiple):
+	"""
+		This code is based on app django-ajax-selects
+	"""
+	def __init__(self, model_fk, show_help_text=False, help_text='',*args, **kwargs):
+		super(AdminAjaxSelectMultipleInputWidget, self).__init__(*args, **kwargs)
 		self.show_help_text=show_help_text
 		self.help_text=help_text
 		self.model=model_fk

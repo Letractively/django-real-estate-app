@@ -13,9 +13,11 @@ from django.utils.safestring import mark_safe
 
 from real_estate_app.apps.visitcalendar.models import VisitEvent, Visitor
 from real_estate_app.apps.visitcalendar.forms import VisitEventForm, VisitorForm
+from real_estate_app.apps.visitcalendar.settings import VISITOR_SEARCH_FIELDS
 from real_estate_app.apps.propertys.models import Property
 from real_estate_app.views.generic import create_object
 
+@requires_csrf_token
 def visitcalendar_list_json(request, *args, **kwargs):
 	if kwargs.has_key('slug'):
 		property=get_object_or_404(Property,slug=kwargs['slug'])
@@ -41,13 +43,13 @@ def visitcalendar_list_json(request, *args, **kwargs):
 			))
 
 	return HttpResponse(simplejson.dumps(events),mimetype='application/json')
-	
 
-@requires_csrf_token
+@requires_csrf_token	
 def visitcalendar_list(request, *args, **kwargs):	
 	kwargs['queryset'] = VisitEvent.objects.all()
 	return list_detail.object_list(request, *args, **kwargs)
 
+@requires_csrf_token
 def visitcalendar_list_property_visit(request, *args, **kwargs):
 	"""
 	A view wrapper around ``django.views.generic.list_detail.object_list`.
@@ -74,3 +76,14 @@ def visitcalendar_update_object(request, *args, **kwargs):
 	kwargs.pop('property_slug')
 	kwargs['form_class']=VisitEventForm
 	return update_object(request, *args, **kwargs)
+
+@requires_csrf_token
+def visitcalendar_search_visitor(request, *args, **kwargs):
+	if 'term' in request.GET:
+		try:
+			query=VISITOR_SEARCH_FIELDS['fields'][0]+'__icontains'
+			q_value={query:request.GET['term']}
+			json=serializers.serialize("json",Visitor.objects.filter(**q_value),fields='visitor_first_name')
+			return HttpResponse(json,mimetype="text/javascript")
+		except:
+			raise 

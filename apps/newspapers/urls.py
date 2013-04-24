@@ -34,7 +34,7 @@ newspapers_detail = url(
 feeds_newspapers_url = url(
 	regex  = '^news/rss/$',
 	view   = NewsFeed(),
-	name   = 'property-feeds'
+	name   = 'newspapers-feeds'
 )
 
 newspapers_sitemap = url(

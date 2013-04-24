@@ -2,17 +2,36 @@
 from datetime import datetime
 
 from django import forms
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
 
 from real_estate_app.apps.visitcalendar.models import VisitEvent, Visitor 
 from real_estate_app.apps.propertys.models import Property
+from real_estate_app.widgets import AjaxInputWidget
+
+LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
+
+if LANGUAGE_CODE in ('pt-br','pt_BR'):
+	from real_estate_app.apps.visitcalendar.localflavor.br.forms import fields_visitor_form
+else:
+	from real_estate_app.apps.visitcalendar.localflavor.forms import fields_visitor_form
 
 class VisitorForm(forms.ModelForm):
 
+	cpf = forms.CharField(
+						label=u'CPF',
+						widget=AjaxInputWidget(
+									model_fk=Visitor,
+									help_text=_('Enter text to search.'),
+									show_help_text=True
+						)
+	)
+
 	class Meta:
 		model=Visitor
-		exclude=('create_date','enable_publish',)
+		fields=fields_visitor_form
+		#exclude=('create_date','enable_publish',)
 
 class VisitEventForm(forms.ModelForm):
 

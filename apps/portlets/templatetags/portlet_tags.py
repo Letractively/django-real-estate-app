@@ -22,15 +22,15 @@ class PortletsNode(template.Node):
                 """
                         Response to render a portlet object.
                 """
-                # TODO: Better the node to get a portlet with model indicated.
+                # TODO: Better the acept null amount.
                 try:
                         PortletObjects=get_portlet_model(self.type_portlet)
 
                         portlet_options = Portlet.objects.get(type_portlet=self.type_portlet)
                        
-                        amount = portlet_options.amount_featured
-                       
-                        portlet_objects=PortletObjects.objects.all()[:amount]
+                        amount = portlet_options.amount_featured or 10
+
+                        PortletObjects=PortletObjects.objects.all()[:amount]
 
                         if portlet_options.featured:
                                 amount-=1

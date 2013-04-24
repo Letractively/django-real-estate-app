@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from real_estate_app.apps.propertys.models import Property, AditionalThings 
 from real_estate_app.apps.realtors.models import Realtor
-from real_estate_app.widgets import MoneyInputWidget, ZipInputWidget, CheckboxSelectMultipleCustom, AreaInputWidget, AjaxSelectMultipleInputWidget
+from real_estate_app.widgets import MoneyInputWidget, ZipInputWidget, CheckboxSelectMultipleCustom, AreaInputWidget, AdminAjaxSelectMultipleInputWidget
 
 class PropertyAdminForm(ModelForm):
 	
@@ -28,7 +28,7 @@ class PropertyAdminForm(ModelForm):
 									label=_('Realtor'),
 									queryset=Realtor.objects.all(),
 									required=False,
-									widget=AjaxSelectMultipleInputWidget(
+									widget=AdminAjaxSelectMultipleInputWidget(
 											model_fk=Realtor,
 											help_text=_('Enter text to search.'),
 											show_help_text=True

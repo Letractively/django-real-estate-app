@@ -43,3 +43,10 @@ visitcalendar_update_object = url (
     kwargs = dict(slug_field='slug', post_save_redirect='../../'),
     name   = 'visitcalendar-create-object'
 )
+
+visitcalendar_visitor_ajax_view = url (
+    regex  = '^calendar/visitor/search/$',
+    view   = 'real_estate_app.apps.visitcalendar.views.visitcalendar_search_visitor',
+    kwargs = {},
+    name   = 'visitcalendar_visitor_ajax_view'
+)

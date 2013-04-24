@@ -18,10 +18,10 @@ def property_list(request, *args, **kwargs):
 	post={}
 	get={}
 
-	if request.GET and request.GET.get('statusProperty'):
+	if request.GET and request.GET.get('statusproperty'):
 		
-		status_id=StatusProperty.objects.filter(statusProperty=request.GET.get('statusProperty'))
-		kwargs['queryset'] = kwargs['queryset'].filter(statusProperty_fk=status_id)	
+		status_id=StatusProperty.objects.filter(statusproperty=request.GET.get('statusproperty'))
+		kwargs['queryset'] = kwargs['queryset'].filter(statusproperty_fk=status_id)	
 		get=request.GET
 	
 	if request.POST:
@@ -34,9 +34,9 @@ def property_list(request, *args, **kwargs):
 
 			if query[0] not in ('x','y','csrfmiddlewaretoken') and query[1] != 'any' and query[1] != 'Em qualquer lugar':
 
-				if query[0] == 'statusProperty_fk':
+				if query[0] == 'statusproperty_fk':
 					try:
-						query[1]=StatusProperty.objects.get(statusProperty=query[1])
+						query[1]=StatusProperty.objects.get(statusproperty=query[1])
 					except StatusProperty.DoesNotExist:
 						pass
 

@@ -138,9 +138,10 @@ class PropertyPhotoDestaqueNode(template.Node):
 			self.num = None
 
 	def render(self, context):
+		
 		if self.id:
 			obj = template.resolve_variable(self.id, context)
-
+		# TODO: change field name of photo models from image_destaque to image_featured
 		if self.id:
 			photo = Photo.objects.filter(album_property=int(obj)).filter(image_destaque=True)
 			#photo = Photo.objects.filter(album=int(obj)).filter(image_featured=True)
