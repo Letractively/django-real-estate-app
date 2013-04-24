@@ -210,6 +210,7 @@ class AjaxInputWidget(TextInput):
 		self.html_id = final_attrs.pop('id', name)
 		
 		plugin_options = {
+			'minLength':3,
 			'source': reverse('%s_%s_ajax_view' % (self.apps,self.module_name)),
 			#'initial': autocompleteobject.render(id__in=str(value)),
 			'fields':self.fields_show,
@@ -269,12 +270,13 @@ class AdminAjaxSelectMultipleInputWidget(SelectMultiple):
 			current_ids = "|"
 		
 		related_url_facebox=reverse('admin:%s_%s_add_popup' % (self.apps,self.module_name))+'?_popup=1'
-		
+		# TODO: check persmission of can add on admin site.
 		plugin_options = {
 			'source': reverse('admin:%s_%s_ajax_view' % (self.apps,self.module_name)),
 			'initial': autocompleteobject.render(id__in=[str(v) for v in value]),
 			'fields':self.fields_show,
-			'ajax_url_facebox': related_url_facebox
+			'ajax_url_facebox': related_url_facebox,
+			'can_add':True,
 		}
 		
 		context = {
