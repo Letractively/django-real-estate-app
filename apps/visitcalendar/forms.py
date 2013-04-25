@@ -19,12 +19,19 @@ else:
 
 class VisitorForm(forms.ModelForm):
 
+	pk = forms.CharField(
+		'pk',
+		widget=forms.widgets.HiddenInput,
+		required=False,
+	)
+
 	cpf = forms.CharField(
 						label=u'CPF',
 						widget=AjaxInputWidget(
 									model_fk=Visitor,
 									help_text=_('Enter text to search.'),
-									show_help_text=True
+									show_help_text=True,
+									ajax_length=10
 						)
 	)
 

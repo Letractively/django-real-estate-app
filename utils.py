@@ -62,6 +62,10 @@ def radomstring(max=10):
 	return a
 
 class AutoCompleteObject(object):
+	"""
+	This class you pass as param to simplejson.dump for redenring according the template of model you pass.
+	"""
+	# TODO: better this code
 
 	def __init__(self,model):
 
@@ -69,12 +73,17 @@ class AutoCompleteObject(object):
 		self.module_name=self.model._meta.module_name
 		self.image_fields=[]
 		self.thumbnail=[]
+		self.all_fields=[]
+		self.thumbnail_ajax=REAL_ESTATE_APP_AJAX_SEARCH.get(self.module_name).get('thumbnail_ajax','')
+		self.return_all_fields=REAL_ESTATE_APP_AJAX_SEARCH.get(self.module_name).get('all_fields',False)
+		if self.return_all_fields:
+			self.all_fields=[field.name == 'id' and 'pk' or field.name for field in model._meta.fields]
 		try:
 			self.fields_search=REAL_ESTATE_APP_AJAX_SEARCH[self.module_name]['search_fields']
 			self.return_values=REAL_ESTATE_APP_AJAX_SEARCH[self.module_name]['return_values']
-			self.thumbnail_ajax=REAL_ESTATE_APP_AJAX_SEARCH[self.module_name]['thumbnail_ajax']
 		except KeyError:
 			raise ImproperlyConfigured("settings.REAL_ESTATE_APP_AJAX_SEARCH not configured correctly for %s." % self.module_name)
+
 
 
 	def getSpecialField(self,models,fields=''):
@@ -90,7 +99,7 @@ class AutoCompleteObject(object):
 
 	def filter(self,value='',**kwargs):
 		from django.db.models import Q
-
+		
 		queryset = self.model.objects.all()
 
 		if self.fields_search and value:
@@ -100,20 +109,24 @@ class AutoCompleteObject(object):
 		if kwargs:
 			queryset=queryset.filter(**kwargs)
 
-		if isinstance(self.return_values,(list,tuple)) and self.return_values:
+		if isinstance(self.return_values,(list,tuple)) and self.return_values and not self.return_all_fields:
+			# return only the settings.<model>[return_values] if all_fields is False
 			self.image_fields=self.getSpecialField(queryset,self.return_values)
 			queryset=queryset.values(*self.return_values)
-
+		elif self.return_all_fields:
+			self.image_fields=self.getSpecialField(queryset,self.all_fields)
+			queryset=queryset.values(*self.all_fields)
+		
 		return queryset
 
 	def render(self,value='',**kwargs):
 		"""
-			This render a json format for jquery.ui.autocomplete plugin
+			This render a json format for autocomplete.js plugin customized for jquery-ui autocomplete.
 		"""
 		from django.utils.safestring import mark_safe
 		from django.template.loader import render_to_string
 		return [{
-					'pk':model['pk'],
+					'pk':model.get('pk',model.get('id','')),
 					'real_value':' '.join([model[f] for f in self.return_values if not (f in ('pk','id') or f in self.image_fields)]),
 					'value': mark_safe(render_to_string(
 										  				('real_estate_app/autocompleteselectmultiple_response_ajax.html',
@@ -127,6 +140,7 @@ class AutoCompleteObject(object):
 									   	 				}
 							   			)
 					),
+					'all_fields':[{f:mark_safe(model[f])} for f in self.all_fields if f in self.all_fields ]
 				} for model in self.filter(value,**kwargs)]					
 
 	def forcePositionFieldsShow(self,filter_values):
@@ -138,12 +152,12 @@ class AutoCompleteObject(object):
 		from sorl.thumbnail import get_thumbnail
 
 		if isinstance(filter_values,dict):
-			tmp_fields_values=filter_values.items()
+			tmp_fields_values=[]
 			for ct, field in enumerate(self.return_values):
 				if field in self.image_fields and filter_values[field]:
-					tmp_fields_values[ct]=(field,get_thumbnail(filter_values[field],self.thumbnail_ajax, quality=99))
+					tmp_fields_values.append((field,get_thumbnail(filter_values[field],self.thumbnail_ajax, quality=99)))
 				else:
-					tmp_fields_values[ct]=(field,filter_values[field])
+					tmp_fields_values.append((field,filter_values[field]))
 			
 			return tmp_fields_values
 

@@ -6,7 +6,9 @@ $.fn.extend({
 		autocompleteinput: function(options) {
 										defaults = {
 											'can_add':false,
-											'minLength':3
+											'minLength':3,
+											'multiple':false,
+											'delay':500
 										}
 
 										var options = $.extend(defaults,options)
@@ -27,54 +29,70 @@ $.fn.extend({
 									 				$.each(data,function(i,val){
 									 					objects.push(val);
 									 				});
-									 				var add_link = '';
-									 				//objects.push("Clique para dicionar");
 									 				add(objects);
 									 			});
 											}
 
 											function addItem(value, pk) {
-									 			var span=$('<span>').html(value.value);
-									 			var a=$("<a>").addClass("remove").attr({
-									 				href:"javascript:",
-									 				title:"Remove "+value.real_value,
-									 				value:pk
-									 			}).text("x").appendTo(span);
-									 			span.insertBefore($text);
+												if (options.multiple) {
+										 			var span=$('<span>').html(value.value);
+										 			var a=$("<a>").addClass("remove").attr({
+										 				href:"javascript:",
+										 				title:"Remove "+value.real_value,
+										 				value:pk
+										 			}).text("x").appendTo(span);
+										 			span.insertBefore($text);
+									 			} 
+									 			return false
 											}
 
 											function selectRealEstate(event, ui) {
 												pk=ui.item.pk;
 												prev = $this.val();
 
-												if (prev.indexOf("|"+pk+"|") == -1) {
+												if (prev.indexOf("|"+pk+"|") == -1 && options.multiple) {
 														$this.val((prev ? prev : "|") + pk + "|");
 														addItem(ui.item, pk)
 														$text.val('');
+														return false
+												} 
+												if (ui.item.all_fields && ! options.multiple){
+													$.each(ui.item.all_fields, function(ct,val){
+														$.each(val, function(k,value){ 
+															$('#id_'+k).val(value);
+														});
+													});
 												}
 
 												return false
 											}
 
 											function changeRealEstate(){
-												$text.val("").css("top",2);
+												if (options.multiple)
+													$text.val("").css("top",2);
 											}
 
-											//function itemFocus(event, ui) {
-											//	return false;
-											//}
+											function itemFocus(event, ui) {
+												$text.val(ui.item.label)
+												return false;
+											}
 
 											if (options.initial) {
 												$.each(options.initial, function(i, its){
+													if (options.multiple) {
 														addItem(its,its.pk);
 														if (its.pk) {
 															prev = $this.val();
 														    $this.val((prev ? prev : "|") + its.pk + "|");
 														}
+													} 
 												});
 											}
 
-											$text.autocomplete({
+											$text.focusout(function(){
+													if (! options.multiple)
+										    			$this.attr('value',$text.attr('value'));
+										    	}).autocomplete({
 												source: sourceRealEstate,//options.source,
 												select: selectRealEstate,
 												change: changeRealEstate,
@@ -102,9 +120,13 @@ $.fn.extend({
 											})		
 										});
 		},
+		// AUTOCOMPLETE SELECT MULTIPLE
 		autocompleteselectmutiple: function(options) {
 										defaults = {
 											'can_add':false,
+											'minLength':3,
+											'multiple':true,
+											'delay':500
 										}
 										var options = $.extend(options, defaults)
 
@@ -125,20 +147,21 @@ $.fn.extend({
 									 				$.each(data,function(i,val){
 									 					objects.push(val);
 									 				});
-									 				var add_link = '';
-									 				//objects.push("Clique para dicionar");
 									 				add(objects);
 									 			});
 											}
 
 											function addItem(value, pk) {
-									 			var span=$('<span>').html(value.value);
-									 			var a=$("<a>").addClass("remove").attr({
-									 				href:"javascript:",
-									 				title:"Remove "+value.real_value,
-									 				value:pk
-									 			}).text("x").appendTo(span);
-									 			span.insertBefore($text);
+												if (options.multiple) {
+										 			var span=$('<span>').html(value.value);
+										 			var a=$("<a>").addClass("remove").attr({
+										 				href:"javascript:",
+										 				title:"Remove "+value.real_value,
+										 				value:pk
+										 			}).text("x").appendTo(span);
+										 			span.insertBefore($text);
+									 			}
+									 			return false;
 											}
 
 											function selectRealEstate(event, ui) {
@@ -149,9 +172,10 @@ $.fn.extend({
 														$this.val((prev ? prev : "|") + pk + "|");
 														addItem(ui.item, pk)
 														$text.val('');
+														return false
 												}
 
-												return false
+												return false;
 											}
 
 											function changeRealEstate(event,ui){

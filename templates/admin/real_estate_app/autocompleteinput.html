@@ -6,7 +6,6 @@ django.jQuery(document).ready(function($){
 </script>
 
 <div id="custom-{{ html_id }}" class="ui-helper-clearfix">
-	{{ plugin_options|safe }}
 	<input type="text" name="{{ name }}" id="{{ html_id }}_text" rev="iframe" href="{{ related_url_facebox }}" value="" {{ extra_attrs }} />
 </div>
 

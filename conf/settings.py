@@ -30,9 +30,9 @@ REAL_ESTATE_APP_AJAX_SEARCH = getattr(settings,
 									  				'thumbnail_ajax':'40x40'
 									  			   },
 									  	'visitor': {
-									  				'search_fields':['visitor_first_name','visitor_last_name',],
+									  				'search_fields':['cpf',],
 									  				'return_values':['pk','visitor_first_name','visitor_last_name',],
-									  				'thumbnail_ajax':'40x40'
+									  				'all_fields':True,
 									  	}
 									  }
 )

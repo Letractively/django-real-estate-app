@@ -183,13 +183,14 @@ class AjaxInputWidget(TextInput):
 	"""
 		This code is based on app django-ajax-selects
 	"""
-	def __init__(self, model_fk, show_help_text=False, help_text='',*args, **kwargs):
+	def __init__(self, model_fk, show_help_text=False, help_text='',ajax_length=3, *args, **kwargs):
 		super(AjaxInputWidget, self).__init__(*args, **kwargs)
 		self.show_help_text=show_help_text
 		self.help_text=help_text
 		self.model=model_fk
 		self.module_name=self.model._meta.module_name
 		self.apps=self.model._meta.app_label
+		self.ajax_length=ajax_length
 
 		try:
 			self.fields_show=REAL_ESTATE_APP_AJAX_SEARCH[self.module_name]['search_fields']
@@ -208,9 +209,9 @@ class AjaxInputWidget(TextInput):
 
 		final_attrs = self.build_attrs(attrs, name=name)
 		self.html_id = final_attrs.pop('id', name)
-		
+		#import pdb;pdb.set_trace()
 		plugin_options = {
-			'minLength':3,
+			'minLength':self.ajax_length,
 			'source': reverse('%s_%s_ajax_view' % (self.apps,self.module_name)),
 			#'initial': autocompleteobject.render(id__in=str(value)),
 			'fields':self.fields_show,

@@ -15,7 +15,8 @@ from real_estate_app.apps.visitcalendar.models import VisitEvent, Visitor
 from real_estate_app.apps.visitcalendar.forms import VisitEventForm, VisitorForm
 from real_estate_app.apps.visitcalendar.settings import VISITOR_SEARCH_FIELDS
 from real_estate_app.apps.propertys.models import Property
-from real_estate_app.views.generic import create_object
+from real_estate_app.views.generic import create_update_object
+from real_estate_app.utils import AutoCompleteObject
 
 @requires_csrf_token
 def visitcalendar_list_json(request, *args, **kwargs):
@@ -68,7 +69,8 @@ def visitcalendar_create_object(request, *args, **kwargs):
 	kwargs['form_class']=VisitorForm
 	kwargs['formset_class']=VisitEventForm 
 	kwargs['initial_formset']={'property_fk':property,'date_visit':date_visit}
-	return create_object(request, *args, **kwargs)
+	kwargs['object_id']=request.POST.get('pk','')
+	return create_update_object(request, *args, **kwargs)
 
 @requires_csrf_token
 def visitcalendar_update_object(request, *args, **kwargs):
@@ -81,9 +83,13 @@ def visitcalendar_update_object(request, *args, **kwargs):
 def visitcalendar_search_visitor(request, *args, **kwargs):
 	if 'term' in request.GET:
 		try:
-			query=VISITOR_SEARCH_FIELDS['fields'][0]+'__icontains'
-			q_value={query:request.GET['term']}
-			json=serializers.serialize("json",Visitor.objects.filter(**q_value),fields='visitor_first_name')
-			return HttpResponse(json,mimetype="text/javascript")
+			q_value=request.GET['term']
+			
+			return HttpResponse(
+						simplejson.dumps(
+								AutoCompleteObject(Visitor).render(value=q_value)
+						),
+						mimetype="text/javascript"
+			)
 		except:
 			raise 
