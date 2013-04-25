@@ -14,22 +14,20 @@ from django.utils.text import capfirst
 from real_estate_app.conf.settings import REAL_ESTATE_APP_AJAX_SEARCH, MEDIA_PREFIX
 
 
-def alertemail(function):
-	#print 'alertemail: ',args, kwargs
-	@wraps(function)
-	def wrapper(self,*args,**kwargs):
-		function.func_globals['self']=self
-		print 'funtion: ', args, kwargs
-		return function(self,*args,**kwargs)
-	return wrapper
-	
-class A(object):
-	teste='Variavel teste'
-	@alertemail
-	def alo(self, tunts,puts):
-		print 'self.alo foi sem problemas'	
-	
+def alertemail(subtitle='',msg='',email_from='',emails_to=[]):
+	def decorator(view_function):
+		def sendemail(self):
+			send_mail(subtitle,msg,email_from,emails_to, fail_silently=True)
 
+		@wraps(view_function)
+		def wrapper(self,*args,**kwargs):
+			view_function.func_globals['self']=self
+			function=view_function(self,*args,**kwargs)
+			sendemail(self)
+		return wrapper
+
+	return decorator
+	
 def format_link_callback(obj,admin_site):
         has_admin = obj.__class__ in admin_site._registry
         opts = obj._meta
