@@ -1,6 +1,9 @@
 /*
 This code is based on app django-ajax-selects
+TODO: Make a custom response base on custom settings.py
+	  http://stackoverflow.com/questions/4718968/detecting-no-results-on-jquery-ui-autocomplete
 */
+
 (function($) {
 $.fn.extend({
 		autocompleteinput: function(options) {
@@ -43,7 +46,13 @@ $.fn.extend({
 										 			}).text("x").appendTo(span);
 										 			span.insertBefore($text);
 									 			} 
-									 			return false
+									 			if ( pk && ! options.multiple) {
+										 			$.each(pk.item.all_fields, function(key,value){
+															$('#id_'+key).val(value);
+															$('#id_'+key+'_text').val(value)
+													});
+									 			}
+									 			return false;
 											}
 
 											function selectRealEstate(event, ui) {
@@ -57,24 +66,15 @@ $.fn.extend({
 														return false
 												} 
 												if (ui.item.all_fields && ! options.multiple){
-													$.each(ui.item.all_fields, function(ct,val){
-														$.each(val, function(k,value){ 
-															$('#id_'+k).val(value);
-														});
-													});
+													addItem(event,ui)
 												}
 
-												return false
-											}
-
-											function changeRealEstate(){
-												if (options.multiple)
-													$text.val("").css("top",2);
-											}
-
-											function itemFocus(event, ui) {
-												$text.val(ui.item.label)
 												return false;
+											}
+
+											function changeRealEstate(event,ui){
+												if (options.multiple) 
+													$text.val("").css("top",2);
 											}
 
 											if (options.initial) {
@@ -90,13 +90,14 @@ $.fn.extend({
 											}
 
 											$text.focusout(function(){
-													if (! options.multiple)
+													if (! options.multiple) {
 										    			$this.attr('value',$text.attr('value'));
+
+										    		}
 										    	}).autocomplete({
 												source: sourceRealEstate,//options.source,
 												select: selectRealEstate,
 												change: changeRealEstate,
-												//focus: itemFocus,
 												minLength: options.minLength
 											}).data( "autocomplete" )._renderMenu = function( ul, items ) {
 												var that = this;

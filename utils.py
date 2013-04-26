@@ -10,24 +10,19 @@ from django.utils.encoding import force_unicode, smart_unicode, smart_str
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
+from django.utils.translation import ugettext_lazy as _
 
 from real_estate_app.conf.settings import REAL_ESTATE_APP_AJAX_SEARCH, MEDIA_PREFIX
 
+def alertemail(instance=None, subtitle='', msg='', email_from='', emails_to=[],fields=()):
+	if instance:
+		if fields:
+			fields_f = (callable(getattr(instance,field)) and getattr(instance,field)() or getattr(instance,field) for field in fields)
+			msg = msg.format(*fields_f)
+		send_mail(subtitle,msg,email_from,emails_to, fail_silently=False)
+		return True
+	raise Exception("On function alteremail instance is required.")
 
-def alertemail(subtitle='',msg='',email_from='',emails_to=[]):
-	def decorator(view_function):
-		def sendemail(self):
-			send_mail(subtitle,msg,email_from,emails_to, fail_silently=True)
-
-		@wraps(view_function)
-		def wrapper(self,*args,**kwargs):
-			view_function.func_globals['self']=self
-			function=view_function(self,*args,**kwargs)
-			sendemail(self)
-		return wrapper
-
-	return decorator
-	
 def format_link_callback(obj,admin_site):
         has_admin = obj.__class__ in admin_site._registry
         opts = obj._meta
@@ -125,7 +120,9 @@ class AutoCompleteObject(object):
 		from django.template.loader import render_to_string
 		return [{
 					'pk':model.get('pk',model.get('id','')),
+					'search_fields':[model[f] for f in self.fields_search if not (f in ('pk','id') or f in self.image_fields)],
 					'real_value':' '.join([model[f] for f in self.return_values if not (f in ('pk','id') or f in self.image_fields)]),
+					'return_values':dict([(f, mark_safe(model[f])) for f in self.return_values if not (f in ('pk','id') or f in self.image_fields)]),
 					'value': mark_safe(render_to_string(
 										  				('real_estate_app/autocompleteselectmultiple_response_ajax.html',
 									   	   				'admin/real_estate_app/autocompleteselectmultiple_response_ajax.html'
@@ -138,7 +135,7 @@ class AutoCompleteObject(object):
 									   	 				}
 							   			)
 					),
-					'all_fields':[{f:mark_safe(model[f])} for f in self.all_fields if f in self.all_fields ]
+					'all_fields':dict([(f,mark_safe(model[f])) for f in self.all_fields if f in self.all_fields ])
 				} for model in self.filter(value,**kwargs)]					
 
 	def forcePositionFieldsShow(self,filter_values):

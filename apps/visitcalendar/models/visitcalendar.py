@@ -8,11 +8,8 @@ from django.db.models import permalink
 from django.utils.translation import ugettext_lazy as _
 
 from real_estate_app.models import RealEstateAppBaseModel
-from real_estate_app.utils import alertemail
-from real_estate_app.conf.settings import MANAGERS
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
-MANAGERS_EMAIL=[mail_tuple[1] for mail_tuple in MANAGERS]
 
 class VisitEvent(RealEstateAppBaseModel):
 
@@ -59,9 +56,3 @@ class VisitEvent(RealEstateAppBaseModel):
 				'slug' : str(self.slug),
 				})
 	get_absolute_url=permalink(_get_absolute_url)
-	
-	msg_new=_('A new visit event has been add. \nUser: %s \nDate: %s \nLink %s') % (visitor_fk, date_visit ,get_absolute_url)
-
-	@alertemail(_('New visit event'),msg_new,'marcello@gmail.com',['root@localhost'])
-	def save(self,commit=True):
-		super(VisitEvent,self).save(commit)

@@ -1,14 +1,16 @@
 # -*- coding: utf-8; -*-
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django import forms
 from django.conf import settings
+from django.contrib.localflavor.br.forms import BRCPFField
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
 
 from real_estate_app.apps.visitcalendar.models import VisitEvent, Visitor 
 from real_estate_app.apps.propertys.models import Property
 from real_estate_app.widgets import AjaxInputWidget
+from real_estate_app.conf.settings import REAL_ESTATE_APP_VISIT_EVENT_HOUR
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 
@@ -24,8 +26,8 @@ class VisitorForm(forms.ModelForm):
 		widget=forms.widgets.HiddenInput,
 		required=False,
 	)
-
-	cpf = forms.CharField(
+	if LANGUAGE_CODE in ('pt-br','pt_BR'):
+		cpf = BRCPFField(
 						label=u'CPF',
 						widget=AjaxInputWidget(
 									model_fk=Visitor,
@@ -33,12 +35,12 @@ class VisitorForm(forms.ModelForm):
 									show_help_text=True,
 									ajax_length=10
 						)
-	)
+		)
 
 	class Meta:
 		model=Visitor
 		fields=fields_visitor_form
-		#exclude=('create_date','enable_publish',)
+
 
 class VisitEventForm(forms.ModelForm):
 
@@ -63,3 +65,11 @@ class VisitEventForm(forms.ModelForm):
 															  initial=Property.objects.get(id=property_fk.id))
 		if date_visit:
 			self.fields['date_visit']=forms.DateTimeField(initial=datetime.strptime(date_visit,'%Y-%m-%d %H:%M:%S'))
+
+	def clean_date_visit(self):
+		date_visit=self.cleaned_data['date_visit']
+		hours=timedelta(hours=REAL_ESTATE_APP_VISIT_EVENT_HOUR-1)
+		visit_agenda=self._meta.model.objects.filter(date_visit__gte=date_visit,date_visit__lte=date_visit+hours)
+		if visit_agenda:
+			raise forms.ValidationError(_('Alredy exist a visit registred on this date and time'))
+		return date_visit
