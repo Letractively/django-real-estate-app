@@ -54,9 +54,13 @@ class VisitEventForm(forms.ModelForm):
 	  	return super(VisitEventForm,self).save(commit)
 
 	def __init__(self, *args, **kwargs):
-
-		property_fk = kwargs.pop('property_fk','')
-		date_visit = kwargs.pop('date_visit','')
+		
+		if kwargs.has_key('initial'):
+			property_fk = kwargs.get('initial').pop('property_fk','')
+			date_visit = kwargs.get('initial').pop('date_visit','')
+		else:
+			property_fk = kwargs.pop('property_fk','')
+			date_visit = kwargs.pop('date_visit','')
 
 		super(VisitEventForm, self).__init__(*args, **kwargs)
 		

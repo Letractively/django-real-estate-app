@@ -36,8 +36,8 @@ class VisitEvent(RealEstateAppBaseModel):
 		db_table  = 'real_estate_app_apps_visitcalendar_visitevent'
 		get_latest_by='date_visit'
 		ordering=('date_visit',)
-		verbose_name=_('Visit property')
-		verbose_name_plural=_('Visitors')
+		verbose_name=_('Visit')
+		verbose_name_plural=_('Visits')
 
 	def __unicode__(self):
 		try:
