@@ -21,27 +21,28 @@
 					{% if add_url %}
 						dayClick: function(date, allDay, jsEvent, view) {
 							date_format=moment(date).format('YYYY-MM-DD HH:mm:ss')
-							window.location="{{ add_url }}?date_visit="+date_format{% if property %}&property_fk={{ property.id }}{% endif %}
+							window.location="{{ add_url }}?date_visit="+date_format{% if property %}+"&property_fk="+{{ property.id }}{% endif %}
 							$('#calendar').fullCalendar('unselect');
 						},
 					{% endif %}
 					events: function(tart, end, callback) {
-						$.ajax({
-	            				url: "{%if property %}{% url visitcalendar-list-json property|slugify %} {% else %} {% url visitcalendar-list-json-index %} {% endif %}",
-	            				dataType: 'json',
-	            				success: function(doc) {
-	            					var events = [];
-	            					$(doc).each(function(){
-	            						events.push({
-	            							title:$(this).attr('title'),
-	            							start:$(this).attr('start'),
-	            							allDay: false,
-	            						});
+							$.ajax({
+		            				url: "{%if property %}{% url visitcalendar-list-json property|slugify %}{% else %}{% url visitcalendar-list-json-index %}{% endif %}{% if admin %}?admin=True{% endif %}",
+		            				dataType: 'json',
+		            				success: function(doc) {
+		            					var events = [];
+		            					$(doc).each(function(){
+		            						events.push({
+		            							title:$(this).attr('title'),
+		            							start:$(this).attr('start'),
+		            							url:$(this).attr('url'),
+		            							allDay: false,
+		            						});
 
-	            					})
-	            					callback(events);
-	            				}
-				        });
+		            					})
+		            					callback(events);
+		            				}
+					        });
 					},
 					{% if not show_events %}
 						eventRender: function(event, element, view) {

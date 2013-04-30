@@ -11,12 +11,7 @@ from real_estate_app.apps.visitcalendar.models import VisitEvent, Visitor
 from real_estate_app.apps.visitcalendar.views import visitcalendar_list
 from real_estate_app.conf.settings import MEDIA_PREFIX as MEDIA_PREFIX_REAL_ESTATE
 
-
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
-
-BRAZIL=[]
-if LANGUAGE_CODE=='pt-br':
-	BRAZIL=['condominio','iptu']
 
 class VisitEventCalendarAdmin(RealEstateAppPopUpModelAdmin):
 	fieldsets = (
