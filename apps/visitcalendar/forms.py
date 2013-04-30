@@ -65,10 +65,17 @@ class VisitEventForm(forms.ModelForm):
 		super(VisitEventForm, self).__init__(*args, **kwargs)
 		
 		if property_fk:
+			
+			if type(property_fk) == unicode:
+				pk=property_fk
+			else:
+				pk=property_fk.id
 			self.fields['property_fk']=forms.ModelChoiceField(queryset=Property.objects.all_enabled(),
-															  initial=Property.objects.get(id=property_fk.id))
+															  initial=Property.objects.get(id=pk))
 		if date_visit:
-			self.fields['date_visit']=forms.DateTimeField(initial=datetime.strptime(date_visit,'%Y-%m-%d %H:%M:%S'))
+			if not isinstance(date_visit,datetime):
+				date_ini=datetime.strptime(date_visit,'%Y-%m-%d %H:%M:%S')
+				self.fields['date_visit']=forms.DateTimeField(initial=date_ini)
 
 	def clean_date_visit(self):
 		date_visit=self.cleaned_data['date_visit']
@@ -77,3 +84,9 @@ class VisitEventForm(forms.ModelForm):
 		if visit_agenda:
 			raise forms.ValidationError(_('Alredy exist a visit registred on this date and time'))
 		return date_visit
+
+class VisitEventAdminForm(forms.ModelForm):
+	def save(self,commit=True):
+	  	data=self.data.copy()
+	  	self.instance.slug=slugify(data['date_visit_1']+data['date_visit_0'])
+	  	return super(VisitEventAdminForm,self).save(commit)

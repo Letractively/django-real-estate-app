@@ -172,6 +172,11 @@ class FaceBoxModelAdmin(ModelAdmin):
         return self.render_change_form(request, context, form_url=form_url, add=True)
 
 class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
+    """
+        All fields with have a ForeignKey must be named with '<var_name>_fk'
+        because this '_fk' is used to identify what field has to be loaded on
+        facebox.
+    """
 
     list_per_page=15
 

@@ -31,6 +31,10 @@
 #index-calendar .fc-header-title h2 {
     background: none;
 }
+a.fc-event:visited, a.fc-event:link {
+    color: #FFFFFF;
+    font-weight: bold;
+}
 #calendar {
     margin-top:10px;
 }

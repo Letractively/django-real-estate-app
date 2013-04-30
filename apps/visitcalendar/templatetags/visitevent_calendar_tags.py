@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404, render_to_response
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 
+from real_estate_app.apps.propertys.models import Property
 from real_estate_app.apps.visitcalendar.models import VisitEvent 
 
 register = template.Library()
@@ -16,9 +17,14 @@ register = template.Library()
 class CalendarVisitEventNode(template.Node):
         def __init__(self, var_name, object_id=None, date='', display='month', height=None, 
                      editable=False, admin=False, headers=False, events=True):
+
+            try:
+                self.object_id = object_id and int(object_id) or object_id
+            except ValueError:
+                self.object_id =  template.Variable(object_id)
+
             self.var_name=var_name
             self.display=display
-            self.object_id= object_id and int(object_id) or object_id
             self.date=date
             self.events=events
             self.height=height
@@ -30,7 +36,7 @@ class CalendarVisitEventNode(template.Node):
                 self.add_url = reverse('visitcalendar-create-object',args=(object_id,))
             else:
                 self.add_url = reverse('admin:visitcalendar_visitevent_add')
-            #reverse('admin:visitcalendar_visitevent_change',args=(object_id,))
+            
             
             self.real_estate_node_template="visitcalendar/admin/visitcalendar_list_%s_node.html" % self.display
 
@@ -46,28 +52,36 @@ class CalendarVisitEventNode(template.Node):
             """
             # TODO: Better the acept null amount.
             property=False
+            if self.object_id and type(self.object_id) != int:
+                try:
+                    self.object_id=int(self.object_id)
+                except:
+                    self.object_id=self.object_id.resolve(context)
+                
+
             try:
                 queryset=VisitEvent.objects.all()
                 if self.object_id:
-                    queryset=queryset.get(property_fk=self.object_id)
-                    property = queryset
+                    queryset=queryset.filter(property_fk=self.object_id)
+                    property = Property.objects.get(id=self.object_id)
+
                 if self.date:
                     queryset=queryset.filter(date_visit=self.date)
             except ObjectDoesNotExist:
                 return []
 
             fullcalendar_options = {
-                                    'monthNames': ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+                                    'monthNames': ['Janeiro','Fevereiro','Mar&ccedil;o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
                                     'monthNamesShort': ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
-                                    'dayNames': ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sabado'],
-                                    'dayNamesShort': ['Dom','Seg','Ter','Qua','Qui','Sex','Sab'],
+                                    'dayNames': ['Domingo','Segunda','Ter&ccedil;a','Quarta','Quinta','Sexta','S&aacute;bado'],
+                                    'dayNamesShort': ['Dom','Seg','Ter','Qua','Qui','Sex','S&aacute;b'],
                                     'buttonText': {
                                         'prev': '&nbsp;&#9668;&nbsp;',
                                         'next': '&nbsp;&#9658;&nbsp;',
                                         'prevYear': '&nbsp;&lt;&lt;&nbsp;',
                                         'nextYear': '&nbsp;&gt;&gt;&nbsp;',
                                         'today': 'Hoje',
-                                        'month': 'Mês',
+                                        'month': 'M&ecirc;s',
                                         'week': 'Semana',
                                         'day': 'Dia'
                                     },      

@@ -5,6 +5,7 @@ from datetime import datetime
 from django.db import models
 from django.conf import settings
 from django.contrib.sites.models import Site
+from django.core.urlresolvers import reverse
 from django.db.models import permalink
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.localflavor.br.br_states import STATE_CHOICES
@@ -247,6 +248,12 @@ class Property(models.Model):
 		ordering=('address',)
 		verbose_name=_('Propety')
 		verbose_name_plural=_('Propetys')
+
+	def agenda(self):
+		agenda_url = reverse('admin:admin_visitcalendar_list_property_visit',args=(self.slug,))
+		return u'<a href="%s"><img src="%s" alt="%s"/></a>' % (agenda_url,settings.ADMIN_MEDIA_PREFIX+'img/admin/icon_calendar.gif',_('Agenda'))
+	agenda.short_description=_('Agenda')
+	agenda.allow_tags=True
 
 	def get_random_photo(self):
 		queryset = self.photo_set.all()

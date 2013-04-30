@@ -24,8 +24,9 @@ def visitcalendar_list_json(request, *args, **kwargs):
 		property=get_object_or_404(Property,slug=kwargs['slug'])
 		visitsevents = VisitEvent.objects.filter(property_fk=property)
 		events = []
-		url = request.GET.get('admin',False) and reverse('admin:visitcalendar_visitevent_change',args=(visitevent.id,)) or visitevent.get_absolute_url()
+		
 		for visitevent in visitsevents:
+			url = request.GET.get('admin',False) and reverse('admin:visitcalendar_visitevent_change',args=(visitevent.id,)) or visitevent.get_absolute_url()
 			events.append(dict(
 						title=_('Has visit'),
 						start = visitevent.date_visit.strftime('%Y-%m-%d %H:%M:%S'),

@@ -68,7 +68,12 @@
         </ul>
       {% endif %}
     {% endblock %}
-    {% get_calendarvisitevent admin show_header display week as calendar %}
+    {% if  property %}
+      {% get_calendarvisitevent from property.id admin show_header display week as calendar %}
+    {% else %}
+      {% get_calendarvisitevent admin show_header display week as calendar %}
+      
+    {% endif %}
     {{ calendar }}
   </div>
 {% endblock %}

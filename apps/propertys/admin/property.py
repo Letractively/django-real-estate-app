@@ -25,13 +25,13 @@ class PropertyAdmin(FaceBoxModelAdmin):
 			(_('General Information'), {
 				'fields': ['address','slug','zip_code','description','price','state','district_fk','classification_fk','statusproperty_fk','realtor_fk']+BRAZIL,
 			}),
-			(_('Detailed Information'),{
+			(_('Detailed Information'), {
 				'fields':('rooms','baths','garage','elevator','private_area','position_of_sun','under_contruction','furnishing','aditionalthings_fk',),
 			}),
-			(_('Publish'),{
+			(_('Publish'), {
 				'fields':('date_init','date_end','domain', 'enable_publish','featured',),
 			}),
-			(_('MAPS'),{
+			(_('MAPS'), {
 				'fields':('gmap_point_x','gmap_point_y',),
 				'classes':('gmap',),
 				'description':_('Mark on map the localization. p.s: use the right click to mark place when use zoom.'),
@@ -40,7 +40,7 @@ class PropertyAdmin(FaceBoxModelAdmin):
 
 	date_hierarchy = 'date_init'
 	
-	list_display = ('code_property','address','state','district_fk', 'classification_fk','statusproperty_fk','date_init','date_end',)
+	list_display = ('code_property','agenda','address','state','district_fk', 'classification_fk','statusproperty_fk','date_init','date_end',)
 	
 	list_filter = ('classification_fk','statusproperty_fk','enable_publish')
 	
