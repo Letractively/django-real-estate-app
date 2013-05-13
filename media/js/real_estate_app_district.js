@@ -4,8 +4,7 @@
 				var state=$(this).attr('value');
 				$.ajax({
 					type:"POST",
-					// TODO: change to url django variable
-					url:'/admin/propertys/district/ajax/',
+					url:'/admin/real_estate_app/district/ajax/',
 					data: {'state':state},
 					timeout: 5000,
 					dataType:"json",

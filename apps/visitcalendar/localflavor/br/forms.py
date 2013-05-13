@@ -1,1 +1,0 @@
-fields_visitor_form=['cpf','visitor_first_name','visitor_last_name','rg','ssp','visitor_address','visitor_celphone', 'visitor_email', 'visitor_phone', 'work_phone', 'work_address']

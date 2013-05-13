@@ -11,8 +11,7 @@ from django.shortcuts import render_to_response
 from django.utils.encoding import force_unicode
 from django.utils.translation import ugettext_lazy as _
 
-from real_estate_app.apps.propertys.models import Property
-from real_estate_app.apps.realtors.models import Realtor
+from real_estate_app.models import Property, Realtor
 from real_estate_app.utils import format_link_callback
 
 def duplicate_object(modeladmin,request,queryset):
