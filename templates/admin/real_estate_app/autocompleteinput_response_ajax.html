@@ -1,7 +1,0 @@
-<div id="results-ajax">
-{% for field in model %}
-	{% if field.0 != 'pk' and field.0 not in image_fields %}
-		{{ field.1 }}
-	{% endif %}
-{% endfor %}
-</div>

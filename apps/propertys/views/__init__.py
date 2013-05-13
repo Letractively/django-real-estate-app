@@ -1,2 +1,0 @@
-from last_visited import receive_property_view, get_recently_viewed_property_ids
-from property import property_detail, property_list

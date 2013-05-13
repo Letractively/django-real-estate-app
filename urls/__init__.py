@@ -1,25 +1,10 @@
 from django.conf.urls.defaults import patterns 
-
+from photo import photo_detail
+from property import property_list, property_detail
 from share import send_content
+from feeds import feeds_property_url, feeds_news_url
 from contact import contact 
+from news import news_list, news_detail
+from portlet import portlet_edit, portlet_create
 
-from real_estate_app.apps.propertys.urls import property_list, property_detail, feeds_property_url, property_sitemap
-from real_estate_app.apps.photos.urls import photo_detail
-from real_estate_app.apps.newspapers.urls import newspapers_list, newspapers_detail, newspapers_sitemap, feeds_newspapers_url
-from real_estate_app.apps.portlets.urls import portlet_edit, portlet_create
-from real_estate_app.apps.visitcalendar.urls import visitcalendar_list_json, visitcalendar_list_json_index, visitcalendar_list,\
-													visitcalendar_list_property_visit, visitcalendar_create_object, visitcalendar_update_object,\
-													visitcalendar_visitor_ajax_view
-
-urlpatterns = patterns('', 
-		contact, send_content, 
-		#newspapers
-		newspapers_list, feeds_newspapers_url, newspapers_detail, 
-		#portlets
-		portlet_edit, portlet_create,
-		#visitcalendar
-		visitcalendar_list_json, visitcalendar_list_json_index, visitcalendar_list_property_visit, 
-		visitcalendar_list, visitcalendar_create_object, visitcalendar_update_object, visitcalendar_visitor_ajax_view,
-		#propertys
-		property_list,feeds_property_url, photo_detail, property_detail, property_sitemap, 
-)
+urlpatterns = patterns('', contact, send_content, feeds_property_url, feeds_news_url, news_list, news_detail, portlet_edit, portlet_create, property_list, photo_detail, property_detail)

@@ -1,10 +1,7 @@
 {% extends "admin/base_site.html" %}
-{% load i18n property_admin_tags visitevent_calendar_tags %}
+{% load i18n real_estate_app_admin %}
 
-{% block extrastyle %}{{ block.super }}
-<link rel="stylesheet" type="text/css" href="{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css" />
-<link rel="stylesheet" type="text/css" href="{{ MEDIA_REAL_ESTATE }}css/visitcalendar/fullcalenar-admin.css" />
-{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css" />{% endblock %}
 
 {% block title %} {{ title }} | {{ REAL_ESTATE_APP_SITE_NAME }} {% endblock %}
 
@@ -72,15 +69,7 @@
 	</div>
 </div>
 {% endif %}
-{% get_calendarvisitevent no_show_events as calendar %}
-{% if calendar %}
-<div id="index-calendar" >
-    <h2 style=""> {% trans 'Visit calendar' %} </h2>
-    {{ calendar }}
-</div>
-{% endif %}
-
-<div id="content-related" {% if property_will_expired or calendar %} style="margin-right:-38em;" {% endif %}>
+<div id="content-related" {% if property_will_expired %} style="margin-right: -38em" {% endif %}>
     <div class="module" id="recent-actions-module">
         <h2>{% trans 'Recent Actions' %}</h2>
         <h3>{% trans 'My Actions' %}</h3>
@@ -109,6 +98,4 @@
             {% endif %}
     </div>
 </div>
-
-
 {% endblock %}
