@@ -11,6 +11,7 @@ from django.db.models import permalink
 
 from property import Property
 from real_estate_app.utils import radomstring 
+from real_estate_app.manager.photos import PhotoManager
 
 GET_THUMB_PATTERN = re.compile(r'^get_photo_(\d+)x(\d+)_(thumb_url|thumb_filename|resize_url)$')
 
@@ -71,6 +72,8 @@ class Photo(models.Model):
 			            default=False,
 		                help_text=u'A imagem destaque aparecera na \
 						           pagina inicial')
+
+	objects = PhotoManager()
 
 	def __unicode__(self):
 		return '%s' % self.photo

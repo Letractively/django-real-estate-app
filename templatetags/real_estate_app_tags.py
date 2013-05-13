@@ -31,10 +31,10 @@ class PropertyAlbumNode(template.Node):
 			obj = template.resolve_variable(self.id, context)
 
 		if self.id:
-			photo = Photo.objects.filter(album=int(obj))
+			photo = Photo.objects.published().filter(album=int(obj))
 			
 		else:
-			photo = Photo.objects.all()
+			photo = Photo.objects.published()
 
 		context[self.var_name] = photo[:self.num]
 		return ''
@@ -43,16 +43,17 @@ def do_get_property_photo(parser, token):
 
 	bits = token.contents.split()
 	if len(bits) == 5:
+		if bits[1] != 'from':
+			raise template.TemplateSyntaxError, "First argument to '%s' tag must be 'from'" % bits[0]
 		if bits[3] != 'as':
-			raise template.TemplateSyntaxError, "Second argument to '%s' tag must be 'as'" % bits[0]
-		return PropertyAlbumNode(obj_id=bits[1],num=bits[2], var_name=bits[4])
+			raise template.TemplateSyntaxError, "Third argument to '%s' tag must be 'as'" % bits[0]
+		return PropertyAlbumNode(obj_id=bits[2],var_name=bits[4])
 	if len(bits) == 6:
 		if bits[2] != 'from':
 			raise template.TemplateSyntaxError, "Second argument to '%s' tag must be 'from'" % bits[0]
 		if bits[4] != 'as':
 			raise template.TemplateSyntaxError, "Fourth argument to '%s' tag must be 'as'" % bits[0]
 		return PropertyAlbumNode(num=bits[1], var_name=bits[5], obj_id=bits[3])
-
 	elif len(bits)==3:
 		if bits[1]!='as':
 			raise template.TemplateSyntaxError, "Firts argument to '%s' tag must be 'as'" % bits[0]

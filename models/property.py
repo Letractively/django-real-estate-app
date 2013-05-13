@@ -249,13 +249,13 @@ class Property(models.Model):
 		verbose_name_plural=_('Propetys')
 
 	def get_random_photo(self):
-		queryset = self.photo_set.all()
+		queryset = self.photo_set.all().filter(is_published=True)
 		if queryset:
 			return queryset.order_by('?')[0]
 		return None
 
 	def _get_all_photos(self):
-		photos =self.photo_set.all()
+		photos =self.photo_set.all().filter(is_published=True)
 		if photos:
 			return photos.order_by('?')
 
