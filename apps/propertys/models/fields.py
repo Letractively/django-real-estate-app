@@ -1,25 +1,22 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
 from django.contrib.localflavor.br.br_states import STATE_CHOICES
 
-from real_estate_app.managers import SelectFieldManager
+from real_estate_app.models import RealEstateAppBaseModel
+from real_estate_app.managers import RealEstateManager
 from real_estate_app.apps.propertys.manager import DistrictSelectFieldManager
 
 
-class District(models.Model):
+class District(RealEstateAppBaseModel):
 	district=models.CharField(
 						_('District'),
 						max_length=100,
 						help_text=_('Enter with new district.')
 
 	)
-	logical_exclude = models.NullBooleanField(
-					_('Logical exclude'),
-					default=False,
-					editable=False,
-					null=True
-	)
+
 	state = models.CharField(
 					_('State'),
 					choices=STATE_CHOICES,
@@ -47,23 +44,17 @@ class District(models.Model):
 	state_name=property(_state)
 
 
-class Classification(models.Model):
+class Classification(RealEstateAppBaseModel):
 	classification=models.CharField(
 					_('Classification'),
 					max_length=100,
 					help_text=_('Enter with new classification. Ex.: House, Build,...')
 	)
-	logical_exclude = models.NullBooleanField(
-					_('Logical exclude'),
-					default=False,
-					editable=False,
-					null=True
-	)
 
-	objects = SelectFieldManager() 
+	objects = RealEstateManager() 
 
 	def __unicode__(self):
-		return self.classification 
+		return u'%s' % self.classification 
 
 	class Meta:	
 		app_label = 'propertys'
@@ -74,20 +65,14 @@ class Classification(models.Model):
 		verbose_name_plural=_('Classifications')
 
 
-class StatusProperty(models.Model):
+class StatusProperty(RealEstateAppBaseModel):
 	statusproperty=models.CharField(
 					_('Status Property'),
 					max_length=100,
 					help_text=_('Enter with new status. Ex.: Rent, Sale,...')
 	)
-	logical_exclude = models.NullBooleanField(
-					_('Logical exclude'),
-					default=False,
-					null=True,
-					editable=False
-	)
 	
-	objects = SelectFieldManager() 
+	objects = RealEstateManager() 
 
 	def __unicode__(self):
 		return self.statusproperty 
@@ -100,23 +85,18 @@ class StatusProperty(models.Model):
 		verbose_name=_('Status Property')
 		verbose_name_plural=_('Status Propertys')
 
-class AditionalThings(models.Model):
+class AditionalThings(RealEstateAppBaseModel):
 
 	name=models.CharField(
 						_('Name'),
 						max_length=255,
 						help_text=_('Enter with new aditional things to property. Ex.: Pool, Barbecue,...')
 	)
-	logical_exclude = models.NullBooleanField(
-					_('Logical exclude'),
-					default=False,
-					null=True,
-					editable=False
-	)
+
 #   TODO: report a bug to django about this error when i use the 
 #	      CheckboxSelectMultiple with custom Manager has problem.
 #         Not work with logical_exclude and mark all checked
-#	objects = SelectFieldManager()
+	objects = RealEstateManager()
 
 	def __unicode__(self):
 		return self.name
@@ -129,22 +109,15 @@ class AditionalThings(models.Model):
 		verbose_name=_('Aditional things')
 		verbose_name_plural=_('Aditionals things')
 
-class PositionOfSun(models.Model):
+class PositionOfSun(RealEstateAppBaseModel):
 
 	position=models.CharField(
 						_('Position'),
 						max_length=255,
 						help_text=_('Enter with a new position of sun of a property.')
 	)
-
-	logical_exclude = models.NullBooleanField(
-					_('Logical exclude'),
-					default=False,
-					null=True,
-					editable=False
-	)
 	
-	objects = SelectFieldManager() 
+	objects = RealEstateManager() 
 
 	def __unicode__(self):
 		return self.position 

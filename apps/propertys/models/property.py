@@ -8,20 +8,22 @@ from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db.models import permalink
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.localflavor.br.br_states import STATE_CHOICES
+
 from django.utils.safestring import mark_safe 
 
 from fields import District, Classification, StatusProperty, AditionalThings, PositionOfSun
 from real_estate_app.apps.propertys.manager import PropertyManager
 from real_estate_app.apps.propertys.utils import make_dv
 from real_estate_app.apps.realtors.models import Realtor
+from real_estate_app.models import RealEstateAppBaseModel
 
 # TODO: better import STATE_CHOICE based on LANGUAGE_CODE
+from django.contrib.localflavor.br.br_states import STATE_CHOICES
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 GMAP_DEFAULT=getattr(settings,'GMAP_DEFAULT',('-15.793905','-47.882395'))
 
-class Property(models.Model):
+class Property(RealEstateAppBaseModel):
 	code_property=models.CharField(
 							_('code property'),
 							max_length=8,
@@ -39,7 +41,6 @@ class Property(models.Model):
         unique=True,
         help_text=_('Automatically built from the caption. A slug is a short '
                     'label generally used in URLs.'),
-		#editable=False
     )
 
 
@@ -103,7 +104,8 @@ class Property(models.Model):
 					_('State'),
 					choices=STATE_CHOICES,
 					max_length=2,
-					help_text=_('State of that belongs to district')
+					help_text=_('State of that belongs to district'),
+					default='DF',
 	)
 
 	aditionalthings_fk = models.ManyToManyField(
@@ -174,25 +176,6 @@ class Property(models.Model):
 						null=True,
 						verbose_name=_("Position of sun")
 	)
-
-	date_init = models.DateField(
-							_('Date of init published'),
-							default=datetime.now(),
-							help_text=_('Entry with a init of date publicashion')
-	)
-
-	date_end = models.DateField(
-							_('Date of end published'),
-							blank=True,
-							null=True,
-							help_text=_('Entry with a end of date publicashion')
-	)
-
-	create_date = models.DateField(
-							_('Creation date'),
-							default=datetime.now(),
-							help_text=_('Entry with a init of date publicashion')
-	)
 	
 	description = models.TextField(
 							_('Description'),
@@ -206,11 +189,6 @@ class Property(models.Model):
 							default=[settings.SITE_ID],
 					        verbose_name=_('publish on'),
 							help_text=_('Entry with a site')
-	)
-
-	enable_publish = models.BooleanField(
-							_('Enable publish'), 
-							default=True
 	)
 	
 	gmap_point_x = models.CharField(
@@ -236,6 +214,16 @@ class Property(models.Model):
 						verbose_name=_("Realtors")
 	)
 
+	pub_date = models.DateField(
+				_('Date init'),
+				default=datetime.now()
+	)
+
+	pub_date_end = models.DateField(
+				_('Date end'),
+				default=datetime.now()
+	)
+
 	def __unicode__(self):
 		return self.address
 
@@ -256,13 +244,13 @@ class Property(models.Model):
 	agenda.allow_tags=True
 
 	def get_random_photo(self):
-		queryset = self.photo_set.all()
+		queryset = self.photo_set.all().filter(enable_publish=True)
 		if queryset:
 			return queryset.order_by('?')[0]
 		return None
 
 	def _get_all_photos(self):
-		photos =self.photo_set.all()
+		photos =self.photo_set.all().filter(enable_publish=True)
 		if photos:
 			return photos.order_by('?')
 
@@ -320,11 +308,11 @@ class Property(models.Model):
 			for _photo in self.photos:
 				file_name='copy-'+_photo.photo.name.split('/')[-1:][0]
 				p=Photo(
-						album=obj,
+						album_property=obj,
 						description=_photo.description,
 						slug=slugify(_photo.slug+'-copy'),
 						image_destaque=_photo.image_destaque,
-						is_published=_photo.is_published,
+						enable_publish=_photo.enable_publish,
 						pub_date=_photo.pub_date,
 						width=_photo.width,
 						height=_photo.height,

@@ -1,0 +1,33 @@
+<div id="{{ fieldset.name|slugify }}" class="tab-pane" >
+<h3 id="line"> &nbsp; </h3>
+<fieldset class="module aligned {{ fieldset.classes }}">
+    {% if fieldset.namee %}<h2>{{ fieldset.name }}</h2>{% endif %}
+	{% if fieldset.description %}
+        <p class="help">{{ fieldset.description|safe }}</p>
+    {% endif %}
+
+	<div id="gmaps"></div>
+    {% for line in fieldset %}
+        <div class="form-row{% if line.errors %} errors{% endif %}{% for field in line %} {{ field.field.name }}{% endfor %} hidden">
+            {{ line.errors }}
+            {% for field in line %}
+                <div{% if not line.fields|length_is:"1" %} class="field-box"{% endif %}>
+                    {% if field.is_checkbox %}
+                        {{ field.field }}{{ field.label_tag }}
+                    {% else %}
+                        {{ field.label_tag }}
+                        {% if field.is_readonly %}
+                            <p>{{ field.contents }}</p>
+                        {% else %}
+                            {{ field.field }}
+                        {% endif %}
+                    {% endif %}
+                    {% if field.field.field.help_text %}
+                        <p class="help">{{ field.field.field.help_text|safe }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</fieldset>
+</div>

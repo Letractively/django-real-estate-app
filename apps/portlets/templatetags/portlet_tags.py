@@ -44,7 +44,6 @@ class PortletsNode(template.Node):
                 
                 except ObjectDoesNotExist:
                         url = reverse('portlet-add')
-                        import pdb;pdb.set_trace()
                         return mark_safe(
                         """<a href="%s" >%s</a> """ % (url, _('Add portlet'))
                         )

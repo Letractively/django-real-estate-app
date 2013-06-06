@@ -23,7 +23,7 @@ from django.views.decorators.csrf import csrf_protect
 
 from real_estate_app import widgets
 from real_estate_app.admin.actions import delete_selected_popup, make_enabled, make_disabled
-from real_estate_app.conf.settings import MEDIA_PREFIX as MEDIA_PREFIX_REAL_ESTATE
+from real_estate_app.conf.settings import REAL_ESTATE_APP_AJAX_SEARCH, MEDIA_PREFIX as MEDIA_PREFIX_REAL_ESTATE
 from real_estate_app.utils import AutoCompleteObject
 
 from real_estate_app.apps.propertys.models import Property
@@ -65,7 +65,7 @@ class FaceBoxModelAdmin(ModelAdmin):
             # OneToOneField with parent_link=True or a M2M intermediary.
             if formfield and db_field.name not in self.raw_id_fields:
                 formfield.widget = widgets.FaceBoxFieldWrapper(formfield.widget, db_field.rel, self.admin_site)
-
+            
             return formfield
 
         # If we've got overrides for the formfield defined, use 'em. **kwargs
@@ -184,14 +184,8 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
 
     list_filter=['logical_exclude',]
 
-    def changelist_view(self,request,extra_context=None):
-        if not request.GET.has_key('logical_exclude__exact'):
-            get=request.GET.copy()
-            get['logical_exclude__exact']='0'
-            request.GET = get
-            request.META['QUERY_STRING']=request.GET.urlencode()
+    exclude = ('create_date',)
 
-        return super(RealEstateAppPopUpModelAdmin,self).changelist_view(request,extra_context=extra_context)
 
     def delete_model(self, request, obj):
         obj_fk = obj._meta.module_name+'_fk'
@@ -368,30 +362,20 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
     @csrf_protect_m
     @transaction.commit_on_success
     def add_view_popup(self, request, extra_context=None):
-        notabs = {'notabs':True}
-        try:
-            extra_context = extra_context.update(notabs)
-        except:
-            extra_context = notabs
         return super(RealEstateAppPopUpModelAdmin,self).add_view(request, extra_context=extra_context)
 
     @csrf_protect_m
     @transaction.commit_on_success
     def change_view_popup(self, request, object_id=None, extra_context=None):
-        notabs = {'notabs':True}
-        try:
-            extra_context = extra_context.update(notabs)
-        except:
-            extra_context = notabs
         return super(RealEstateAppPopUpModelAdmin,self).change_view(request, object_id, extra_context=extra_context)
 
     @csrf_protect_m
     def changelist_view_popup(self, request, extra_context=None):
-        notabs = {'notabs':True}
-        try:
-            extra_context = extra_context.update(notabs)
-        except:
-            extra_context = notabs
+        if not request.GET.has_key('logical_exclude__exact'):
+            get=request.GET.copy()
+            get['logical_exclude__exact']='0'
+            request.GET = get
+            request.META['QUERY_STRING']=request.GET.urlencode()
         return super(RealEstateAppPopUpModelAdmin,self).changelist_view(request, extra_context=extra_context)
 
     @csrf_protect_m
@@ -470,12 +454,16 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
         opts=self.model._meta
 
         model = self.model
+        model_name=model.__name__.lower()
         queryset = model.objects.all_enabled()
         module_name=opts.module_name
+        
+        #fields = REAL_ESTATE_APP_AJAX_SEARCH.get(model_name,False).get('label',False)
         fields = [i.name for i in model._meta.fields]
 
         if request.POST:
             if request.POST.items():
+                
                 for query in request.POST.items():
                     if 'csrfmiddlewaretoken' not in query:
                         query=dict((query,))
@@ -489,19 +477,11 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
                                         AutoCompleteObject(model).render(value=q_value,logical_exclude__exact=False)
                                     )
                                     ,mimetype="text/javascript")
-            else:
-                fields = (fields[1],)
 
         json = serializers.serialize("json", queryset,fields=fields)
         return HttpResponse(json, mimetype="text/javascript")
 
     class Media:
-
-        css = {
-            'all':[
-                MEDIA_PREFIX_REAL_ESTATE+"css/popup.css",
-            ]
-        }
 
         js = [
             settings.ADMIN_MEDIA_PREFIX+"js/jquery.min.js",

@@ -18,7 +18,7 @@ $.fn.extend({
 
 										return this.each(function(){
 											var id = this.id;
-											var $text=$("#"+id+"_text")
+											var $text=$("#"+id+"_text");
 											var $this=$(this);
 											var self=this;
 											function removeItem(pk) {

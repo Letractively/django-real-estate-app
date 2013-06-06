@@ -1,1 +1,1 @@
-fields_visitor_form=['visitor_first_name','visitor_last_name','visitor_address','visitor_celphone', 'visitor_email', 'visitor_phone', 'work_phone', 'work_address']
+fields_visitor_form=['first_name','last_name','address','zip','celphone', 'email', 'phone', 'work_address','work_zip','work_phone',]

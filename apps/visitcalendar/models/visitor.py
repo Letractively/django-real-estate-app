@@ -8,17 +8,18 @@ from django.db.models import permalink
 from django.utils.translation import ugettext_lazy as _
 
 from real_estate_app.models import RealEstateAppBaseModel
+from real_estate_app.managers import RealEstateManager
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 
 class Visitor(RealEstateAppBaseModel):
 	
-	visitor_first_name = models.CharField(
+	first_name = models.CharField(
 		_('First name'),
 		max_length=255
 	)
 
-	visitor_last_name = models.CharField(
+	last_name = models.CharField(
 		_('Last name'),
 		max_length=255
 	)
@@ -44,20 +45,26 @@ class Visitor(RealEstateAppBaseModel):
 			blank=True
 		)
 
-	visitor_address = models.CharField(
-		_('Visitor address'),
+	address = models.CharField(
+		_('Address'),
 		max_length=255
 	)
-	visitor_celphone = models.CharField(
-		_('Visitor celphone'),
+
+	zip = models.CharField(
+		_('ZIP'),
 		max_length=15
 	)
-	visitor_phone = models.CharField(
+
+	celphone = models.CharField(
+		_('Celphone'),
+		max_length=15
+	)
+	phone = models.CharField(
 		_('Phone'),
 		max_length=15
 	)
 
-	visitor_email = models.CharField(
+	email = models.CharField(
 		_('E-mail'),
 		max_length=255
 	)
@@ -67,10 +74,17 @@ class Visitor(RealEstateAppBaseModel):
 		max_length=255
 	)
 
+	work_zip = models.CharField(
+		_('ZIP'),
+		max_length=15
+	)
+
 	work_phone = models.CharField(
 		_('Work phone'),
 		max_length=15
 	)
+
+	objects=RealEstateManager()
 
 	class Meta:
 		app_label = 'visitcalendar'
@@ -81,11 +95,11 @@ class Visitor(RealEstateAppBaseModel):
 		verbose_name_plural=_('Visitors')
 
 	def __unicode__(self):
-			return u'%s' % self.visitor
+			return u'%s' % self.name
 
-	def _visitor(self):
-		return self.visitor_first_name+' '+self.visitor_last_name
-	visitor=property(_visitor)
+	def _name(self):
+		return self.first_name+' '+self.last_name
+	name=property(_name)
 
 	def _get_absolute_url(self):
 		return ('visitcalendar-detail',None, {

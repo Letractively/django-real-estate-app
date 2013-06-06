@@ -1,0 +1,59 @@
+{% extends "admin/base_site.html" %}
+{% load i18n l10n %}
+{% block extrastyle %}
+  {{ block.super }}
+{% endblock %}
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+      <li><a href="{% url admin:index %}"><i class="icon-home" ></i>{% trans "Home" %}</a> <span class="divider">/</span></li>
+      <li><a href="./">{{ opts.verbose_name_plural|capfirst }}</a> <span class="divider">/</span></li>
+      <li class="active"> {% trans 'Delete multiple objects' %} </li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+{% if perms_lacking or protected %}
+    {% if perms_lacking %}
+        <p>{% blocktrans %}Deleting the selected {{ objects_name_delete }} would result in deleting related objects, but your account doesn't have permission to delete the following types of objects:{% endblocktrans %}</p>
+        <ul>
+        {% for obj in perms_lacking %}
+            <li>{{ obj }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% if protected %}
+        <p>{% blocktrans %}Deleting the selected {{ objects_name_delete }} would require deleting the following protected related objects:{% endblocktrans %}</p>
+        <ul>
+        {% for obj in protected %}
+            <li>{{ obj }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endif %}
+{% if deletable_objects or disabled_objects %}
+    {% if deletable_objects %}
+        <p>{% blocktrans %}Are you sure you want to delete the selected {{ objects_name_delete }}? All of the following objects and their related items will be deleted:{% endblocktrans %}</p>
+        {{ deletable_objects|unordered_list }}
+    {% endif %}
+    {% if disabled_objects %}
+        <p> {% blocktrans %}Are you sure you want to disable the selected {{ objects_name_disable }}? All of the following objects and their related items will be disabled:{% endblocktrans %} </p>
+        <ul>
+        {% for disable_object in disabled_objects %}
+            <li>{{ disable_object }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form action="" method="post">{% csrf_token %}
+    <div>
+    {% for obj in queryset %}
+    <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk|unlocalize }}" />
+    {% endfor %}
+    <input type="hidden" name="action" value="delete_selected_popup" />
+    <input type="hidden" name="post" value="yes" />
+    <input type="submit" class="btn btn-primary" value="{% trans "Yes, I'm sure" %}" />
+    </div>
+    </form>
+{% endif %}
+{% endblock %}

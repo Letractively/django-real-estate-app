@@ -1,18 +1,26 @@
 import operator
 from functools import wraps
 
+from django.db.models import Model
 from django.conf import settings
 from django.contrib.admin.util import quote
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
+from django.template import Context, Template, VariableNode, compile_string
 from django.utils.encoding import force_unicode, smart_unicode, smart_str
+from django.utils.importlib import import_module
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import ugettext_lazy as _
 
 from real_estate_app.conf.settings import REAL_ESTATE_APP_AJAX_SEARCH, MEDIA_PREFIX
+
+LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
+
+class TranslateVariableObjectError(Exception):
+	pass
 
 def alertemail(instance=None, subtitle='', msg='', email_from='', emails_to=[],fields=()):
 	if instance:
@@ -53,6 +61,82 @@ def radomstring(max=10):
 	for i in random.sample(string,max):
 		a+=i
 	return a
+
+class RenderVariablesString(object):
+
+	def __init__(self,text2convert=None,app=None,obj=None):
+		if not obj and app:
+			raise TranslateVariableObjectError("Error RenderVariablesString needed app and object.")
+		self.obj = obj
+		self.app = app
+		self.text2convert = text2convert
+
+	def str_variables_locale(self):
+		variables = self.locale_variables_from_obj()
+		string = ""
+		for key, value in variables.items():
+			string+="\n\t\t\t {{ %s }}" % key 
+		return string
+
+	def locale_variables_from_obj(self):
+		"""
+			This function is used to get translation of variables used on middles of CharFields or TextFields from models
+			exemple on pt-br:
+			class TermVisit(models.Model):
+				text=models.TextField()
+				...
+			news = TermVisit('Today keys of property is outed with visitor: 
+				              Name: {{ nome }}  
+				              Address: {{ endereco }}...')
+			
+			when 'render_variables' function is called, this function 'locale_variables_from_obj' is called to translate 
+			variables '{{ nome }}', '{{ endereco }}' to '{{ name }}', '{{ address }}' and return the real value of variable 
+			inside of object passed.
+		"""
+		if LANGUAGE_CODE in ('pt_BR','pt-br'):
+			try:
+				code_langague=LANGUAGE_CODE.split('-')[1]
+			except IndexError:
+				code_langague='br'
+
+		try:
+			obj=self.obj
+			if hasattr(self.obj,'__module__'):
+				obj=self.obj.__module__.split('.')[-1]
+			
+			module_name='%s.localflavor.%s.models_variables' % (self.app,code_langague)
+			variable='variables_%s_translate' % obj
+			module=import_module(module_name,variable)
+			return getattr(module,variable)
+		except Exception, error:
+			raise TranslateVariableObjectError, error
+
+
+	def render_variables(self):
+		
+		context ={}
+		locale_variables = self.locale_variables_from_obj()
+		variables = [ 
+			str(var_name.filter_expression.token) 
+			for var_name in compile_string(self.text2convert,self.text2convert) 
+			if isinstance(var_name,VariableNode)
+		]
+		msg=_("Doesn't exist this variable '%(field)s' for '%(object)s'.")
+
+		try:
+			for field in variables:
+				context.update({
+					field:getattr(
+						self.obj,
+						locale_variables and locale_variables.get(field,field) or field, # get real variable on obj
+						msg % {'field': field, 'object': self.obj._meta.verbose_name }
+					)
+				})
+			context=Context(context)
+			return mark_safe('%s' % Template(self.text2convert).render(context))
+		except Exception, error:
+			raise TranslateVariableObjectError, error
+		
 
 class AutoCompleteObject(object):
 	"""

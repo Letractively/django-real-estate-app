@@ -54,7 +54,7 @@ def items_for_result(cl, result, form):
             result_repr = mark_safe('&nbsp;')
         # If list_display_links not defined, add the link tag to the first field
         if (first and not cl.list_display_links) or field_name in cl.list_display_links:
-            table_tag = {True:'th', False:'td'}[first]
+            table_tag = {True:'td', False:'td'}[first]
             first = False
             url = cl.url_for_result(result)
             if cl.is_popup:

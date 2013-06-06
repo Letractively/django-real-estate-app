@@ -82,6 +82,7 @@
   </div>
 {% endif %}
 <div class="clear"> </div>
+
 {% for fieldset in adminform %}
 	{% ifequal fieldset.name 'MAPS' %}
 	  {% include "admin/real_estate_app/includes/fieldset-gmaps.html" %}

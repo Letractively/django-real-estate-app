@@ -23,6 +23,13 @@ visitcalendar_list_json = url(
     name   = 'visitcalendar-list-json'
 )
 
+visitcalendar_list_json_day = url(
+    regex  = '^calendar/json/day/(?P<day>[-\w]+)/$',
+    view   = 'real_estate_app.apps.visitcalendar.views.visitcalendar_list_json',
+    kwargs = dict(info_dict),
+    name   = 'visitcalendar-list-json-day'
+)
+
 visitcalendar_list_json_index = url(
     regex  = '^calendar/json/$',
     view   = 'real_estate_app.apps.visitcalendar.views.visitcalendar_list_json',

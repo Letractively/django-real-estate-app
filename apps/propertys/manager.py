@@ -1,11 +1,13 @@
 from datetime import datetime
-from django.db.models import Manager, Q
-from real_estate_app.managers.select_manager import SelectFieldManager
 
-class DistrictSelectFieldManager(SelectFieldManager):
+from django.db.models import Q
+
+from real_estate_app.managers import RealEstateManager, RealEstateCompleteModelManager
+
+class DistrictSelectFieldManager(RealEstateManager):
 
 	def get_selected(self):
-		qs = super(SelectFieldManager,self).get_query_set()
+		qs = self.all_enabled()
 		options={}
 		for obj in qs:
 			if not options.has_key(obj.state_name):
@@ -15,11 +17,7 @@ class DistrictSelectFieldManager(SelectFieldManager):
 
 		return options
 
-class PropertyManager(Manager):
-
-		def all_enabled(self):
-			qs = super(PropertyManager,self).get_query_set().filter(enable_publish=True)
-			return qs.filter(Q(date_end__gte=datetime.now())|Q(date_end=None))
+class PropertyManager(RealEstateCompleteModelManager):
 
 		def all_destaque(self):
 			return self.all_enabled().filter(Q(featured=True))

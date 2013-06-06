@@ -1,0 +1,22 @@
+/* 
+custom fullcalendar content 
+custom fullcalendar widget admin 
+*/
+.widget-content .fc-header-left {
+	text-align: center;
+}
+.widget-content .fc-header-left,
+.widget-content .fc-header-left .fc-header-title h2,
+#content-main .fc-header-center h2 {
+	font-size: 20px;
+}
+.widget-content .fc-button-today {
+	float: left;
+}
+
+.widget-content .fc-header-left,
+.widget-content .fc-header-center,
+.widget-content .fc-header-right {
+	float:left;
+	width: 100%;
+}

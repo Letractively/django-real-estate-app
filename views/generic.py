@@ -53,10 +53,13 @@ def create_update_object(request, model=None, object_id=None,template_name=None,
 
             if formset.is_valid() and form.is_valid():
                 new_object=form.save()
-                
+                form_opts=new_object._meta
                 obj=formset.save(commit=False)
-                obj.visitor_fk=new_object
-                formset.save()
+                if hasattr(form_opts,'module_name') and hasattr(obj,form_opts.module_name+'_fk_id'):
+                    setattr(obj,form_opts.module_name+'_fk',new_object)
+                    formset.save()
+                else:
+                    raise Exception('Error the model %s must has a ForeignKey named %s_fk' % (obj._meta.module_name, form_opts.module_name) )
 
                 msg = ugettext("The %(verbose_name)s was created successfully.") %\
                                 {"verbose_name": model._meta.verbose_name}

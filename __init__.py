@@ -20,5 +20,6 @@ def get_apps():
 		'real_estate_app.apps.propertys',
 		'real_estate_app.apps.photos',
 		'real_estate_app.apps.marketing',
-		'real_estate_app.apps.visitcalendar'
+		'real_estate_app.apps.visitcalendar',
+		'real_estate_app.apps.visitclick'
 	]

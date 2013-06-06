@@ -9,36 +9,45 @@ from django.shortcuts import get_object_or_404, render_to_response
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 
+from real_estate_app.utils import radomstring
 from real_estate_app.apps.propertys.models import Property
 from real_estate_app.apps.visitcalendar.models import VisitEvent 
 
 register = template.Library()
        
 class CalendarVisitEventNode(template.Node):
-        def __init__(self, var_name, object_id=None, date='', display='month', height=None, 
-                     editable=False, admin=False, headers=False, events=True):
+        def __init__(self, var_name, object_id=None, date='', html_id='calendar',
+                     display='month', height=None, editable=False, admin=False, 
+                     headers=False, events=True):
 
             try:
                 self.object_id = object_id and int(object_id) or object_id
             except ValueError:
                 self.object_id =  template.Variable(object_id)
 
+            
             self.var_name=var_name
             self.display=display
-            self.date=date
+            self.date = date 
             self.events=events
             self.height=height
             self.headers=headers
             self.admin = admin
             self.editable = editable
+            self.edit_url = ''
+            self.html_id = html_id
+
+            self.html_id+=radomstring(max=20)
+
+            if self.date:
+                self.date = template.Variable(date)
 
             if self.object_id and not self.admin:
                 self.add_url = reverse('visitcalendar-create-object',args=(object_id,))
             else:
                 self.add_url = reverse('admin:visitcalendar_visitevent_add')
             
-            
-            self.real_estate_node_template="visitcalendar/admin/visitcalendar_list_%s_node.html" % self.display
+            self.real_estate_node_template="admin/visitcalendar/templatetags/visitcalendar_list_%s_node.html" % self.display
 
             if self.display == 'week':
                 self.display='agendaWeek'
@@ -57,24 +66,25 @@ class CalendarVisitEventNode(template.Node):
                     self.object_id=int(self.object_id)
                 except:
                     self.object_id=self.object_id.resolve(context)
-                
 
-            try:
-                queryset=VisitEvent.objects.all()
                 if self.object_id:
-                    queryset=queryset.filter(property_fk=self.object_id)
-                    property = Property.objects.get(id=self.object_id)
+                    try:
+                        property = Property.objects.get(id=self.object_id)
+                    except ObjectDoesNotExist:
+                        pass
 
-                if self.date:
-                    queryset=queryset.filter(date_visit=self.date)
-            except ObjectDoesNotExist:
-                return []
+            if self.date:
+                try:
+                    self.date = datetime.strptime(self.date.resolve(context),'%Y-%m-%d')
+                except:
+                    self.date = self.date.resolve(context)
+
 
             fullcalendar_options = {
                                     'monthNames': ['Janeiro','Fevereiro','Mar&ccedil;o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
                                     'monthNamesShort': ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
                                     'dayNames': ['Domingo','Segunda','Ter&ccedil;a','Quarta','Quinta','Sexta','S&aacute;bado'],
-                                    'dayNamesShort': ['Dom','Seg','Ter','Qua','Qui','Sex','S&aacute;b'],
+                                    'dayNamesShort': ['Dom','Seg','Ter','Qua','Qui','Sex','Sab'],
                                     'buttonText': {
                                         'prev': '&nbsp;&#9668;&nbsp;',
                                         'next': '&nbsp;&#9658;&nbsp;',
@@ -98,11 +108,13 @@ class CalendarVisitEventNode(template.Node):
                                     'defaultView': self.display,
                                     'allDaySlot': 0,
                                     'slotMinutes':60,
+                                    'weekHeader':'Sm',
                                     'axisFormat': 'H:mm',
                                     'timeFormat': {
                                         '': 'H:mm',
                                         'agenda': 'H:mm{ - H:mm}'
                                     },
+
             }
 
             if self.height:
@@ -121,15 +133,14 @@ class CalendarVisitEventNode(template.Node):
                 'show_events':self.events,
                 'fullcalendar_options':mark_safe(fullcalendar_options),
                 'property':property,
+                'd_date':self.date,
                 'add_url':self.add_url,
-                'admin':self.admin
+                'admin':self.admin,
+                'edit':self.editable,
+                'html_id':self.html_id,
             })
-            
-            context[self.var_name] = template.loader.get_template(
-                    self.real_estate_node_template or [
-                    "admin/visitcalendar/visitcalendar_list_%s_node.html" % self.display,
-                    "admin/visitcalendar_list_%s_node.html" % self.display
-                ]).render(context)
+
+            context[self.var_name] = template.loader.get_template(self.real_estate_node_template).render(context)
             return ''
 
 def do_get_calendarvisitevent(parser, token):
@@ -181,11 +192,11 @@ def do_get_calendarvisitevent(parser, token):
                     raise template.TemplateSyntaxError, "Display arguments [day|week|month] to '%s' tag must be preceded 'display': %s from [property_id] display [day|week|month] as [varname]" % (bits[0], bits[0])
             
             if bit == 'date':
-                #{% get_calendarvisitevent from [property_id] date [date] as [varname] %}
+                #{% get_calendarvisitevent date [date] as [varname] %}
                 try:
                     params.update({'date':bits[ct+1]})
                 except IndexError:
-                    raise template.TemplateSyntaxError, "Date argument to '%s' tag must be preceded 'date': %s from [property_id] date [date] as [varname]" % (bits[0], bits[0])
+                    raise template.TemplateSyntaxError, "Date argument to '%s' tag must be preceded 'date': %s date [date] as [varname]" % (bits[0], bits[0])
 
             if bit == 'no_show_events':
                 #{% get_calendarvisitevent [no_show_events] as varname %}
@@ -206,6 +217,8 @@ def do_get_calendarvisitevent(parser, token):
                     params.update({'admin':True})
                 else:
                     raise template.TemplateSyntaxError, "Admin argument to '%s' tag can't used with editable argument." % bits[0]
+            if bit == 'html_id':
+                params.update({'html_id':True})
 
         return CalendarVisitEventNode(**params)
 

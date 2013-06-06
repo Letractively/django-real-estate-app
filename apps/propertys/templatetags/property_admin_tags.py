@@ -19,7 +19,7 @@ class PropertyWillExpiredNode(template.Node):
 
         def render(self,context):
                 last_days = datetime.now()+timedelta(days=5)
-                propertys = Property.objects.all_enabled().filter(Q(date_end__lte=last_days))
+                propertys = Property.objects.all_enabled().filter(Q(pub_date_end__lte=last_days))
                 context[self.var_name] = propertys[:self.num]
                 return ''
 

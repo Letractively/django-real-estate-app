@@ -9,7 +9,7 @@ from django.db import router
 from django.db.models import Q
 from django.shortcuts import render_to_response
 from django.utils.encoding import force_unicode
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 
 from real_estate_app.apps.propertys.models import Property
 from real_estate_app.apps.realtors.models import Realtor
@@ -207,7 +207,8 @@ def delete_selected_popup(modeladmin, request, queryset):
         except:
             pass
 
-
+    import pdb;pdb.set_trace()
+    
     context = {
         "title": title,
         "objects_name_delete": objects_name_delete,
@@ -220,7 +221,7 @@ def delete_selected_popup(modeladmin, request, queryset):
         "root_path": modeladmin.admin_site.root_path,
         "app_label": app_label,
         'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,
-        'is_popup':True,
+        'is_popup': "_popup" in request.REQUEST or "pop" in request.REQUEST,
         'disabled_objects': disabled_objects,
         'queryset_obj_disabled':disabled_objects,
     }

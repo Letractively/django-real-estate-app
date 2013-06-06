@@ -1563,6 +1563,7 @@ function formatDates(date1, date2, format, options) {
 			}
 		}
 	}
+
 	return res;
 };
 
@@ -5375,4 +5376,4 @@ function HorizontalPositionCache(getElement) {
 
 ;;
 
-})(jQuery);
+})(django.jQuery);

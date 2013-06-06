@@ -1,3 +1,3 @@
-from marketing import MaketingObject
+from marketing import MarketingObject
 
-__all__=('MaketingObject',)
+__all__=('MarketingObject',)

@@ -8,7 +8,8 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
-from real_estate_app.managers import SelectFieldManager
+from real_estate_app.managers import RealEstateManager
+from real_estate_app.models import RealEstateAppBaseModel
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 
@@ -23,7 +24,7 @@ def get_realtor_directory(instance, filename):
 		return 'real_estate_app/photos/realtor/'+instance.name+'/'+datetime.now().strftime('%Y/%m/%d/')+'/'+filename
 
 
-class Realtor(models.Model):
+class Realtor(RealEstateAppBaseModel):
 
 	user = models.ForeignKey(User, unique=True)
 
@@ -51,13 +52,6 @@ class Realtor(models.Model):
 							upload_to=get_realtor_directory,
 							max_length=255,
 							blank=True
-	)
-
-	logical_exclude = models.NullBooleanField(
-					_('Logical exclude'),
-					default=False,
-					null=True,
-					editable=False
 	)
 
 	if LANGUAGE_CODE in ('pt_BR','pt-br'):
@@ -108,7 +102,7 @@ class Realtor(models.Model):
 							max_length=10,
 		)
 	
-	objects= SelectFieldManager()
+	objects= RealEstateManager()
 
 	class Meta:
 		app_label = 'realtors'

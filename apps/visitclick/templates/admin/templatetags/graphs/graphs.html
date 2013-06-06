@@ -1,0 +1,13 @@
+{% load i18n %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="{{ MEDIA_REAL_ESTATE }}admin/js/real_estate_app_charts.js"></script>
+<script type="text/javascript">
+(function($){
+  $(document).ready(function() {
+   $('#{{ html_id }}').realcharts({{ plugin_options }});
+
+  });
+})(jQuery)
+
+</script>
+<div id="{{ html_id }}" ></div>

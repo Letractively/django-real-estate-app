@@ -36,6 +36,16 @@ class VisitorForm(forms.ModelForm):
 									ajax_length=10
 						)
 		)
+	else:
+		email = forms.CharField(
+				label=u'E-mail',
+				widget=AjaxInputWidget(
+									model_fk=Visitor,
+									help_text=_('Enter text to search.'),
+									show_help_text=True,
+									ajax_length=3
+			)
+		)
 
 	class Meta:
 		model=Visitor
@@ -84,9 +94,3 @@ class VisitEventForm(forms.ModelForm):
 		if visit_agenda:
 			raise forms.ValidationError(_('Alredy exist a visit registred on this date and time'))
 		return date_visit
-
-class VisitEventAdminForm(forms.ModelForm):
-	def save(self,commit=True):
-	  	data=self.data.copy()
-	  	self.instance.slug=slugify(data['date_visit_1']+data['date_visit_0'])
-	  	return super(VisitEventAdminForm,self).save(commit)

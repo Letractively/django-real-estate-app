@@ -1,5 +1,5 @@
 {% extends "admin/base_site.html" %}
-{% load i18n admin_modify adminmedia %}
+{% load i18n admin_modify adminmedia termvisit_tags graph_tags %}
 {% load url from future %}
 
 {% block extrahead %}{{ block.super }}
@@ -15,12 +15,11 @@
 {% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
 
 {% block breadcrumbs %}{% if not is_popup %}
-<div class="breadcrumbs">
-     <a href="../../../">{% trans "Home" %}</a> &rsaquo;
-     <a href="../../">{{ app_label|capfirst|escape }}</a> &rsaquo;
-     {% if has_change_permission %}<a href="../">{{ opts.verbose_name_plural|capfirst }}</a>{% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %} &rsaquo;
-     {% if add %}{% trans "Add" %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}
-</div>
+   <ul class="breadcrumb">
+      <li><a href="../../../"><i class="icon-home" ></i>{% trans "Home" %}</a> <span class="divider">/</span></li>
+      <li >{% if has_change_permission %}<a href="../">{{ opts.verbose_name_plural|capfirst }}</a>{% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %} <span class="divider">/</span></li> 
+      <li >{% if add %}{% trans "Add" %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}</li>
+    </ul>
 {% endif %}{% endblock %}
 
 {% block content %}<div id="content-main">
@@ -28,6 +27,7 @@
 {% if change %}{% if not is_popup %}
   <ul class="object-tools">
     {% block object-tools-items %}
+    <li><a href="term/" class="historylink"> {% trans "Term Visit" %} </a></li>
     <li><a href="history/" class="historylink">{% trans "History" %}</a></li>
     {% if has_absolute_url %}<li><a href="../../../r/{{ content_type_id }}/{{ object_id }}/" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif%}
     {% endblock %}
@@ -67,5 +67,19 @@
 {% prepopulated_fields_js %}
 
 </div>
-</form></div>
+</form>
+
+</div>
+{% endblock %}
+
+{% block sidebar %}
+    {% get_linegraph as line_graph %}
+    <div class="widget">
+        <div class="widget-header">
+            <i class="icon-calendar"></i> <h3 style=""> {% trans 'Amounts clicks' %} </h3>
+        </div>
+        <div class="widget-content">
+            {{ line_graph }}
+        </div>
+    </div>
 {% endblock %}

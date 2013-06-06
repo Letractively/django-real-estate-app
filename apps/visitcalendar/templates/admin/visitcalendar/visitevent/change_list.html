@@ -1,5 +1,5 @@
 {% extends "admin/base_site.html" %}
-{% load adminmedia admin_list i18n visitevent_calendar_tags %}
+{% load adminmedia admin_list i18n visitevent_calendar_tags graph_tags %}
 {% load url from future %}
 {% block extrastyle %}
   {{ block.super }}
@@ -37,17 +37,24 @@
 
 {% if not is_popup %}
   {% block breadcrumbs %}
-    <div class="breadcrumbs">
-      <a href="../../">
-        {% trans "Home" %}
-      </a>
-       &rsaquo;
-       <a href="../">
+    <ul class="breadcrumb">
+      <li><a {% if not d_date %}href="../../"{% else %} href="../../../../" {% endif %}><i class="icon-home" ></i>{% trans "Home" %}</a> <span class="divider">/</span></li>
+      {% if d_date or property %}
+      <li>
+        <a {% if d_date and not property %} href="../../" {% endif %}
+          {% if property and not d_date %} href="../../../../propertys/property/" {% endif %}
+        >
          {{ app_label|capfirst }}
-      </a>
-      &rsaquo;
-      {{ cl.opts.verbose_name_plural|capfirst }}
-    </div>
+        </a>
+        <span class="divider">/</span>
+      </li>
+      {% endif %}
+      {% if not cl %}
+       <li class="active">{{ property }}</li>
+      {% else %}
+        <li class="active">{{ cl.opts.verbose_name_plural|capfirst }}</li>
+      {% endif %}      
+    </ul>
   {% endblock %}
 {% endif %}
 
@@ -56,24 +63,48 @@
 {% block content %}
   <div id="content-main">
     {% block object-tools %}
+      {% comment %}
       {% if has_add_permission %}
-        <ul class="object-tools">
-          {% block object-tools-items %}
-            <li>
-              <a href="add/{% if is_popup %}?_popup=1{% endif %}" class="addlink">
-                {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}
-              </a>
-            </li>
-          {% endblock %}
-        </ul>
+        <div class="offset8 text-right">
+          <div class="btn-group">
+            <a title="{% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}" 
+               {% if is_popup %} href="add/?_popup=1" {% else %} href="add/" {% endif %} 
+               class="btn btn-primary">
+              <i class="icon-plus icon-white"></i>
+              {% if not is_popup %}
+                {% blocktrans with cl.opts.verbose_name as name %}{{ name }}{% endblocktrans %}
+              {% else %}
+                {% blocktrans %}Add{% endblocktrans %}
+              {% endif %}
+            </a>
+          </div>
+        </div>
       {% endif %}
+      {% endcomment %}
     {% endblock %}
-    {% if  property %}
-      {% get_calendarvisitevent from property.id admin show_header display week as calendar %}
-    {% else %}
-      {% get_calendarvisitevent admin show_header display week as calendar %}
-      
+
+    {% if property and not d_date %}
+      {% get_calendarvisitevent from property.id admin show_header display week as calendar_list %}
     {% endif %}
-    {{ calendar }}
+    {% if d_date and not property %}
+      {% get_calendarvisitevent admin show_header display day date d_date as calendar_list %}
+    {% endif %}
+    {% if not d_date and not property  %}
+      {% get_calendarvisitevent admin show_header display week as calendar_list %}
+    {% endif %}
+
+    {{ calendar_list  }}
   </div>
+{% endblock %}
+
+{% block sidebar %}
+    {% get_linegraph as line_graph %}
+    <div class="widget">
+        <div class="widget-header">
+            <i class="icon-calendar"></i> <h3 style=""> {% trans 'Amounts clicks' %} </h3>
+        </div>
+        <div class="widget-content">
+            {{ line_graph }}
+        </div>
+    </div>
 {% endblock %}

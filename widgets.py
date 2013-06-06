@@ -17,7 +17,6 @@ from django.utils.translation import ugettext_lazy as _
 from real_estate_app.conf.settings import MEDIA_PREFIX, REAL_ESTATE_APP_AJAX_SEARCH
 from real_estate_app.utils import AutoCompleteObject
 
-
 class MoneyInputWidget(TextInput):
 
 	def render(self, name, value, attrs=None):
@@ -62,7 +61,7 @@ class PhoneInputWidget(TextInput):
 
 class FaceBoxFieldWrapper(widgets.RelatedFieldWidgetWrapper):
 
-    def render(self, name, value, *args, **kwargs):
+  	def render(self, name, value, *args, **kwargs):
 
 		rel_to = self.rel.to
 
@@ -79,35 +78,46 @@ class FaceBoxFieldWrapper(widgets.RelatedFieldWidgetWrapper):
 
 			self.widget.choices = self.choices
 			output = [self.widget.render(name, value, *args, **kwargs)]
-			field = rel_to._meta.fields[1].name
+
+			module_name = rel_to._meta.module_name
+
+			field=','.join(REAL_ESTATE_APP_AJAX_SEARCH[module_name]['label'])
 			## TO DO: Fazer tratamento para pegar se o campo e select 
 			##        para ser utilizado no facebox.
-			output.append(u'''
-			<script type="text/javascript">
-				django.jQuery(document).ready(function($) {
-					django.jQuery('a[rel="facebox-select"]').facebox({
-					loadingImage : '/media-real/img/loading.gif',
-					closeImage   : '/media-real/img/closelabel.png',
-					id: '%s',
-					ajax_url: '%s',
-					type_field:'select'
+			if self.can_add_related:
+				output.append(u'''
+				<script type="text/javascript">
+					django.jQuery(document).ready(function($) {
+						$('a[rel="facebox-select"]').facebox({
+						loadingImage : '%simg/loading.gif',
+						closeImage   : '%simg/closelabel.png',
+						id: '%s',
+						ajax_url: '%s',
+						type_field:'select',
+						field:'%s',
+						})
 					})
-				})
-			</script>''' % ('id_'+name, ajax_url) )
-			output.append(u'<a href="%s" class="add-another" id="id_%s" rel="facebox-select" rev="iframe" > ' %(related_url, name))
-			output.append(u'<img src="%simg/admin/icon_addlink.gif" width="10" height="10" alt="%s"/></a>' % (settings.ADMIN_MEDIA_PREFIX, _('Add Another')))
-
+				</script>''' % ( MEDIA_PREFIX, MEDIA_PREFIX, 'id_'+name, ajax_url, field) )
+				output.append(u'<a href="%s" class="add-another btn" id="id_%s" rel="facebox-select" rev="iframe" > ' %(related_url, name))
+				output.append(u'<i class="icon-plus-sign"></i>  </a>')
 			return mark_safe(u''.join(output))
 		except NoReverseMatch:
 			return super(FaceBoxFieldWrapper,self).render(name,value,*args,**kwargs)
 
 class CheckboxSelectMultipleCustom(CheckboxSelectMultiple):
+	#TODO: change to SelectMultiple and try to make like RelatedFieldWidgetWrapper
+	def __init__(self, module_name=None,field=None, app_name=None,*args,**kwargs):
+		self.module_name=module_name
+		self.field=field
+		self.app_name=app_name
+		return super(CheckboxSelectMultipleCustom,self).__init__(*args,**kwargs)
 
 	def render(self, name, value, attrs=None, choices=()):
 
+		field=self.field
 		name_db=name.strip('_fk')
 		rev_url = reverse('admin:index') 
-		info = (rev_url, 'real_estate_app', name_db)
+		info = (rev_url, self.app_name, self.module_name)
 		#related_url = reverse('admin:%s_%s_add_popup' % ('real_estate_app', name_db))
 		#ajax_url = reverse('admin:%s_%s_ajax_view/' %('real_estate_app', name_db))
 		related_url = '%s%s/%s/add/?_popup=1' % info
@@ -115,24 +125,29 @@ class CheckboxSelectMultipleCustom(CheckboxSelectMultiple):
 
 		output =[]
 
+		if not self.field and self.module_name:
+			field=','.join(REAL_ESTATE_APP_AJAX_SEARCH[self.module_name]['label'])
+		
 		output.append(u'''
-			<script type="text/javascript">
-				django.jQuery(document).ready(function($) {
-					django.jQuery('a[rel="facebox-check"]').facebox({
-					loadingImage : '/media-real/img/loading.gif',
-					closeImage   : '/media-real/img/closelabel.png',
-					id: '%s',
-					ajax_url: '%s',
-					type_field:'checkbox'
+				<script type="text/javascript">
+					django.jQuery(document).ready(function($) {
+						$('a[rel="facebox-check"]').facebox({
+						loadingImage : '%simg/loading.gif',
+						closeImage   : '%simg/closelabel.png',
+						id: '%s',
+						ajax_url: '%s',
+						type_field:'checkbox',
+						field:'%s',
+						})
 					})
-				})
-			</script>''' % ('id_'+name_db, ajax_url) )
+				</script>''' % (MEDIA_PREFIX, MEDIA_PREFIX,'id_'+self.module_name, ajax_url, field) )
+		output.append(u'<a href="%s" class="add-another btn" id="id_%s" rel="facebox-check" rev="iframe" > ' %(related_url, name_db))
+		output.append(u'<i class="icon-plus-sign"></i>  </a>')
 		
 		if value is None: value = []
 		has_id = attrs and 'id' in attrs
 		final_attrs = self.build_attrs(attrs, name=name)
-		output.append(u'<a href="%s" class="add-another" id="id_%s" rel="facebox-check" rev="iframe" > ' %(related_url, name_db))
-		output.append(u'<img src="%simg/admin/icon_addlink.gif" width="10" height="10" alt="%s"/></a><br />' % (settings.ADMIN_MEDIA_PREFIX, _('Add Another')))
+		
 
 		output.append(u'<ul id=id_%s style="float:left">' %name_db)
 		# Normalize to strings
@@ -209,11 +224,10 @@ class AjaxInputWidget(TextInput):
 
 		final_attrs = self.build_attrs(attrs, name=name)
 		self.html_id = final_attrs.pop('id', name)
-		#import pdb;pdb.set_trace()
+		
 		plugin_options = {
 			'minLength':self.ajax_length,
 			'source': reverse('%s_%s_ajax_view' % (self.apps,self.module_name)),
-			#'initial': autocompleteobject.render(id__in=str(value)),
 			'fields':self.fields_show,
 		}
 		

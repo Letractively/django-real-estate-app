@@ -1,8 +1,18 @@
-Melhorar a parte de portlet para suportar a propaganda.
-Revisar código real_estate_app_tags.py, para melhorar as classes semelhantes.
-Melhorar a busca da url dos feeds em feeds.py.
-Melhorar os exemplos.
-Fazer a reserva de chaves para cada imóvel com calendário.
-Problema do meio.mask com ie7.
-Criar a busca por geoprocessamento.
-Fazer versão de css para telefone e tablets.
+PRIORIDADE:
+	Utilizar bootstrap twitter.
+	Reescrever SQL migration.
+	
+	- PORTLET: este deve ser o mais complicado devido aos tipos.
+    - PORTLETPROPAGANDAIMAGE: migrar para portlet e migrar para marketing caso exista
+    - Avisar que o images deixou de ser suportado por conta do real_estate_files.
+	Testar toda aplicacao
+
+NORMAL:
+	Criar um app para construir locales.
+	Melhorar os exemplos.
+	Problema do meio.mask com ie7.
+	Criar a busca por geoprocessamento.
+	Utilizar bootstrap twitter.
+	Error de encoding na apresentacao do calendario de visita. TRANS Pt-BR
+	Migrar todas funcoes de get_photo_... para solr-thumbnail.
+	Informar que será descontinuado o get_photos_..., habilitando somente um.

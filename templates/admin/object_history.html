@@ -1,0 +1,64 @@
+{% extends "admin/base_site.html" %}
+{% load i18n graph_tags %}
+
+{% block breadcrumbs %}
+   <ul class="breadcrumb">
+      <li><a href="{% url admin:index %}"><i class="icon-home" ></i>{% trans "Home" %}</a> <span class="divider">/</span></li>
+      {% if app_label == "auth" and not user.is_superuser %}
+        {% if perms.auth %}
+          <li >{{ object|truncatewords:"18" }} <span class="divider">/</span> </li> 
+        {% endif %}
+      {% else %}
+          <li ><a href="../../../">{{ app_label|capfirst }}</a><span class="divider">/</span> </li>
+          <li ><a href="../">{{ module_name }}</a><span class="divider">/</span></li>
+          <li >{{ object|truncatewords:"18" }}<span class="divider">/</span></li>
+      {% endif %}
+      <li >{% trans 'History' %}</li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+{% if action_list %}
+<div class="widget widget-table">
+    <div class="widget-header">
+        {% if title and user.is_authenticated %}<h3>{{ title }}</h3>{% endif %}
+    </div>
+    <div class="widget-content">
+        <table id="change-history" class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">{% trans 'Date/time' %}</th>
+                <th scope="col">{% trans 'User' %}</th>
+                <th scope="col">{% trans 'Action' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for action in action_list %}
+            <tr>
+                <th scope="row">{{ action.action_time|date:"DATETIME_FORMAT" }}</th>
+                <td>{{ action.user.username }}{% if action.user.get_full_name %} ({{ action.user.get_full_name }}){% endif %}</td>
+                <td>{{ action.change_message }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+    <p>{% trans "This object doesn't have a change history. It probably wasn't added via this admin site." %}</p>
+{% endif %}
+
+{% endblock %}
+
+{% block sidebar %}
+    {% get_linegraph as line_graph %}
+    <div class="widget">
+        <div class="widget-header">
+            <i class="icon-calendar"></i> <h3 style=""> {% trans 'Amounts clicks' %} </h3>
+        </div>
+        <div class="widget-content">
+            {{ line_graph }}
+        </div>
+    </div>
+{% endblock %}

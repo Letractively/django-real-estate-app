@@ -2,6 +2,7 @@ from datetime import datetime
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from real_estate_app.models import RealEstateAppCompleteModel
 from real_estate_app.apps.newspapers.models import News
 
 TYPES=(
@@ -11,13 +12,7 @@ TYPES=(
 	('propertys.Property',_('Property')),
 )
 
-class Portlet(models.Model):
-
-	title=models.CharField(
-			_('Title'),	
-			max_length=255,
-			help_text=_('Entry the title of propaganda')
-	)
+class Portlet(RealEstateAppCompleteModel):
 	
 	featured=models.IntegerField(
 							_('Featured object'),

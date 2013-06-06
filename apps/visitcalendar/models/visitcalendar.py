@@ -8,6 +8,7 @@ from django.db.models import permalink
 from django.utils.translation import ugettext_lazy as _
 
 from real_estate_app.models import RealEstateAppBaseModel
+from real_estate_app.managers import RealEstateManager
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 
@@ -30,6 +31,8 @@ class VisitEvent(RealEstateAppBaseModel):
         help_text=_('Automatically built from the caption. A slug is a short '
                     'label generally used in URLs.'),
     )
+
+	objects = RealEstateManager()
 
 	class Meta:
 		app_label = 'visitcalendar'

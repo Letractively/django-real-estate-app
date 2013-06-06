@@ -5,31 +5,15 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import permalink
 from django.db import models
 
+from real_estate_app.models import RealEstateAppCompleteModel
+
 def get_files(instance, filename):
 		if instance is None:
 			return 'real_estate_app/real_estate_files/'+datetime.now().strftime('%Y/%m/%d/')+filename
 		else:
 			return 'real_estate_app/real_estate_files/'+instance.slug+datetime.now().strftime('/%Y/%m/%d/')+filename
 
-class Files(models.Model):
-
-	title = models.CharField(
-				max_length=255
-	)
-
-	slug = models.SlugField(
-			        _('slug'),
-			        unique=True,
-			        help_text=_('Automatically built from the caption. A slug is a short label generally used in URLs.')
-	)
-
-
-	pub_date = models.DateTimeField(
-			    _('date published'),
-		        default=datetime.now,
-		        help_text=_('Files in future dates are only published on \
-		                     correct date.'),
-	)
+class Files(RealEstateAppCompleteModel):
 	
 	files=models.FileField(
 			_('Files'),

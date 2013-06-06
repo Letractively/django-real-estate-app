@@ -27,22 +27,33 @@ def visitcalendar_list_json(request, *args, **kwargs):
 		
 		for visitevent in visitsevents:
 			url = request.GET.get('admin',False) and reverse('admin:visitcalendar_visitevent_change',args=(visitevent.id,)) or visitevent.get_absolute_url()
+			url_term = request.GET.get('admin',False) and reverse('admin:admin_term_view',args=(visitevent.id,)) or ''
 			events.append(dict(
 						title=_('Has visit'),
 						start = visitevent.date_visit.strftime('%Y-%m-%d %H:%M:%S'),
 						url = url,
+						term = url_term
 			))
 
 	else:
 		visitsevents = VisitEvent.objects.all()
 
+		if kwargs.has_key('day'):
+			visitsevents=visitsevents.filter(date_visit__gte='%s 00:00:00' % kwargs['day'],date_visit__lte='%s 23:59:59' % kwargs['day'])
+
 		events = []
 		for visitevent in visitsevents:
-			url = request.GET.get('admin',False) and reverse('admin:visitcalendar_visitevent_change',args=(visitevent.id,)) or visitevent.get_absolute_url()
+			
+			if request.GET.get('no-events',False):
+				url = visitevent.get_absolute_url()
+			else:
+				url = request.GET.get('admin',False) and reverse('admin:visitcalendar_visitevent_change',args=(visitevent.id,)) or visitevent.get_absolute_url()
+			url_term = request.GET.get('admin',False) and reverse('admin:admin_term_view',args=(visitevent.id,)) or ''
 			events.append(dict(
 						title= _('Has visit: \n %s') % visitevent.property_fk.address,
 						start = visitevent.date_visit.strftime('%Y-%m-%d %H:%M:%S'),
 						url = url,
+						term = url_term,
 			))
 
 	return HttpResponse(simplejson.dumps(events),mimetype='application/json')
@@ -60,7 +71,10 @@ def visitcalendar_list_property_visit(request, *args, **kwargs):
 	property=get_object_or_404(Property,slug=kwargs['slug'])
 	kwargs['queryset'] = VisitEvent.objects.filter(property_fk=property)
 	kwargs.pop('slug')
-	kwargs['extra_context']= {'property':property}
+	kwargs['extra_context']= {
+							  'property':property,
+							  'app_label':property._meta.app_label,
+							 }
 	return list_detail.object_list(request, *args, **kwargs)
 
 @requires_csrf_token
@@ -94,4 +108,4 @@ def visitcalendar_search_visitor(request, *args, **kwargs):
 						mimetype="text/javascript"
 			)
 		except:
-			raise 
+			raise
