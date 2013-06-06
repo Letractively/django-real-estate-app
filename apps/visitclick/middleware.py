@@ -43,7 +43,6 @@ class UntrackedBootsMiddleware(object):
 
 		os = get_os(boots)
 		os = os.family+' '+os.version_string
-		property=Property.objects.get(id=1)
 
 		attrs = {
 			'url':request.path,
@@ -51,7 +50,6 @@ class UntrackedBootsMiddleware(object):
 			'user_agent':boots,
 			'ip': ip,
 			'operating_sistem':os,
-			'content_visited':property, # do get request object
 		}
 
 		click=Click(**attrs)

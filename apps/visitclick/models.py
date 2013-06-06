@@ -37,10 +37,10 @@ class Click(models.Model):
 		_('IP Address')
 	)
 	
-	content_type = models.ForeignKey(ContentType)
-	object_id = models.PositiveIntegerField()
+	# content_type = models.ForeignKey(ContentType,null=True,blank=True)
+	# object_id = models.BigIntegerField(null=True,blank=True)
 
-	content_visited = generic.GenericForeignKey('content_type', 'object_id')
+	# content_visited = generic.GenericForeignKey('content_type', 'object_id')
 
 	class Meta:
 		app_label = 'visitclick'

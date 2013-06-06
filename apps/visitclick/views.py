@@ -18,6 +18,7 @@ def visitclick_data_json(request, *args, **kwargs):
 	"""
 		For default this function return a data list of week
 	"""
+
 	google_format = {'rows':[],'cols':[
 			{'label':_('Time'),'type':'string','pattern':''},
 			{'label':_('Click'),'type':'number','pattern':''},
@@ -55,22 +56,43 @@ def visitclick_data_json(request, *args, **kwargs):
 			Q(date__lte=date_end)
 	)
 
-	clicks = QuerySetStats(clicks, field).time_series(date_init,date_end, display,aggregate=Count(field))		
+	if not ('clicks' in request.GET.values() or 'clicks' in request.POST.values()):
+		clicks = QuerySetStats(clicks, field).time_series(date_init,date_end, display,aggregate=Count(field))
+	else:
+		field='url'
+		clicks= clicks.values(field).order_by(field).annotate(count=Count(field))
+		google_format['cols']=[
+			{'label':_('Url'),'type':'string','pattern':''},
+			{'label':_('Click'),'type':'number','pattern':''},
+		]
+		
 
 	if field == 'date':
 		google_format['cols']=[
 			{'label':_('Date'),'type':'string','pattern':''},
 			{'label':_('Click'),'type':'number','pattern':''},
 		]
-		
+	
+
 	for click in clicks:
-		
-			google_format['rows'].append({
-				'c':[
-						{'v':click[0],'f':click[0].strftime(strftime)},
-						{'v':click[1],'f':str(click[1])}
-					]
-			})
+		if type(click) is tuple:
+			value_line=click[0]
+			label_line=click[0]
+			value_column=str(click[1])
+			label_column=click[1]
+		if type(click) is dict:
+			value_line, value_column = click.values()
+			label_line, label_column = click.values()
+
+		if isinstance(value_line,datetime):
+			value_line=value_line.strftime(strftime)
+
+		google_format['rows'].append({
+			'c':[
+					{'v':label_line,'f':value_line},
+					{'v':label_column,'f':value_column}
+				]
+		})
 
 	return HttpResponse(
 						simplejson.dumps(google_format,cls=DjangoJSONEncoder),

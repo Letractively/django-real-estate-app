@@ -3,7 +3,6 @@ google.load('visualization',  '1', {'packages':['corechart']});
 	$.fn.realcharts= function(options) {		
 		defaults ={
 			'dataTable':[],
-			'html_id':'#chart',
 			'ajaxUrl':'',
 			'gchart': {
 				'pointSize': 5,
@@ -25,13 +24,14 @@ google.load('visualization',  '1', {'packages':['corechart']});
 			var html_id = $(this).attr('id');
 			var select_id = html_id+'-select';
 			var containerId=document.getElementById(html_id);
-			var dataTable = tableDataRequest()
+			var dataTable = tableDataRequest();
+			var chart, gdata, goptions = null;
 
 			function init(){				
-				drawChart(dataTable,settigns.type_chart);
+				chart=drawChart(dataTable,settigns.type_chart);
 				initSelectChart();
 				$('#'+select_id).bind('changeValueChartOnSelect',function(event,dataTable){
-					drawChart(dataTable,settigns.type_chart);
+					chart=drawChart(dataTable,settigns.type_chart);
 				})
 			}
 
@@ -68,19 +68,32 @@ google.load('visualization',  '1', {'packages':['corechart']});
 
 			}
 
+			function pointClicked(){
+
+	  			var selection = chart.getChart().getSelection();
+	  			if (selection[0].row != null){
+	  				var date=gdata.getValue(selection[0].row,0).split(' ')[0];
+	  				dateData=tableDataRequest(settigns.ajaxUrl+'?display=clicks&date_init='+date+'&date_end='+date)
+	  				drawChart(dateData,'Table')
+	  			}	
+			}
+
 			function drawChart(data,chart_type,extra_options={}){
 
-				var gdata = new google.visualization.DataTable(data);
-			    var goptions = $.extend(extra_options,settigns.gchart);
+				gdata = new google.visualization.DataTable(data);
+			    goptions = $.extend(extra_options,settigns.gchart);
 
-				var wrapper = new google.visualization.ChartWrapper({
+				wrapper = new google.visualization.ChartWrapper({
 					chartType: chart_type,
 					dataTable: gdata,
 					options: goptions,
 					containerId: containerId,
 				});
+
+			    google.visualization.events.addListener(wrapper, 'select', pointClicked);
 			    
-			    wrapper.draw();	
+			    wrapper.draw()
+			    return wrapper
 			}
 
 			init();
