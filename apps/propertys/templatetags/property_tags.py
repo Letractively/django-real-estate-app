@@ -7,7 +7,8 @@ from django.utils.safestring import mark_safe
 
 from real_estate_app.apps.portlets.models import Portlet
 from real_estate_app.apps.newspapers.models import  News
-from real_estate_app.apps.propertys.models import Property, District, StatusProperty, Classification, AditionalThings
+from real_estate_app.apps.propertys.models import Property, District, StatusProperty, \
+                                                  Classification, AditionalThings
 from real_estate_app.apps.photos.models import Photo
 
 
@@ -173,6 +174,9 @@ def do_get_property_photo_destaque(parser, token):
 		return PropertyDestaqueNode(var_name=bits[2])
 	else:
 		raise template.TemplateSyntaxError, "'%s' tag takes one or two arguments: %s as [varname] %s [limit] as [varname]" % (bits[0],bits[0],bits[0])
+
+
+
 
 register.tag('get_property_photo',do_get_property_photo)
 register.tag('get_propertys',do_get_property)

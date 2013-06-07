@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.contrib.admin import site
+#from django.contrib.admin import site
 from options import *
 from flatpages import *
 from admin_site import *
