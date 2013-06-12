@@ -52,14 +52,14 @@ def visitclick_data_json(request, *args, **kwargs):
 	elif 'custom' in request.GET.values() or 'custom' in request.POST.values():
 		date_init = datetime.strptime(request.POST.get('date_init',False) or request.GET.get('date_init'),'%Y-%m-%d')
 		date_end = datetime.strptime(request.POST.get('date_end',False) or request.GET.get('date_end'),'%Y-%m-%d')
-		date = date_end-date_init
-		if (date.days ==1):
+		date_diff = date_end-date_init
+		if (date_diff.days ==1):
 			strftime='%d/%m'
 			display='hours'
-		elif (date.days >=2 and date.days <=30):
+		elif (date_diff.days >2 and date_diff.days <=31):
 			strftime='%d/%m'
 			display='days'
-		elif (date.days > 30):
+		elif (date_diff.days > 31):
 			strftime='%d/%m'
 			display='months'
 

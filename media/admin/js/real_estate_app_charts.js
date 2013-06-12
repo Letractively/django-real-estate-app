@@ -10,7 +10,7 @@ google.load('visualization',  '1', {'packages':['corechart']});
 				'title': "{{ title_chart }}",
 			},
 			'select_chart':[
-				['custom','Custom: <input type="text" value="" /> à <input type="text" value="" /> '],
+				['custom','Custom: <input type="text" id="date_init" value="" /> - <input id="date_end" type="text" value="" /> '],
 				['week','Week'],
 				['today','Today'],
 				['month','Month'],
@@ -60,45 +60,41 @@ google.load('visualization',  '1', {'packages':['corechart']});
 				html+= '<div class="btn dropdown-toggle" data-toggle="dropdown"> Selecione <span class="caret"></span></div>'
 				html+='<ul class="dropdown-menu" id="chart-items">'
 				for (option in options){
-					html+='<li value="'+options[option][0]+'"><a href="#">'+options[option][1]+'</a></li>'
+					html+='<li value="'+options[option][0]+'"><span>'+options[option][1]+'</span></li>'
 				}
-				html+='<li class="divider" ></li><li value="none"><a href="#"> <span class="btn btn-primary"> OK </span></a></li>'
+				html+='<li class="divider" ></li><li value="none"><span > <span class="btn btn-primary"> Filtrar </span></span></li>'
 				html+='</ul></div>';
 				$(containerId).before(html);
 
 				$('#'+select_id+' ul.dropdown-menu li').click(function(e){
 				 	e.preventDefault();
 				 	params ={}
-					
-					$(this).parent().children().each(function(){
-						if ($(this).attr('selected') === 'selected' 
-							&& $(this).attr('value')!='none' 
-							&& $(this).attr('value') != 'custom'){
-							$(this).removeAttr('selected');
-							$(this).children().first().children().first().detach();
-							params=$.extend(params,{'type':$(this).attr('value')});
-
-						}
-						if ($(this).attr('selected') === 'selected' && $(this).attr('value') === 'custom') {
-							$(this).removeAttr('selected');
-							$(this).children().first().children().first().detach();
-							params=$.extend(params,{
-								'type':$(this).attr('value'),
-								'date_init':'2013-05-01',
-								'date_end':'2013-06-08'
-						    });
-						}
-					})
 
 					if( $(this).attr('selected') != 'selected' && $(this).attr('value')!='none') {
-						tmp_html=$(this).html();
-						$(this).children().first().html('<span class="icon-ok"></span> '+tmp_html)
-						$(this).attr('selected','selected')
-						params=$.extend(params,{'type':$(this).attr('value')})
+						//Clean selected object and set seleceted
+						$(this).parent().find('li[selected]')
+				 		.removeAttr('selected').find('span.icon-ok').detach();
+
+						$(this).children().first().prepend('<span class="icon-ok"></span> ')
+						$(this).attr('selected','selected');
+						
 					}
 
 					if ($(this).attr('value') === 'none'){
-							
+						// Get selected object
+						selected = $(this).parent().find('li[selected]')
+						params=$.extend(params,{'type':selected.attr('value')})
+						
+						if (selected.attr('value') === 'custom' ) {
+							var date_init=selected.find('#date_init').val();
+							var date_end=selected.find('#date_end').val();
+							params=$.extend(params,{
+								'date_init':date_init,
+								'date_end':date_end
+						    });
+						} 
+
+						//Get data from url and refresh graph with new data.
 						dataTable=tableDataRequest(params);
 						$(this).trigger('changeValueChartOnSelect',dataTable);
 						$('#'+select_id).removeClass('open');
