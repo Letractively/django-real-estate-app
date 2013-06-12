@@ -17,10 +17,13 @@ from real_estate_app.apps.visitclick.utils import get_ip, find_user_agents, get_
 class UntrackedBootsMiddleware(object):
 
 	def process_request(self,request):
+
 		if request.is_ajax(): return 
+
 		try:
 			match=resolve(request.path)
-			if match.url_name not in VISIT_URLS_VIEW_CHECK_CLICK: return
+			if (request.path not in VISIT_URLS_VIEW_CHECK_CLICK and match.url_name not in VISIT_URLS_VIEW_CHECK_CLICK) and \
+			   (request.path not in VISIT_URLS_VIEW_CHECK_CLICK or match.url_name not in VISIT_URLS_VIEW_CHECK_CLICK): return 
 		except:
 			return 
 

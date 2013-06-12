@@ -22,11 +22,13 @@
 
 {% block content %}
 
-	{% get_linegraph as click_line_graph %}
+	{% get_linegraph height 200 as click_line_graph %}
 	{{ click_line_graph }}
 
 	{% if title %} <h3> {{ title }}</h3> {% endif %}
+	
 	{% get_property_chagelist_view as property_list %}
+
 	{{ property_list }}
 
 {% endblock %}

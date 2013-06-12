@@ -11,12 +11,13 @@ from django.template import Library
 
 register = Library()
 
-def items_for_result(cl, result, form):
+def items_for_result(cl, result, form,is_tag):
     """
     Generates the actual list of data.
     """
     first = True
     pk = cl.lookup_opts.pk.attname
+    opts=cl.opts
     for field_name in cl.list_display:
         row_class = ''
         try:
@@ -57,6 +58,7 @@ def items_for_result(cl, result, form):
             table_tag = {True:'td', False:'td'}[first]
             first = False
             url = cl.url_for_result(result)
+            if is_tag: url = opts.app_label.lower()+'/'+opts.object_name.lower()+'/'+cl.url_for_result(result)
             if cl.is_popup:
                 url+='?_popup=1'
             # Convert the pk to something that can be used in Javascript.
@@ -83,21 +85,23 @@ def items_for_result(cl, result, form):
     if form and not form[cl.model._meta.pk.name].is_hidden:
         yield mark_safe(u'<td>%s</td>' % force_unicode(form[cl.model._meta.pk.name]))
 
-def results(cl):
+def results(cl,is_tag):
     if cl.formset:
         for res, form in zip(cl.result_list, cl.formset.forms):
-            yield list(items_for_result(cl, res, form))
+            yield list(items_for_result(cl, res, form,is_tag))
     else:
         for res in cl.result_list:
-            yield list(items_for_result(cl, res, None))
+            yield list(items_for_result(cl, res, None,is_tag))
 
 
-def real_estate_app_result_list(cl):
+def real_estate_app_result_list(cl,is_tag=False):
     """
-    Displays the headers and data list together
+        Custom result list can used with templatetags.
+        cl = ChangeList
+        is_tag = True or False, this is used to mount a url link.
     """
     return {'cl': cl,
             'result_hidden_fields': list(result_hidden_fields(cl)),
             'result_headers': list(result_headers(cl)),
-            'results': list(results(cl))}
+            'results': list(results(cl,is_tag))}
 real_estate_app_result_list = register.inclusion_tag("admin/real_estate_app/change_list_results.html")(real_estate_app_result_list)

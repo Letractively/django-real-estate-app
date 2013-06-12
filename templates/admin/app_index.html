@@ -14,7 +14,7 @@
 	{% endblock %}
 {% endif %} 
 {% block sidebar %}
-    {% get_linegraph as line_graph %}
+    {% get_linegraph display month as line_graph %}
     <div class="widget">
         <div class="widget-header">
             <i class="icon-calendar"></i> <h3 style=""> {% trans 'Amounts clicks' %} </h3>

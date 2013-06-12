@@ -23,7 +23,11 @@ def visitclick_data_json(request, *args, **kwargs):
 			{'label':_('Time'),'type':'string','pattern':''},
 			{'label':_('Click'),'type':'number','pattern':''},
 	]}
-	date_init = datetime.now().date()
+	
+	if datetime.now().hour == 0:
+		date_init = datetime.now()-timedelta(hours=4)
+	else:
+		date_init = datetime.now().date()
 	date_end = datetime.now()
 	strftime='%H:%M'
 	field='date'
@@ -31,7 +35,7 @@ def visitclick_data_json(request, *args, **kwargs):
 
 	if 'week' in request.GET.values() or 'week' in request.POST.values():
 		date_init = get_first_dow(datetime.now().year, datetime.now().isocalendar()[1])
-		date_end  = date_init+timedelta(days=7)
+		date_end  = date_init+timedelta(days=6)
 		strftime='%d/%m'
 		display='days'
 
@@ -48,8 +52,24 @@ def visitclick_data_json(request, *args, **kwargs):
 	elif 'custom' in request.GET.values() or 'custom' in request.POST.values():
 		date_init = datetime.strptime(request.POST.get('date_init',False) or request.GET.get('date_init'),'%Y-%m-%d')
 		date_end = datetime.strptime(request.POST.get('date_end',False) or request.GET.get('date_end'),'%Y-%m-%d')
-		strftime='%d/%m'
-		display='days'
+		date = date_end-date_init
+		if (date.days ==1):
+			strftime='%d/%m'
+			display='hours'
+		elif (date.days >=2 and date.days <=30):
+			strftime='%d/%m'
+			display='days'
+		elif (date.days > 30):
+			strftime='%d/%m'
+			display='months'
+
+	elif 'clicks' in request.GET.values() or 'clicks' in request.POST.values():
+		date_init = datetime.strptime(request.POST.get('date_init',False) or request.GET.get('date_init'),'%Y-%m-%d %H:%M:%S')
+		date_end = request.POST.get('date_end',False) or request.GET.get('date_end',False)
+		if date_end:
+			date_end = datetime.strptime(date_end,'%Y-%m-%d %H:%M:%S')
+		else:
+			date_end =date_init+timedelta(hours=1)
 	
 	clicks = Click.objects.filter(
 			Q(date__gte=date_init),
@@ -61,10 +81,6 @@ def visitclick_data_json(request, *args, **kwargs):
 	else:
 		field='url'
 		clicks= clicks.values(field).order_by(field).annotate(count=Count(field))
-		google_format['cols']=[
-			{'label':_('Url'),'type':'string','pattern':''},
-			{'label':_('Click'),'type':'number','pattern':''},
-		]
 		
 
 	if field == 'date':
@@ -72,7 +88,11 @@ def visitclick_data_json(request, *args, **kwargs):
 			{'label':_('Date'),'type':'string','pattern':''},
 			{'label':_('Click'),'type':'number','pattern':''},
 		]
-	
+	elif field == 'url':
+		google_format['cols']=[
+			{'label':_('Url'),'type':'string','pattern':''},
+			{'label':_('Click'),'type':'number','pattern':''},
+		]
 
 	for click in clicks:
 		if type(click) is tuple:

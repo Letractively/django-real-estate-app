@@ -1,32 +1,19 @@
-{% extends "admin/base_site.html" %}
 {% load adminmedia admin_list real_estate_app_list graph_tags i18n %}
 
-{% block extrastyle %}
   {{ block.super }}
   
-  {% if cl.formset %}
-  
-  {% endif %}
   {% if cl.formset or action_form %}
     {% url admin:jsi18n as jsi18nurl %}
     <script type="text/javascript" src="{{ jsi18nurl|default:'../../jsi18n/' }}"></script>
   {% endif %}
-  {{ media.css }}
+  
   {% if not actions_on_top and not actions_on_bottom %}
     <style>
       #changelist table thead th:first-child {width: inherit}
     </style>
   {% endif %}
-  {% if cl.has_filters %}
-  {% endif %}
-{% endblock %}
+  
 
-{% block extrahead %}
-{{ block.super }}
-{{ media.js }}
-{% if cl.has_filters %}
-
-{% endif %}
 {% if action_form %}{% if actions_on_top or actions_on_bottom %}
 <script type="text/javascript">
 (function($) {
@@ -36,28 +23,13 @@
 })(django.jQuery);
 </script>
 {% endif %}{% endif %}
-{% endblock %}
 
-{% block bodyclass %}change-list{% endblock %}
-
-{% if not is_popup %}
-  {% block breadcrumbs %}
-    <ul class="breadcrumb">
-      <li><a href="{% url admin:index %}"><i class="icon-home" ></i>{% trans "Home" %}</a> <span class="divider">/</span></li>
-      <li class="active">{{ cl.opts.verbose_name_plural|capfirst }}</li>
-    </ul>
-  {% endblock %}
-{% endif %}
-
-{% block coltype %}flex{% endblock %}
-
-{% block content_title %}
   {% if title %}<h4 class="span8">{{ title }}</h4>{% endif %}
   {% if has_add_permission %}
   <div class="offset8 text-right">
     <div class="btn-group">
       <a title="{% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}" 
-         {% if is_popup %} href="add/?_popup=1" {% else %} href="add/" {% endif %} 
+         {% if is_popup %} href="{{ app_label }}/{{ object_name|lower }}/add/?_popup=1" {% else %} href="{{ app_label }}/{{ object_name|lower }}/add/" {% endif %} 
          class="btn btn-primary">
         <i class="icon-plus icon-white"></i>
         {% if not is_popup %}
@@ -69,9 +41,7 @@
     </div>
   </div>
   {% endif %}
-{% endblock %}
 
-{% block content %}
         <div class="row-fluid">
           <div class="span9">
               {% block object-tools %}{% endblock %}
@@ -87,7 +57,7 @@
               <div class="widget-header-no-hieght">
                 {% block date_hierarchy %}{% date_hierarchy cl %}{% endblock %}
               </div>
-              <form id="changelist-form" action="" method="post"{% if cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %}>{% csrf_token %}
+              <form id="changelist-form" action="/admin/{{ app_label }}/{{ object_name|lower }}/" method="post"{% if cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %}>{% csrf_token %}
                 {% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
                 {% if cl.formset %}
                   {{ cl.formset.management_form }}
@@ -98,7 +68,7 @@
                     {% if action_form and actions_on_top and cl.full_result_count %}{% admin_actions %}{% endif %}
                     </div>
                     <div class="widget-content">
-                    {% real_estate_app_result_list cl %}
+                    {% real_estate_app_result_list cl 'True' %}
                     {% if action_form and actions_on_bottom and cl.full_result_count %}{% admin_actions %}{% endif %}
                     </div>
                 {% endblock %}
@@ -108,7 +78,7 @@
               
           </div>
           
-          {% block filters %}
+
             <div class="span3 container real_apps">
               {% if cl.has_filters %}
                 <a data-target=".filterbar" data-toggle="collapse" class="btn btn-navbar btn-left">
@@ -128,18 +98,5 @@
                 </div>
               {% endif %}
             </div>
-          {% endblock %}
+          
         </div>
-{% endblock %}
-
-{% block sidebar %}
-    {% get_linegraph display month as line_graph %}
-    <div class="widget">
-        <div class="widget-header">
-            <i class="icon-calendar"></i> <h3 style=""> {% trans 'Amounts clicks' %} </h3>
-        </div>
-        <div class="widget-content">
-            {{ line_graph }}
-        </div>
-    </div>
-{% endblock %}
