@@ -81,7 +81,11 @@
   </ul>
 <div class="tab-content">
 {% for fieldset in adminform %}
-    {% include "admin/includes/fieldset.html" %}
+  {% ifequal fieldset.name 'MAPS' %}
+    {% include "admin/propretys/proprety/includes/fieldset-gmaps.html" %}
+  {% else %}
+    {% include "admin/propretys/proprety/includes/fieldset-custom.html" %}
+  {% endifequal %}
 {% endfor %}
 
 {% block after_field_sets %}{% endblock %}

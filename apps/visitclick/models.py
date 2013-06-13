@@ -23,9 +23,18 @@ class Click(models.Model):
 		max_length=100,
 	)
 
-	operating_sistem = models.CharField(
+	browser_version = models.CharField(
+		_('Web browser version'),
+		max_length=10,
+	)
+	operating_system = models.CharField(
 		_('Operating Sistem'),
 		max_length=100,
+	)
+
+	operating_system_version = models.CharField(
+		_('Operating System version'),
+		max_length=10,
 	)
 
 	user_agent = models.CharField(

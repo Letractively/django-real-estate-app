@@ -53,6 +53,8 @@ class PropertyAdmin(RealEstateAppPopUpModelAdmin):
 	)
 	actions=[duplicate_object,make_unpublished,make_published]
 
+	template = 'admin/propertys/property/property_change_form.html'
+
 	class Media:
 		css = {
 			'all':(

@@ -2,7 +2,7 @@
    $(document).ready(function () {
        var width= $('.real_content > .span7').width()-130;
        var height = $('.real_content > .span7').height()/4;
-       alert(width+'X'+height)
+       //alert(width+'X'+height)
        tinyMCE.init({
             // General options
             mode : "textareas",

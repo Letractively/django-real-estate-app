@@ -42,17 +42,16 @@ class UntrackedBootsMiddleware(object):
 				return 
 
 		browser = get_browser(boots)
-		browser = browser.family+' '+browser.version_string
-
 		os = get_os(boots)
-		os = os.family+' '+os.version_string
 
 		attrs = {
 			'url':request.path,
-			'browser':browser,
+			'browser':browser.family,
+			'browser_version':browser.version_string,
 			'user_agent':boots,
 			'ip': ip,
-			'operating_sistem':os,
+			'operating_system':os.family,
+			'operating_system_version':os.version_string,
 		}
 
 		click=Click(**attrs)

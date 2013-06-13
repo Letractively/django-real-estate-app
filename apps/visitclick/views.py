@@ -66,33 +66,49 @@ def visitclick_data_json(request, *args, **kwargs):
 	elif 'clicks' in request.GET.values() or 'clicks' in request.POST.values():
 		date_init = datetime.strptime(request.POST.get('date_init',False) or request.GET.get('date_init'),'%Y-%m-%d %H:%M:%S')
 		date_end = request.POST.get('date_end',False) or request.GET.get('date_end',False)
+		field='url'
+		google_format['cols']=[
+			{'label':_('Url'),'type':'string','pattern':''},
+			{'label':_('Click'),'type':'number','pattern':''},
+		]
 		if date_end:
 			date_end = datetime.strptime(date_end,'%Y-%m-%d %H:%M:%S')
 		else:
 			date_end =date_init+timedelta(hours=1)
+
+	elif 'browsers' in request.GET.values() or 'browsers' in request.POST.values():
+		field='browser'
+		google_format['cols']=[
+			{'label':_('Browsers'),'type':'string','pattern':''},
+			{'label':_('Click'),'type':'number','pattern':''},
+		]
+	elif 'operating_system' in request.GET.values() or 'operate_system' in request.POST.values():
+		field='operating_system'
+		google_format['cols']=[
+			{'label':_('Operating System'),'type':'string','pattern':''},
+			{'label':_('Click'),'type':'number','pattern':''},
+		]
 	
 	clicks = Click.objects.filter(
 			Q(date__gte=date_init),
 			Q(date__lte=date_end)
 	)
 
-	if not ('clicks' in request.GET.values() or 'clicks' in request.POST.values()):
+
+	if not ('clicks' in request.GET.values() or 'clicks' in request.POST.values()) and \
+	   not ('browsers' in request.GET.values() or 'browsers' in request.POST.values()) and \
+	   not ('operating_system' in request.GET.values() or 'operating_system' in request.POST.values()):
 		clicks = QuerySetStats(clicks, field).time_series(date_init,date_end, display,aggregate=Count(field))
 	else:
-		field='url'
 		clicks= clicks.values(field).order_by(field).annotate(count=Count(field))
-		
+
 
 	if field == 'date':
 		google_format['cols']=[
 			{'label':_('Date'),'type':'string','pattern':''},
 			{'label':_('Click'),'type':'number','pattern':''},
 		]
-	elif field == 'url':
-		google_format['cols']=[
-			{'label':_('Url'),'type':'string','pattern':''},
-			{'label':_('Click'),'type':'number','pattern':''},
-		]
+
 
 	for click in clicks:
 		if type(click) is tuple:
@@ -107,12 +123,20 @@ def visitclick_data_json(request, *args, **kwargs):
 		if isinstance(value_line,datetime):
 			value_line=value_line.strftime(strftime)
 
-		google_format['rows'].append({
-			'c':[
-					{'v':label_line,'f':value_line},
-					{'v':label_column,'f':value_column}
-				]
-		})
+		if field == 'browser' or field == 'operating_system':
+			google_format['rows'].append({
+				'c':[
+						{'v':label_column,'f':value_column},
+						{'v':label_line,'f':value_line},
+					]
+			})
+		else:
+			google_format['rows'].append({
+				'c':[
+						{'v':label_line,'f':value_line},
+						{'v':label_column,'f':value_column},
+					]
+			})			
 
 	return HttpResponse(
 						simplejson.dumps(google_format,cls=DjangoJSONEncoder),

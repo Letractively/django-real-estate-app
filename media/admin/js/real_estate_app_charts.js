@@ -30,7 +30,9 @@ google.load('visualization',  '1', {'packages':['corechart']});
 
 			function init(){				
 				chart=drawChart(dataTable,settigns.type_chart);
-				initSelectChart();
+				if (settigns.type_chart != 'PieChart') 
+					initSelectChart();
+				
 				$('#'+select_id).bind('changeValueChartOnSelect',function(event,dataTable){
 					chart=drawChart(dataTable,settigns.type_chart);
 				})
@@ -138,8 +140,8 @@ google.load('visualization',  '1', {'packages':['corechart']});
 					options: goptions,
 					containerId: containerId,
 				});
-
-			    google.visualization.events.addListener(wrapper, 'select', pointClicked);
+				if (chart_type != 'PieChart')
+			    	google.visualization.events.addListener(wrapper, 'select', pointClicked);
 			    
 			    wrapper.draw()
 			    return wrapper

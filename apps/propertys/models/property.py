@@ -221,7 +221,8 @@ class Property(RealEstateAppBaseModel):
 
 	pub_date_end = models.DateField(
 				_('Date end'),
-				default=datetime.now()
+				null=True,
+				blank=True,
 	)
 
 	def __unicode__(self):

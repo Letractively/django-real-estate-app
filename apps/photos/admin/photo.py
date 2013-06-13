@@ -13,7 +13,7 @@ class PhotoInlineAdmin(admin.StackedInline):
 	model = Photo
 	extra = 0
 	form = PhotoAdminForm 
-	template = 'admin/edit_inline/stacked.html'
+	template = 'admin/photos/photo/edit_inline/stacked.html'
 
 	def _media(self):
 		from django.conf import settings
