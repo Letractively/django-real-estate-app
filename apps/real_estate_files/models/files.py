@@ -21,7 +21,7 @@ class Files(RealEstateAppCompleteModel):
 	)
 	
 	def __unicode__(self):
-		return u'%s' % self.files
+		return u'%s' % self.title
 
 	class Meta:
 		app_label           = 'real_estate_files'

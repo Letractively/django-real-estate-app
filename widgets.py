@@ -85,6 +85,7 @@ class FaceBoxFieldWrapper(widgets.RelatedFieldWidgetWrapper):
 			## TO DO: Fazer tratamento para pegar se o campo e select 
 			##        para ser utilizado no facebox.
 			if self.can_add_related:
+				output.insert(0,u'<div class="input-append">')
 				output.append(u'''
 				<script type="text/javascript">
 					django.jQuery(document).ready(function($) {
@@ -100,6 +101,7 @@ class FaceBoxFieldWrapper(widgets.RelatedFieldWidgetWrapper):
 				</script>''' % ( MEDIA_PREFIX, MEDIA_PREFIX, 'id_'+name, ajax_url, field) )
 				output.append(u'<a href="%s" class="add-another btn" id="id_%s" rel="facebox-select" rev="iframe" > ' %(related_url, name))
 				output.append(u'<i class="icon-plus-sign"></i>  </a>')
+				output.append(u'</div>')
 			return mark_safe(u''.join(output))
 		except NoReverseMatch:
 			return super(FaceBoxFieldWrapper,self).render(name,value,*args,**kwargs)

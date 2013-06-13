@@ -131,7 +131,7 @@
       $('#'+$.facebox.settings.id+' .content').append(data)
       $('#'+$.facebox.settings.id+' .loading').remove()
       $('#'+$.facebox.settings.id+' .body').children().fadeIn('normal')
-      $('#'+$.facebox.settings.id).css('left', $(window).width() / 2 - ($('#'+$.facebox.settings.id+' .popup').width() / 2))
+      //$('#'+$.facebox.settings.id).css('left', $(window).width() / 2 - ($('#'+$.facebox.settings.id+' .popup').width() / 2))
       $(document).trigger('reveal.facebox').trigger('afterReveal.facebox')
     },
 

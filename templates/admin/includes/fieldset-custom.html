@@ -7,7 +7,6 @@
         <div class="form-row{% if line.errors %} errors{% endif %}{% for field in line %} {{ field.field.name }}{% endfor %}">
             {{ line.errors }}
             {% for field in line %}
-                <div class="input-append" >
                     {% if field.is_checkbox %}
                         {{ field.field }}{{ field.label_tag }}
                     {% else %}
@@ -21,7 +20,6 @@
                     {% if field.field.field.help_text %}
                         <p class="help">{{ field.field.field.help_text|safe }}</p>
                     {% endif %}
-                </div>
             {% endfor %}
         </div>
     {% endfor %}

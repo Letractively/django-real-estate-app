@@ -19,7 +19,7 @@ class RealtorInlineAdmin(admin.StackedInline):
 	model = Realtor
 	extra = 1
 	formset = RealtorAdminFormSet
-	template = 'admin/real_estate_app/%s/edit_inline/stacked-realtor.html' % LANGUAGE_CODE
+	template = 'admin/realtors/%s/edit_inline/stacked-realtor.html' % LANGUAGE_CODE
 
 	if LANGUAGE_CODE in ('pt_BR','pt-br'):
 		from django.contrib.localflavor.br import forms as br_forms
@@ -39,6 +39,8 @@ class RealtorInlineAdmin(admin.StackedInline):
 	
 class RealtorAdmin(RealEstateAppRevertInlineModelAdmin):
 
+	change_form_template = 'admin/realtors/realtor_change_form.html'
+	
 	revert_inlines = [RealtorInlineAdmin,]
 	
 	revert_model = User

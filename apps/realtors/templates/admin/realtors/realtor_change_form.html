@@ -1,15 +1,36 @@
 {% extends "admin/base_site.html" %}
-{% load i18n admin_modify adminmedia graph_tags %}
+{% load i18n admin_modify adminmedia %}
 
 {% block extrahead %}{{ block.super }}
 {% url admin:jsi18n as jsi18nurl %}
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
 {{ media }}
-<script type="text/javascript" src="{{ MEDIA_REAL_ESTATE }}admin/js/real_estate_app_tabs.js"></script>
+<script type="text/javascript" >
+(function($) {
+  $(document).ready(function ($){
+		$('.inline-group h2').click(function(){
+			if($('.inline-related').is(':visible')) $('.inline-related').hide('slow');
+			else $('.inline-related').show();
+		});
+  });
+})(django.jQuery);
+</script>
 {% endblock %}
 
-{% block extrastyle %}{{ block.super }} <link rel="stylesheet" type="text/css" href="{{ MEDIA_REAL_ESTATE }}admin/css/forms.css" />
+{% block extrastyle %}{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_REAL_ESTATE }}admin/css/forms.css" />
+<style type="text/css">
+  .username {
+    display: none;
+  }
+  .tab-content {
+    border-top-color: #EEEEEE;
+    border-top-style: solid;
+    border-top-width: 1px; 
+  }
+</style>
 {% endblock %}
 
 {% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
@@ -31,7 +52,6 @@
 {% endif %}{% endblock %}
 
 {% block content %}<div id="content-main">
-
 {% block object-tools %}
 {% if change %}
   {% if not is_popup %}
@@ -56,7 +76,7 @@
 {% endblock %}
 
 <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}{% block form_top %}{% endblock %}
-<div>
+
 {% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
 {% if save_on_top %}{% submit_row %}{% endif %}
 {% if errors %}
@@ -65,30 +85,10 @@
     </div>
     {{ adminform.form.non_field_errors }}
 {% endif %}
-
-
-  <ul class="nav nav-tabs" id="myTab">
-  {% for fieldset in adminform %}
-    {% if fieldset.name %}
-      <li  class="{% for line in fieldset %}{% if line.errors %}errors {% endif%}{% endfor %}"><a data-toggle="tab" href="#{{ fieldset.name|slugify }}">{{ fieldset.name }}</a></li>
-    {% endif %}
-  {% endfor %}
-  {% for inline_admin_formset in inline_admin_formsets %}
-    {% if inline_admin_formset.opts.verbose_name_plural %}
-      <li  class="{% for inline_admin_form in inline_admin_formset %}{% for fieldset in inline_admin_form %} {% for line in fieldset %}{% if line.errors %}{% if forloop.first %}errors{% endif %}{% endif%}{% endfor %}{% endfor %}{% endfor %}" ><a data-toggle="tab" href="#{{ inline_admin_formset.formset.prefix }}-group">{{ inline_admin_formset.opts.verbose_name_plural|title }}</a></li>
-    {% endif %}
-  {% endfor %}
-  </ul>
 <div class="tab-content">
 {% for fieldset in adminform %}
-  {% ifequal fieldset.name 'MAPS' %}
-    {% include "admin/includes/fieldset-gmaps.html" %}
-  {% else %}
-    {% include "admin/includes/fieldset-custom.html" %}
-  {% endifequal %}
+	  {% include "admin/realtors/includes/fieldset-custom.html" %}
 {% endfor %}
-
-{% block after_field_sets %}{% endblock %}
 
 {% for inline_admin_formset in inline_admin_formsets %}
     {% include inline_admin_formset.opts.template %}
@@ -104,18 +104,6 @@
 
 {# JavaScript for prepopulated fields #}
 {% prepopulated_fields_js %}
-</div>
-</form></div>
-{% endblock %}
 
-{% block sidebar %}
-    {% get_linegraph as line_graph %}
-    <div class="widget">
-        <div class="widget-header">
-            <i class="icon-calendar"></i> <h3 style=""> {% trans 'Amounts clicks' %} </h3>
-        </div>
-        <div class="widget-content">
-            {{ line_graph }}
-        </div>
-    </div>
+</form></div>
 {% endblock %}

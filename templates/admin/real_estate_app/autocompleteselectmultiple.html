@@ -11,7 +11,7 @@ django.jQuery(document).ready(function($){
 });
 </script>
 
-<div id="custom-{{ html_id }}" class="ui-helper-clearfix">
+<div id="custom-{{ html_id }}" class="ui-helper-clearfix input-append">
 	<input type="text" name="{{ name }}" id="{{ html_id }}_text" rev="iframe" href="{{ related_url_facebox }}" value="" {{ extra_attrs }} />
 	<a href="{{ related_url_facebox }}" class="add-another btn" id="{{ html_id }}_add_icon" rel="facebox-input" rev="iframe" >
 		<i class="icon-plus-sign"></i> 

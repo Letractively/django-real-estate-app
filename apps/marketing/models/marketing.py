@@ -15,7 +15,7 @@ class MarketingObject(RealEstateAppCompleteModel):
 			help_text=_('Entry with description of propaganda')
 	)
 
-	files=models.ForeignKey(
+	files_fk=models.ForeignKey(
 		'real_estate_files.Files',
 		blank=True,
 		null=True,

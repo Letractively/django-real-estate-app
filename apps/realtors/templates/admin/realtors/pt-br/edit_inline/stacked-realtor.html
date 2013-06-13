@@ -1,5 +1,5 @@
 {% load i18n adminmedia %}
-<div class="inline-group tab-content" id="{{ inline_admin_formset.formset.prefix }}-group">
+<div id="{{ inline_admin_formset.formset.prefix }}-group">
 {% if inline_admin_formsett %} {% endif %}
 {{ inline_admin_formset.formset.management_form }}
 {{ inline_admin_formset.formset.non_form_errors }}
@@ -7,10 +7,9 @@
 {% for inline_admin_form in inline_admin_formset %}
     <div class="inline-related{% if forloop.last %} empty-form last-related{% endif %} {% if inline_admin_form.form.non_field_errors %} inline-errors {% endif %}" id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
       {% if inline_admin_form.form.non_field_errors %}{{ inline_admin_form.form.non_field_errors }}{% endif %}
-      <div class="clear"> </div>
       {% if not forloop.last %}
         {% for fieldset in inline_admin_form %}
-                {% include "admin/real_estate_app/pt-br/includes/fieldset.html" %}
+                {% include "admin/realtors/pt-br/includes/fieldset.html" %}
         {% endfor %}
        {% endif %}
       {% if inline_admin_form.has_auto_field %}{{ inline_admin_form.pk_field.field }}{% endif %}
