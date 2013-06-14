@@ -14,7 +14,8 @@
  * Licensed under the New BSD License
  * See: http://www.opensource.org/licenses/bsd-license.php
  */
-(function($) {
+(function($,jq) {
+	//This function use jQuer and django.jQuery because of bootstrap template and django.
 	$.fn.formset = function(opts) {
 		var options = $.extend({}, $.fn.formset.defaults, opts);
 		var updateElementIndex = function(el, prefix, ndx) {
@@ -57,6 +58,9 @@
 				addButton = $(this).find('.'+options.addCssClass);
 			}
 			addButton.click(function() {
+				// Custom bootstrap collapse hide a photo
+				var editInline = jq('#'+options.prefix+'-group').find('.in').collapse('hide');
+				
 				var totalForms = $("#id_" + options.prefix + "-TOTAL_FORMS");
 				var template = $("#" + options.prefix + "-empty");
 				var row = template.clone(true);
@@ -89,7 +93,7 @@
 					addButton.parent().hide();
 				}
 				// The delete button of each row triggers a bunch of other things
-				row.find("a." + options.deleteCssClass).click(function() {
+				row.find("a." + options.deleteCssClass).click( function() {
 					// Remove the parent form containing this button:
 					var row = $(this).parents("." + options.formCssClass);
 					row.remove();
@@ -138,4 +142,4 @@
 		removed: null,					// Function called each time a form is deleted
 		addButtonCreate: true,			// Create automatic add button
 	}
-})(django.jQuery);
+})(django.jQuery, jQuery);

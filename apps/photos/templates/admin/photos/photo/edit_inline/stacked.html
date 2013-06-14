@@ -1,10 +1,27 @@
-{% load i18n adminmedia thumbnail %}
+{% load i18n adminmedia %}
 <div class="tab-pane" id="{{ inline_admin_formset.formset.prefix }}-group">
-    <div class="row-fluid">
+    
     {{ inline_admin_formset.formset.management_form }}
     {{ inline_admin_formset.formset.non_form_errors }} 
     
     {% for inline_admin_form in inline_admin_formset %}
+        <script type="text/javascript">
+        (function($, dj){
+            $(document).ready(function(){
+                $('#{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% endif %}').on('show',function(){
+                    var collapse=$('#{{ inline_admin_formset.formset.prefix }}-group').find('.in');
+                    if (collapse.attr('class'))
+                        $('#'+collapse.attr('id')).collapse('hide');
+                    var added = $('#{{ inline_admin_formset.formset.prefix }}-group').find('.dynamic-photo_set');
+                    if (added.attr('class')){
+                         dj('#'+added.attr('id')).find('a.inline-deletelink').trigger('click')
+                     }
+
+                    return true;
+                })
+            })
+        })(jQuery,django.jQuery);
+        </script>
         <div class="inline-related {% if forloop.last %} empty-form last-related {% else %} collapse {% endif %}" id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
             <span class="inline_label">
             {% if inline_admin_form.original %}{{ inline_admin_form.original }}{% else %}#{{ forloop.counter }}{% endif %}
@@ -18,9 +35,10 @@
           {{ inline_admin_form.fk_field.field }}
         </div>
     {% endfor %}
+
     {% for inline_admin_form in inline_admin_formset %}
         {% if forloop.first %}
-            <ul class="thumbnails" >
+            <ul class="thumbnails" style="margin: 10px;">
         {% endif %}
 
         {% comment %}
@@ -40,7 +58,7 @@
         {% endif %}
 
     {% endfor %}
-    </div>
+    
 </div>
 
 <script type="text/javascript">

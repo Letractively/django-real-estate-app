@@ -12,10 +12,13 @@
             <div class="thumbnail">
         {% endif %}
         {% for field in line %}
-            
+
             {% if field.field.value %}
                 {% if field.field.name == 'photo' %}
-                    <img src="{{ MEDIA_URL }}{{ field.field.value }}" width="160" height="120" />
+                    {% thumbnail field.field.value "160x120" crop="center" as img %}
+                        <img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}">
+                    {% endthumbnail %}
+                    
                 {% endif %}
                 {% if field.field.name == 'description' %}
                 <div class="caption">
