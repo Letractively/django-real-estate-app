@@ -41,16 +41,20 @@
 		});
 		if ($(this).length && showAddButton) {
 			var addButton;
-			if ($(this).attr("tagName") == "TR") {
-				// If forms are laid out as table rows, insert the
-				// "add" button in a new table row:
-				var numCols = this.eq(0).children().length;
-				$(this).parent().append('<tr class="' + options.addCssClass + '"><td colspan="' + numCols + '"><a href="javascript:void(0)">' + options.addText + "</a></tr>");
-				addButton = $(this).parent().find("tr:last a");
+			if (options.addButtonCreate) {
+				if ($(this).attr("tagName") == "TR") {
+					// If forms are laid out as table rows, insert the
+					// "add" button in a new table row:
+					var numCols = this.eq(0).children().length;
+					$(this).parent().append('<tr class="' + options.addCssClass + '"><td colspan="' + numCols + '"><a href="javascript:void(0)">' + options.addText + "</a></tr>");
+					addButton = $(this).parent().find("tr:last a");
+				} else {
+					// Otherwise, insert it immediately after the last form:
+					$(this).filter(":first").before('<div class="' + options.addCssClass + '"><a class="btn btn-primary" href="javascript:void(0)"><i class="icon-plus icon-white"></i>' + options.addText + "</a></div>");
+					addButton = $(this).filter(":first").parent().find("a");
+				}
 			} else {
-				// Otherwise, insert it immediately after the last form:
-				$(this).filter(":first").before('<div class="' + options.addCssClass + '"><a class="btn btn-primary" href="javascript:void(0)"><i class="icon-plus icon-white"></i>' + options.addText + "</a></div>");
-				addButton = $(this).filter(":first").parent().find("a");
+				addButton = $(this).find('.'+options.addCssClass);
 			}
 			addButton.click(function() {
 				var totalForms = $("#id_" + options.prefix + "-TOTAL_FORMS");
@@ -131,6 +135,7 @@
 		emptyCssClass: "empty-row",		// CSS class applied to the empty row
 		formCssClass: "dynamic-form",	// CSS class applied to each form in a formset
 		added: null,					// Function called each time a new form is added
-		removed: null					// Function called each time a form is deleted
+		removed: null,					// Function called each time a form is deleted
+		addButtonCreate: true,			// Create automatic add button
 	}
 })(django.jQuery);

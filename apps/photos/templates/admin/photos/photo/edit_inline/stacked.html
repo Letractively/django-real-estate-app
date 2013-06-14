@@ -1,70 +1,52 @@
 {% load i18n adminmedia thumbnail %}
-<div class="inline-group tab-pane" id="{{ inline_admin_formset.formset.prefix }}-group">
-{% if inline_admin_formsett %}  {% endif %}
-{{ inline_admin_formset.formset.management_form }}
-{{ inline_admin_formset.formset.non_form_errors }}
-<ul class="thumbnails">
-{% for inline_admin_form in inline_admin_formset %}
-
-    {% comment %}
-    <span class="inline_label">
-    {% if inline_admin_form.original %}{{ inline_admin_form.original }}{% else %}#{{ forloop.counter }}{% endif %}
-    </span>
-    {% if inline_admin_formset.formset.can_delete and inline_admin_form.original %}<span class="delete">{{ inline_admin_form.deletion_field.field }} {{ inline_admin_form.deletion_field.label_tag }}</span>{% endif %}
-  {% if inline_admin_form.form.non_field_errors %}{{ inline_admin_form.form.non_field_errors }}{% endif %}
-  {% endcomment %}
-  {% for fieldset in inline_admin_form %}
-
-    {# include "admin/photos/photo/includes/fieldset-image.html" #}
-    {% for line in fieldset %}
-        {% if forloop.first and line %}
-        <li class="span4">
-            <div class="thumbnail">
-        {% endif %}
-        {% for field in line %}
-            {% if field.field.value %}
-                {% if field.field.name == 'photo' %}
-                    <img src="{{ MEDIA_URL }}{{ field.field.value }}" width="100" height="100" />
-                {% endif %}
-                {% if field.field.name == 'description' %}
-                <div class="caption">
-                    <h5>
-                        {{ field.field.value }}
-                    </h5>
-                </div>
-                {% endif %}
-            {% endif %}
-        {% endfor %}
-        {% if forloop.last and line %}
-            </div>
-        </li>
-        {% endif %}
+<div class="tab-pane" id="{{ inline_admin_formset.formset.prefix }}-group">
+    <div class="row-fluid">
+    {{ inline_admin_formset.formset.management_form }}
+    {{ inline_admin_formset.formset.non_form_errors }} 
+    
+    {% for inline_admin_form in inline_admin_formset %}
+        <div class="inline-related {% if forloop.last %} empty-form last-related {% else %} collapse {% endif %}" id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
+            <span class="inline_label">
+            {% if inline_admin_form.original %}{{ inline_admin_form.original }}{% else %}#{{ forloop.counter }}{% endif %}
+            </span>
+            {% if inline_admin_formset.formset.can_delete and inline_admin_form.original %}<span class="delete">{{ inline_admin_form.deletion_field.field }} {{ inline_admin_form.deletion_field.label_tag }}</span>{% endif %}
+          {% if inline_admin_form.form.non_field_errors %}{{ inline_admin_form.form.non_field_errors }}{% endif %}
+          {% for fieldset in inline_admin_form %}
+            {% include "admin/includes/fieldset.html" %}
+          {% endfor %}
+          {% if inline_admin_form.has_auto_field %}{{ inline_admin_form.pk_field.field }}{% endif %}
+          {{ inline_admin_form.fk_field.field }}
+        </div>
     {% endfor %}
-  {% endfor %}
+    {% for inline_admin_form in inline_admin_formset %}
+        {% if forloop.first %}
+            <ul class="thumbnails" >
+        {% endif %}
 
-{% endfor %}
-</ul>
+        {% comment %}
+            <span class="inline_label">
+            {% if inline_admin_form.original %}{{ inline_admin_form.original }}{% else %}#{{ forloop.counter }}{% endif %}
+            </span>
+            {% if inline_admin_formset.formset.can_delete and inline_admin_form.original %}<span class="delete">{{ inline_admin_form.deletion_field.field }} {{ inline_admin_form.deletion_field.label_tag }}</span>{% endif %}
+            {% if inline_admin_form.form.non_field_errors %}{{ inline_admin_form.form.non_field_errors }}{% endif %}
+        {% endcomment %}
+
+        {% for fieldset in inline_admin_form %}
+            {% include "admin/photos/photo/includes/fieldset-image.html" %}
+        {% endfor %}
+
+        {% if forloop.last %}
+            </ul>
+        {% endif %}
+
+    {% endfor %}
+    </div>
 </div>
-{% comment %}
-{% for inline_admin_form in inline_admin_formset %}
 
-<div class="inline-related{% if forloop.last %} empty-form last-related{% endif %}" id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
-    <span class="inline_label">
-    {% if inline_admin_form.original %}{{ inline_admin_form.original }}{% else %}#{{ forloop.counter }}{% endif %}
-    </span>
-    {% if inline_admin_formset.formset.can_delete and inline_admin_form.original %}<span class="delete">{{ inline_admin_form.deletion_field.field }} {{ inline_admin_form.deletion_field.label_tag }}</span>{% endif %}
-  {% if inline_admin_form.form.non_field_errors %}{{ inline_admin_form.form.non_field_errors }}{% endif %}
-  {% for fieldset in inline_admin_form %}
-    {% include "admin/photos/photo/includes/fieldset-image.html" %}
-  {% endfor %}
-  {% if inline_admin_form.has_auto_field %}{{ inline_admin_form.pk_field.field }}{% endif %}
-  {{ inline_admin_form.fk_field.field }}
-</div>{% endfor %}
-{% endcomment %}
 <script type="text/javascript">
 (function($) {
     $(document).ready(function() {
-        var rows = "#{{ inline_admin_formset.formset.prefix }}-group .inline-related";
+        var rows = "#{{ inline_admin_formset.formset.prefix }}-group .thumbnails";
         var updateInlineLabel = function(row) {
             $(rows).find(".inline_label").each(function(i) {
                 var count = i + 1;
@@ -113,13 +95,15 @@
             deleteText: "{% trans "Remove" %}",
             emptyCssClass: "empty-form",
             removed: updateInlineLabel,
+            addButtonCreate: false,
             added: (function(row) {
                 initPrepopulatedFields(row);
                 reinitDateTimeShortCuts();
                 updateSelectFilter();
                 updateInlineLabel(row);
-            })
+            }),
         });
     });
 })(django.jQuery);
 </script>
+

@@ -1,4 +1,46 @@
 {% load thumbnail %}
+    {% for line in fieldset %}
+
+        {% if forloop.first %}
+        <li 
+            class="span2 {% if forloop.parentloop.parentloop.last %} add-row {% endif %}" 
+            id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.parentloop.parentloop.last %}{{ forloop.parentloop.parentloop.counter0 }}{% else %}empty{% endif %}"
+            {% if not forloop.parentloop.parentloop.last %}
+            data-toggle="collapse" data-target="#{{ inline_admin_formset.formset.prefix }}-{% if not forloop.parentloop.parentloop.last %}{{ forloop.parentloop.parentloop.counter0 }}{% else %}empty{% endif %}"
+            {% endif %}
+        >
+            <div class="thumbnail">
+        {% endif %}
+        {% for field in line %}
+            
+            {% if field.field.value %}
+                {% if field.field.name == 'photo' %}
+                    <img src="{{ MEDIA_URL }}{{ field.field.value }}" width="160" height="120" />
+                {% endif %}
+                {% if field.field.name == 'description' %}
+                <div class="caption">
+                    <h5>
+                        {{ field.field.value }}
+                    </h5>
+                </div>
+                {% endif %}
+            {% endif %}
+            
+            {% if forloop.parentloop.last and 'prefix' in field.field.html_name %}
+                <i class="icon-plus"></i>
+                <div class="caption">
+                    <h5>Add new</h5>
+                </div>
+            {% endif %}
+
+        {% endfor %}
+        {% if forloop.last %}
+            </div>
+        </li>
+        {% endif %}
+    {% endfor %}
+
+{% comment %}
 <div id="{{ fieldset.name|slugify }}" >
 <fieldset class="module aligned {{ fieldset.classes }} {% for line in fieldset %} {% if line.errors %}{% if forloop.first %}errornote-custom{% endif %}{% endif%} {% endfor %}">
     {% if fieldset.namee %}<h2>{{ fieldset.name }}</h2>{% endif %}
@@ -37,3 +79,4 @@
     {% endfor %}
 </fieldset>
 </div>
+{% endcomment %}
