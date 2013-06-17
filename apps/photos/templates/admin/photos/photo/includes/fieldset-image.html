@@ -1,9 +1,8 @@
 {% load thumbnail %}
     {% for line in fieldset %}
-
         {% if forloop.first %}
         <li 
-            class="span2 {% if forloop.parentloop.parentloop.last %} add-row {% endif %}" 
+            class="span3 {% if forloop.parentloop.parentloop.last %} add-row {% endif %}" 
             id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.parentloop.parentloop.last %}{{ forloop.parentloop.parentloop.counter0 }}{% else %}empty{% endif %}"
             {% if not forloop.parentloop.parentloop.last %}
             data-toggle="collapse" data-target="#{{ inline_admin_formset.formset.prefix }}-{% if not forloop.parentloop.parentloop.last %}{{ forloop.parentloop.parentloop.counter0 }}{% else %}empty{% endif %}"
@@ -41,6 +40,7 @@
             </div>
         </li>
         {% endif %}
+
     {% endfor %}
 
 {% comment %}

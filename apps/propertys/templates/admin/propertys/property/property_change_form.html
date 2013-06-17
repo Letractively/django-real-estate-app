@@ -75,7 +75,7 @@
   {% endfor %}
   {% for inline_admin_formset in inline_admin_formsets %}
     {% if inline_admin_formset.opts.verbose_name_plural %}
-      <li  class="{% for inline_admin_form in inline_admin_formset %}{% for fieldset in inline_admin_form %} {% for line in fieldset %}{% if line.errors %}{% if forloop.first %}errors{% endif %}{% endif%}{% endfor %}{% endfor %}{% endfor %}" ><a data-toggle="tab" href="#{{ inline_admin_formset.formset.prefix }}-group">{{ inline_admin_formset.opts.verbose_name_plural|title }}</a></li>
+      <li  class="{% for inline_admin_form in inline_admin_formset %}{% for fieldset in inline_admin_form %} {% for line in fieldset %}{% if line.errors %}errors {% endif%}{% endfor %}{% endfor %}{% endfor %}" ><a data-toggle="tab" href="#{{ inline_admin_formset.formset.prefix }}-group">{{ inline_admin_formset.opts.verbose_name_plural|title }}</a></li>
     {% endif %}
   {% endfor %}
   </ul>

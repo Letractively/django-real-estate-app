@@ -90,6 +90,13 @@ body {
 	padding-right: 15px;
 	padding-left: 15px;
 }
+ul.thumbnails {
+	margin-top:2.564102564102564%;*margin-top:2.5109110747408616%;
+	margin-bottom:2.564102564102564%;*margin-bottom:2.5109110747408616%;
+}
+.thumbnails [class*="span"]:first-child {
+    margin-left:2.564102564102564%;*margin-left:2.5109110747408616%;
+}
 
 @media (max-width: 979px) {
 

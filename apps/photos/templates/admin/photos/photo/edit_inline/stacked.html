@@ -37,10 +37,12 @@
     {% endfor %}
 
     {% for inline_admin_form in inline_admin_formset %}
+
         {% if forloop.first %}
-            <ul class="thumbnails" style="margin: 10px;">
+            <ul class="thumbnails" >
         {% endif %}
 
+    
         {% comment %}
             <span class="inline_label">
             {% if inline_admin_form.original %}{{ inline_admin_form.original }}{% else %}#{{ forloop.counter }}{% endif %}
