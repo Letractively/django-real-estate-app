@@ -1,5 +1,5 @@
 <div id="{{ fieldset.name|slugify }}" class="tab-pane" >
-<fieldset class="module aligned {{ fieldset.classes }} {% for line in fieldset %} {% if line.errors %}{% if forloop.first %}errornote-custom{% endif %}{% endif%} {% endfor %}">
+<fieldset class="module aligned {{ fieldset.classes }} ">
     {% if fieldset.description %}
         <div class="description">{{ fieldset.description|safe }}</div>
     {% endif %}

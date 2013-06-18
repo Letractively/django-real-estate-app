@@ -336,8 +336,10 @@ div.errors {
     background-color: #FFFFCC;
 }
 
-.errors input, .errors select, .errors textarea {
-    border-color: red;
+.errors input, 
+.errors select, 
+.errors textarea {
+    border-color: red !important;
 }
 
 .errors > ul.errorlist {

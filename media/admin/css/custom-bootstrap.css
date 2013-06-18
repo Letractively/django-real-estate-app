@@ -98,6 +98,26 @@ ul.thumbnails {
     margin-left:2.564102564102564%;*margin-left:2.5109110747408616%;
 }
 
+ul.nav-tabs > li.errors.active > a {
+    background-color: #FFFFCC;
+}
+
+ul.nav-tabs > li.errors.active > a,
+ul.nav-tabs > li.errors > a {
+    color: red;
+}
+
+div.tab-content.errors {
+	border-top-color: red;
+    border-left-color: red;
+    border-right-color: red;
+}
+
+.nav > li.errors > a:hover,
+.nav > li.errors > a:focus {
+	background-color: #EEEEEE;
+}
+
 @media (max-width: 979px) {
 
 	.real_content {

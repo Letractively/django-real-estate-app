@@ -79,7 +79,7 @@
     {% endif %}
   {% endfor %}
   </ul>
-<div class="tab-content">
+<div class="tab-content" id="{% for fieldset in adminform %}{% for line in fieldset %} {% if line.errors %} errors {% endif%} {% endfor %} {% endfor %}">
 {% for fieldset in adminform %}
     {% include "admin/includes/fieldset.html" %}
 {% endfor %}
