@@ -14,7 +14,7 @@
             {% endif %}
             <li 
                 class="span2" 
-                id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.parentloop.parentloop.last %}{{ forloop.parentloop.parentloop.counter0 }}{% else %}empty{% endif %}"
+                
                 {% if not forloop.parentloop.parentloop.last %}
                 data-toggle="collapse" data-target="#{{ inline_admin_formset.formset.prefix }}-{% if not forloop.parentloop.parentloop.last %}{{ forloop.parentloop.parentloop.counter0 }}{% else %}empty{% endif %}"
                 {% endif %}
