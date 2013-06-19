@@ -1,4 +1,4 @@
-{% load url from future%}{% load i18n apps_tags property_admin_tags visitevent_calendar_tags %}<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+{% load url from future%}{% load i18n apps_tags property_admin_tags visitevent_calendar_tags thumbnail %}<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE|default:"en-us" }}" xml:lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
    <head>
         <title>{% block title %}{% endblock %}</title>
@@ -183,7 +183,9 @@
                                     {% for property in property_will_expired %}
                                     <li class="span4">
                                         <div class="thumbnail">
-                                            <img width="70" height="70" class="img-polaroid" src="{{ MEDIA_URL }}{{ property.get_random_photo }}"/> 
+                                            {% thumbnail property.get_random_photo  "160x120" crop="center" as img %}
+                                                <img width="{{ img.width }}" height="{{ img.height }}" src="{{ img.url }}"/> 
+                                            {% endthumbnail %}
                                             {{ property.admin_link }}
                                         </div>
                                     </li>

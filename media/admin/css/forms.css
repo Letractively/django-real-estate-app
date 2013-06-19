@@ -346,3 +346,16 @@ div.errors {
     color: red;
     list-style: none;
 }
+
+.img-circle {
+    background: #CCC;
+}
+
+.add-row img {
+    margin:10% auto 10% auto;
+}
+.add-row .caption h5,
+.add-row .caption div,
+.add-row .caption {
+    text-align: center;
+}

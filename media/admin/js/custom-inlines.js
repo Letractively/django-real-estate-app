@@ -15,7 +15,7 @@
  * See: http://www.opensource.org/licenses/bsd-license.php
  */
 (function($,jq) {
-	//This function use jQuer and django.jQuery because of bootstrap template and django.
+	//This function use jQuery and django.jQuery because of bootstrap template and django.
 	$.fn.formset = function(opts) {
 		var options = $.extend({}, $.fn.formset.defaults, opts);
 		var updateElementIndex = function(el, prefix, ndx) {
@@ -42,6 +42,7 @@
 		});
 		if ($(this).length && showAddButton) {
 			var addButton;
+			//REAL_ESTATE_APP: Custom addButtonCreate
 			if (options.addButtonCreate) {
 				if ($(this).attr("tagName") == "TR") {
 					// If forms are laid out as table rows, insert the
@@ -55,10 +56,11 @@
 					addButton = $(this).filter(":first").parent().find("a");
 				}
 			} else {
-				addButton = $(this).find('.'+options.addCssClass);
+				//REAL_ESTATE_APP: custom addButton get on group.
+				addButton = $('#'+options.prefix+'-group').find('.'+options.addCssClass);
 			}
 			addButton.click(function() {
-				// Custom bootstrap collapse hide a photo
+				// REAL_ESTATE_APP: custom bootstrap collapse hide a photo edited
 				var editInline = jq('#'+options.prefix+'-group').find('.in').collapse('hide');
 				
 				var totalForms = $("#id_" + options.prefix + "-TOTAL_FORMS");
@@ -96,6 +98,7 @@
 				row.find("a." + options.deleteCssClass).click( function() {
 					// Remove the parent form containing this button:
 					var row = $(this).parents("." + options.formCssClass);
+					alert(row.attr('class'));
 					row.remove();
 					nextIndex -= 1;
 					// If a post-delete callback was provided, call it with the deleted form:
@@ -127,6 +130,9 @@
 				return false;
 			});
 		}
+		if (options.inited) {
+			options.inited(this);
+		}
 		return this;
 	}
 	/* Setup plugin defaults */
@@ -140,6 +146,7 @@
 		formCssClass: "dynamic-form",	// CSS class applied to each form in a formset
 		added: null,					// Function called each time a new form is added
 		removed: null,					// Function called each time a form is deleted
-		addButtonCreate: true,			// Create automatic add button
+		addButtonCreate: true,			// CUSTOM REAL_ESTATE_APP: Create automatic add button
+		inited: null,			// CUSTOM REAL_ESTATE_APP: Init functions
 	}
 })(django.jQuery, jQuery);

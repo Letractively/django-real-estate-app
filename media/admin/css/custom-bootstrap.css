@@ -118,6 +118,11 @@ div.tab-content.errors {
 	background-color: #EEEEEE;
 }
 
+.add-row .thumbnail {
+	border-style: dashed;
+	border-width: 2px;
+}
+
 @media (max-width: 979px) {
 
 	.real_content {
