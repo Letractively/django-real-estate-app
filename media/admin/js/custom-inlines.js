@@ -94,40 +94,40 @@
 				if ((maxForms.val() != '') && (maxForms.val()-totalForms.val()) <= 0) {
 					addButton.parent().hide();
 				}
-				//row.find('a.'+options.deleteCssClass)
-				alert(row.html());
-				// The delete button of each row triggers a bunch of other things
-				// row.find("a." + options.deleteCssClass).click( function() {
-				// 	// Remove the parent form containing this button:
-				// 	// var row = $(this).parents("." + options.formCssClass);
-				// 	// row.remove();
-				// 	// nextIndex -= 1;
-				// 	// // If a post-delete callback was provided, call it with the deleted form:
-				// 	// if (options.removed) {
-				// 	// 	options.removed(row);
-				// 	// }
-				// 	// // Update the TOTAL_FORMS form count.
-				// 	// var forms = $("." + options.formCssClass);
-				// 	// $("#id_" + options.prefix + "-TOTAL_FORMS").val(forms.length);
-				// 	// // Show add button again once we drop below max
-				// 	// if ((maxForms.val() == '') || (maxForms.val()-forms.length) > 0) {
-				// 	// 	addButton.parent().show();
-				// 	// }
-				// 	// // Also, update names and ids for all remaining form controls
-				// 	// // so they remain in sequence:
-				// 	// for (var i=0, formCount=forms.length; i<formCount; i++)
-				// 	// {
-				// 	// 	updateElementIndex($(forms).get(i), options.prefix, i);
-				// 	// 	$(forms.get(i)).find("*").each(function() {
-				// 	// 		updateElementIndex(this, options.prefix, i);
-				// 	// 	});
-				// 	// }
-				// 	// return false;
-				// });
 				// If a post-add callback was supplied, call it with the added form:
 				if (options.added) {
 					options.added(row);
 				}
+				// The delete button of each row triggers a bunch of other things
+				row.find("a." + options.deleteCssClass).click(function() {
+					// Remove the parent form containing this button:
+					var row = $(this).parents("." + options.formCssClass);
+					row.remove();
+					nextIndex -= 1;
+
+					// If a post-delete callback was provided, call it with the deleted form:
+					if (options.removed) {
+						options.removed(row);
+					}
+					// Update the TOTAL_FORMS form count.
+					var forms = $("." + options.formCssClass);
+					$("#id_" + options.prefix + "-TOTAL_FORMS").val(forms.length);
+					// Show add button again once we drop below max
+					if ((maxForms.val() == '') || (maxForms.val()-forms.length) > 0) {
+						addButton.parent().show();
+					}
+					// Also, update names and ids for all remaining form controls
+					// so they remain in sequence:
+					for (var i=0, formCount=forms.length; i<formCount; i++)
+					{
+						updateElementIndex($(forms).get(i), options.prefix, i);
+						$(forms.get(i)).find("*").each(function() {
+							updateElementIndex(this, options.prefix, i);
+						});
+					}
+					return false;
+				});
+
 				return false;
 			});
 		}
@@ -148,6 +148,6 @@
 		added: null,					// Function called each time a new form is added
 		removed: null,					// Function called each time a form is deleted
 		addButtonCreate: true,			// CUSTOM REAL_ESTATE_APP: Create automatic add button
-		inited: null,			// CUSTOM REAL_ESTATE_APP: Init functions
+		inited: null,					// CUSTOM REAL_ESTATE_APP: Init functions
 	}
 })(jQuery);

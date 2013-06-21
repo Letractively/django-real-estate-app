@@ -5,35 +5,6 @@
     {{ inline_admin_formset.formset.non_form_errors }} 
     
     {% for inline_admin_form in inline_admin_formset %}
-        <script type="text/javascript">
-        (function($){
-            $(document).ready(function(){
-                $('#{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% endif %}').on('show',function(){
-
-                    //Close all open edited forms inline when add one.
-                    $('#{{ inline_admin_formset.formset.prefix }}-group')
-                    .find('.in').each(function() {
-                        $(this).collapse('hide');
-                    });
-
-                    // Close all added forms inline when edit one.
-                    $('#{{ inline_admin_formset.formset.prefix }}-group')
-                    .find('.dynamic-{{ inline_admin_formset.formset.prefix }}')
-                    .each(function(d){
-                        // if is not template empty form
-                        if ($(this).attr('id') != undefined) {
-                            $(this).find('a.inline-deletelink')
-                            .each(function(){
-                                $(this).trigger('click');
-                            }) 
-                        }
-                     });
-
-                    return true;
-                })
-            })
-        })(jQuery);
-        </script>
         <div class="inline-related {% if forloop.last %} empty-form last-related {% else %} collapse {% endif %} {% if inline_admin_form.form.errors %} {{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% endif %}-erros{% endif %}" 
              id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
             <span class="inline_label">
@@ -79,7 +50,7 @@
 <script type="text/javascript">
 (function($) {
     $(document).ready(function() {
-        var rows = "#{{ inline_admin_formset.formset.prefix }}-group .thumbnails";
+        var rows = "#{{ inline_admin_formset.formset.prefix }}-group .inline-related";
 
         var updateInlineLabel = function(row) {
             $(rows).find(".inline_label").each(function(i) {
@@ -133,6 +104,28 @@
             });
         }
 
+        var init = function(row){
+            $(rows).on('show',function(){
+                //Close all open edited forms inline when add one.
+                $('#{{ inline_admin_formset.formset.prefix }}-group').find('.in').collapse('hide')
+
+                // Close all added forms inline when edit one.
+                $('#{{ inline_admin_formset.formset.prefix }}-group')
+                .find('.dynamic-{{ inline_admin_formset.formset.prefix }}')
+                .each(function(d){
+                    // if is not template empty form
+                    if ($(this).attr('id') != undefined) {
+                        $(this).find('a.inline-deletelink')
+                        .each(function(){
+                            $(this).trigger('click');
+                        }) 
+                    }
+                });
+
+                return true;
+            })
+        }
+
         $(rows).formset({
             prefix: "{{ inline_admin_formset.formset.prefix }}",
             //addText: "{% blocktrans with inline_admin_formset.opts.verbose_name|title as verbose_name %} {{ verbose_name }}{% endblocktrans %}",
@@ -150,6 +143,7 @@
             }),
             inited: (function(row){
                 initWithErrors(row);
+                init(row);
             }),
         })
 
