@@ -82,9 +82,9 @@
 <div class="tab-content">
 {% for fieldset in adminform %}
   {% ifequal fieldset.name 'MAPS' %}
-    {% include "admin/propretys/proprety/includes/fieldset-gmaps.html" %}
+    {% include "admin/propertys/property/includes/fieldset-gmaps.html" %}
   {% else %}
-    {% include "admin/propretys/proprety/includes/fieldset-custom.html" %}
+    {% include "admin/propertys/property/includes/fieldset-custom.html" %}
   {% endifequal %}
 {% endfor %}
 

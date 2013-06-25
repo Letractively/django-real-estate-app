@@ -53,14 +53,14 @@ class PropertyAdmin(RealEstateAppPopUpModelAdmin):
 	)
 	actions=[duplicate_object,make_unpublished,make_published]
 
-	template = 'admin/propertys/property/property_change_form.html'
+	change_form_template = 'admin/propertys/property/property_change_form.html'
 
 	class Media:
 		css = {
 			'all':(
 					MEDIA_PREFIX_REAL_ESTATE+"admin/css/facebox.css",
 					MEDIA_PREFIX_REAL_ESTATE+"admin/css/gmaps.css",
-					MEDIA_PREFIX_REAL_ESTATE+"css/autocomplete.css",
+					#MEDIA_PREFIX_REAL_ESTATE+"css/autocomplete.css",
 			),
 		}
 		js = (

@@ -94,10 +94,7 @@
 				if ((maxForms.val() != '') && (maxForms.val()-totalForms.val()) <= 0) {
 					addButton.parent().hide();
 				}
-				// If a post-add callback was supplied, call it with the added form:
-				if (options.added) {
-					options.added(row);
-				}
+
 				// The delete button of each row triggers a bunch of other things
 				row.find("a." + options.deleteCssClass).click(function() {
 					// Remove the parent form containing this button:
@@ -127,6 +124,10 @@
 					}
 					return false;
 				});
+				// If a post-add callback was supplied, call it with the added form:
+				if (options.added) {
+					options.added(row);
+				}
 
 				return false;
 			});

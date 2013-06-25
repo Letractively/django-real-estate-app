@@ -1,4 +1,15 @@
 {% load thumbnail %}
+{% if forloop.parentloop.last and forloop.parentloop.first %}
+    <li id="{{ inline_admin_formset.formset.prefix }}-empty" class="span2  add-row ">
+        <div class="thumbnail">
+            <img src="/media-real/img/camera.png" class="img-circle">
+            <div class="caption">
+                <h5>Add new</h5>
+            </div>
+        </div>
+    </li>
+{% endif %}
+
 {% if not forloop.parentloop.last %}
     {% for line in fieldset %}
         {% if forloop.first %}

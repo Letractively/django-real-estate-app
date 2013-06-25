@@ -205,6 +205,7 @@ $.fn.extend({
 												focus: itemFocus
 											}).data( "autocomplete" )._renderMenu = function( ul, items ) {
 												var that = this;
+												$(ul).addClass("dropdown-menu");
 								            	$.each( items, function( index, item ) {
 								                	that._renderItem( ul, item );
 								            	});

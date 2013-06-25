@@ -7,10 +7,13 @@
     {% for inline_admin_form in inline_admin_formset %}
         <div class="inline-related {% if forloop.last %} empty-form last-related {% else %} collapse {% endif %} {% if inline_admin_form.form.errors %} {{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% endif %}-erros{% endif %}" 
              id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
-            <span class="inline_label">
-            {% if inline_admin_form.original %}{{ inline_admin_form.original }}{% else %}#{{ forloop.counter }}{% endif %}
-            </span>
-            {% if inline_admin_formset.formset.can_delete and inline_admin_form.original %}<span class="delete">{{ inline_admin_form.deletion_field.field }} {{ inline_admin_form.deletion_field.label_tag }}</span>{% endif %}
+            <div class="breadcrumb">
+                {% if forloop.last %}{% blocktrans with inline_admin_formset.opts.verbose_name|lower as verbose_name %} New {{ verbose_name }}{% endblocktrans %}:{% endif %} 
+                <span class="inline_label">
+                {% if inline_admin_form.original %}{{ inline_admin_form.original }}{% else %}#{{ forloop.counter }}{% endif %}
+                </span>
+                {% if inline_admin_formset.formset.can_delete and inline_admin_form.original %}<span class="delete">{{ inline_admin_form.deletion_field.field }} {{ inline_admin_form.deletion_field.label_tag }}</span>{% endif %}
+            </div>
           {% if inline_admin_form.form.non_field_errors %}{{ inline_admin_form.form.non_field_errors }}{% endif %}
           {% for fieldset in inline_admin_form %}
             {% include "admin/includes/fieldset.html" %}
@@ -121,7 +124,6 @@
                         }) 
                     }
                 });
-
                 return true;
             })
         }
