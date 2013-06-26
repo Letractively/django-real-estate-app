@@ -1,8 +1,6 @@
 /*
 	This is a extend pluggins for jquery.gmap3: 
 	http://gmap3.net
-
-
 */
 (function($) {
 
@@ -19,6 +17,18 @@
 	 				$(options.point_y).attr('value',position.lat());
 			 		$(options.point_y).attr('value',position.lng());
 				};
+
+				var setResize = function(container){
+					var width = container.width() || options.width;
+					var height = container.height() || options.height;
+
+					options.height=height
+					options.width=width
+
+					if (height < 200)
+						options.height=height*3
+
+				}
 				
 				options = $.extend(true, options, {
 					 map:{
@@ -32,7 +42,7 @@
 					    	}
 					    }
 					 },
-					 marker: {
+					 marker:{
 					 	options:{draggable:true},
 					 	latLng:default_position(),
 					 	events: {
@@ -42,10 +52,14 @@
 						 		$(options.point_y).attr('value',position.lng());
 							},
 					 	},
-					}
+					},
+					height:300,
+					width:300,
 				});
+
 				return this.each( function() {
-				 	$(this).gmap3(options);
+					setResize($(this));
+				 	$(this).width(options.width).height(options.height).gmap3(options);
 				});
 		};
 	

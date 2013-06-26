@@ -80,7 +80,7 @@
 				} else {
 					// Otherwise, just insert the remove button as the
 					// last child element of the form's container:
-					row.children(":first").append('<span><a class="btn btn-danger ' + options.deleteCssClass + '" href="javascript:void(0)"><i class="icon-remove icon-white"></i> ' + options.deleteText + "</a></span>");
+					row.children(":first").append('<a class="btn btn-danger pull-right ' + options.deleteCssClass + '" href="javascript:void(0)"><i class="icon-remove icon-white"></i> ' + options.deleteText + "</a>");
 				}
 				row.find("*").each(function() {
 					updateElementIndex(this, options.prefix, totalForms.val());

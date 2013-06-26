@@ -5,6 +5,7 @@
 		    	e.preventDefault();
 		    	$(this).tab('show');
 		    	if ($(this).attr('href') === "#maps") {
+		    		
 		    		dj('#gmaps').realEstateAppGmap({
 		    			point_x:"#id_gmap_point_x",
 		    			point_y:"#id_gmap_point_y",

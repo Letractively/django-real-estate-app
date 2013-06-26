@@ -11,8 +11,7 @@
                 "template paste textcolor"
             ],
             menubar: false,
-            toolbar1: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent table | link image media",
-            toolbar2: "fullscreen preview print | forecolor backcolor emoticons",
+            toolbar: "undo redo | styleselect formatselect fontselect fontsizeselect | forecolor backcolor | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent | table image media | link unlink anchor",
 
         });
 

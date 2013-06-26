@@ -315,7 +315,7 @@ fieldset.monospace textarea {
     float: right;
 }
 
-/* Custom bootstrap */
+/* Custom for bootstrap */
 .input-append {
     white-space: none !important;
 }
@@ -358,4 +358,8 @@ div.errors {
 .add-row .caption div,
 .add-row .caption {
     text-align: center;
+}
+/* Custom for tinymce */
+.description label {
+    float: none;
 }

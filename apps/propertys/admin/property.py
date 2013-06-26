@@ -60,14 +60,13 @@ class PropertyAdmin(RealEstateAppPopUpModelAdmin):
 			'all':(
 					MEDIA_PREFIX_REAL_ESTATE+"admin/css/facebox.css",
 					MEDIA_PREFIX_REAL_ESTATE+"admin/css/gmaps.css",
-					#MEDIA_PREFIX_REAL_ESTATE+"css/autocomplete.css",
 			),
 		}
 		js = (
 			  MEDIA_PREFIX_REAL_ESTATE+"js/meio.mask.min.js",
 			  MEDIA_PREFIX_REAL_ESTATE+"admin/js/facebox.js",
 			  MEDIA_PREFIX_REAL_ESTATE+"admin/js/real_estate_app_masks.js",
-			  MEDIA_PREFIX_REAL_ESTATE+'admin/js/tiny_mce/tiny_mce.js',
+			  MEDIA_PREFIX_REAL_ESTATE+'admin/js/tiny_mce/tinymce.min.js',
 		      MEDIA_PREFIX_REAL_ESTATE+'admin/js/tiny_mce/textarea.js',
 		      MEDIA_PREFIX_REAL_ESTATE+'admin/js/ajax_csrf.js',
 		      'http://maps.google.com/maps/api/js?sensor=false&amp;language=en',
