@@ -1,3 +1,3 @@
 from visitcalendar import VisitEventCalendarAdmin
 
-__all__=('VisitEventCalendarAdmin',)
+__all__=('VisitEventCalendarAdmin','VisitorAdminForm')

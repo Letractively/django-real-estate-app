@@ -75,7 +75,7 @@ class Visitor(RealEstateAppBaseModel):
 	)
 
 	work_zip = models.CharField(
-		_('ZIP'),
+		_('Work ZIP'),
 		max_length=15
 	)
 

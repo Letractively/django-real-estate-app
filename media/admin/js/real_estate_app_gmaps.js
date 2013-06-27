@@ -5,17 +5,11 @@
 (function($) {
 
 		$.fn.realEstateAppGmap=function(options) {
-				var point_x = $(options.point_x).val() || 0;
-				var point_y = $(options.point_y).val() || 0;
 				
 				var default_position =function() {
+					var point_x = $(options.point_x).val() || 0;
+					var point_y = $(options.point_y).val() || 0;
 					return [point_x,point_y];
-				};
-
-				var customDragend = function(marker) {
-	 				var position = marker.getPosition();
-	 				$(options.point_y).attr('value',position.lat());
-			 		$(options.point_y).attr('value',position.lng());
 				};
 
 				var setResize = function(container){
@@ -48,7 +42,7 @@
 					 	events: {
 					 		dragend: function(marker) {
 	 							var position = marker.getPosition();
-				 				$(options.point_y).attr('value',position.lat());
+				 				$(options.point_x).attr('value',position.lat());
 						 		$(options.point_y).attr('value',position.lng());
 							},
 					 	},

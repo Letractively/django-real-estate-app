@@ -5,7 +5,11 @@
 			'zip_code': { mask: '99999-999'},
 			'decimal': {mask:'99.999999999999',type:'reverse'},
 			'area': {mask:'99,999.999.999.999',type:'reverse',defaultValue: '000'},
-			'phone':{mask:'+99 (999) 99999-9999'},
+			'phone':{mask:'+99 (999) 99999-9999',defaultValue:'+55'},
+			'celphone':{mask:'+99 (999) 99999-9999',defaultValue:'+55'},
+			'cpf':{mask:'999.999.999-99'},
+			'cnpj':{mask:'99.999.999/9999-99'},
+			'rg': { mask: '999.999.999.999.999',type:'reverse'},
 		});
 
 		$('input:text').setMask();

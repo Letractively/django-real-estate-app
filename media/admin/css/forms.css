@@ -360,6 +360,8 @@ div.errors {
     text-align: center;
 }
 /* Custom for tinymce */
-.description label {
+.description label[for=id_description],
+.content label[for=id_content],
+.text label[for=id_text] {
     float: none;
 }

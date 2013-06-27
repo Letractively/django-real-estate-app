@@ -43,6 +43,7 @@ class AppsMenuNode(template.Node):
 					if True in perms.values() and model.__name__.lower() in REAL_APPS[app_label]:
 						model_dict = {
 							'name': capfirst(model._meta.verbose_name_plural),
+							'module_name':model.__name__.lower(),
 							'admin_url': reverse('admin:index')+mark_safe('%s/%s/' % (app_label, model.__name__.lower())),
 							'perms': perms,
 						}

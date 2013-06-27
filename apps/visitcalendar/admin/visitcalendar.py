@@ -8,9 +8,10 @@ from django.contrib import admin
 from django.views.generic.simple import direct_to_template
 
 from real_estate_app.admin.options import RealEstateAppPopUpModelAdmin
-from real_estate_app.apps.visitcalendar.admin.forms import VisitEventAdminForm, TermVisitAdminForm
+from real_estate_app.apps.visitcalendar.admin.forms import VisitEventAdminForm, TermVisitAdminForm, VisitorAdminForm
 from real_estate_app.apps.visitcalendar.models import VisitEvent, Visitor, TermVisit
 from real_estate_app.apps.visitcalendar.views import visitcalendar_list_property_visit, visitcalendar_create_object
+from real_estate_app.apps.visitcalendar.localflavor.br.forms import fieldsets_visitor_form
 from real_estate_app.conf.settings import MEDIA_PREFIX as MEDIA_PREFIX_REAL_ESTATE
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
@@ -78,6 +79,24 @@ class VisitEventCalendarAdmin(RealEstateAppPopUpModelAdmin):
 class VisitorAdmin(RealEstateAppPopUpModelAdmin):
 	search_fields = ['first_name','last_name','email']
 	list_display = ('first_name','last_name','email',)
+
+	form = VisitorAdminForm
+	general_information = ['first_name','last_name','email','celphone',]
+
+	if LANGUAGE_CODE in ('pt-br','pt_BR'):
+		general_information += fieldsets_visitor_form['general-information']
+
+	fieldsets = (
+		 	(_('General Information'), {
+	 	 		'fields': general_information,
+	 		}),
+	 		(_('Home address'),{
+	 			'fields': ['address','zip','phone',]
+	 		}),
+	 		(_('Work address'),{
+	 			'fields': ['work_address', 'work_zip', 'work_phone',]
+	 		})
+	)
 	
 	class Media:
 		css = {
@@ -87,6 +106,8 @@ class VisitorAdmin(RealEstateAppPopUpModelAdmin):
 		}
 		js = (
 			  MEDIA_PREFIX_REAL_ESTATE+"js/facebox.js",
+			  MEDIA_PREFIX_REAL_ESTATE+"js/meio.mask.min.js",
+			  MEDIA_PREFIX_REAL_ESTATE+"admin/js/real_estate_app_masks.js"
 		)
 
 class TermVisitAdmin(RealEstateAppPopUpModelAdmin):
@@ -101,8 +122,8 @@ class TermVisitAdmin(RealEstateAppPopUpModelAdmin):
 
 	class Media:
 		js = (
-			  MEDIA_PREFIX_REAL_ESTATE+'js/tiny_mce/tiny_mce.js',
-		      MEDIA_PREFIX_REAL_ESTATE+'js/tiny_mce/textarea.js',
+			  MEDIA_PREFIX_REAL_ESTATE+'admin/js/tiny_mce/tinymce.min.js',
+		      MEDIA_PREFIX_REAL_ESTATE+'admin/js/tiny_mce/textarea.js',
 		)
 
 admin.site.register(Visitor, VisitorAdmin)

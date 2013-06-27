@@ -1,17 +1,59 @@
 # -*- coding: utf-8; -*-
 from django.conf import settings
-from django.forms import ValidationError
+from django.forms import ValidationError, ModelForm, CharField
 from django.forms.fields import EMPTY_VALUES
 from django.forms.models import BaseInlineFormSet
 from django.utils.translation import ugettext_lazy as _
 
 from real_estate_app.apps.realtors.models import Realtor
+from real_estate_app.widgets import PhoneInputWidget, CelphoneInputWidget
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 
+class RealtorAdminForm(ModelForm):
+	if LANGUAGE_CODE in ('pt_BR','pt-br'):
+		from django.contrib.localflavor.br import forms as br_forms
+		from real_estate_app.localflavor.br.widgets import CPFInputWidget, RGInputWidget,\
+														   CNPJInputWidget
+
+		cpf = br_forms.BRCPFField(
+							label=u'CPF',
+							widget=CPFInputWidget,
+							required=False
+		)
+
+		cnpj = br_forms.BRCNPJField(
+							label=u'CNPJ',
+							widget=CNPJInputWidget,
+							required=False
+		)
+
+		phone = br_forms.BRPhoneNumberField(
+							label=_('Phone'),
+							widget=PhoneInputWidget,
+							required=False
+		)
+
+		celphone = br_forms.BRPhoneNumberField(
+							label=_('Celphone'),
+							widget=CelphoneInputWidget,
+							required=False
+		)
+
+		rg = CharField(
+							label='RG',
+							widget=RGInputWidget,
+							required=False
+		)
+
+
+
+	class Meta:
+		model = Realtor
+
 class RealtorAdminFormSet(BaseInlineFormSet):
-	
-	model = Realtor
+
+	model = Realtor	
 
 	def check_empty_fields(self,form, data, fields=[]):
 		for field in fields:

@@ -9,9 +9,7 @@ from real_estate_app.admin.forms import UserAdminForm
 from real_estate_app.admin.options import RealEstateAppRevertInlineModelAdmin
 from real_estate_app.conf.settings import MEDIA_PREFIX as MEDIA_PREFIX_REAL_ESTATE
 from real_estate_app.apps.realtors.models import Realtor
-from real_estate_app.apps.realtors.admin.forms import RealtorAdminFormSet
-
-
+from real_estate_app.apps.realtors.admin.forms import RealtorAdminFormSet, RealtorAdminForm
 
 LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 
@@ -19,24 +17,13 @@ class RealtorInlineAdmin(admin.StackedInline):
 	model = Realtor
 	extra = 1
 	formset = RealtorAdminFormSet
+	form = RealtorAdminForm
 	template = 'admin/realtors/%s/edit_inline/stacked-realtor.html' % LANGUAGE_CODE
 
 	if LANGUAGE_CODE in ('pt_BR','pt-br'):
-		from django.contrib.localflavor.br import forms as br_forms
 		from real_estate_app.localflavor.br.admin.forms.realtor import realtor_br_custom_fields
-
 		fields = realtor_br_custom_fields
 
-		cpf = br_forms.BRCPFField(
-							label=u'CPF',
-							required=False
-		)
-
-		cnpj = br_forms.BRCNPJField(
-							label=u'CNPJ',
-							required=False
-		)
-	
 class RealtorAdmin(RealEstateAppRevertInlineModelAdmin):
 
 	change_form_template = 'admin/realtors/realtor_change_form.html'
@@ -64,7 +51,7 @@ class RealtorAdmin(RealEstateAppRevertInlineModelAdmin):
 
 		js = [
 				MEDIA_PREFIX_REAL_ESTATE+"js/meio.mask.min.js",
-				MEDIA_PREFIX_REAL_ESTATE+"js/real_estate_app_masks.js"
+				MEDIA_PREFIX_REAL_ESTATE+"admin/js/real_estate_app_masks.js"
 		]
 
 		if LANGUAGE_CODE == 'pt-br':

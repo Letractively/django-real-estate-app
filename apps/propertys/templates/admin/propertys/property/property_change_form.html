@@ -1,34 +1,5 @@
-{% extends "admin/base_site.html" %}
+{% extends "admin/change_form.html" %}
 {% load i18n admin_modify adminmedia graph_tags %}
-
-{% block extrahead %}{{ block.super }}
-{% url admin:jsi18n as jsi18nurl %}
-<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-<script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
-{{ media }}
-<script type="text/javascript" src="{{ MEDIA_REAL_ESTATE }}admin/js/real_estate_app_tabs.js"></script>
-{% endblock %}
-
-{% block extrastyle %}{{ block.super }} <link rel="stylesheet" type="text/css" href="{{ MEDIA_REAL_ESTATE }}admin/css/forms.css" />
-{% endblock %}
-
-{% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
-
-{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
-
-{% block breadcrumbs %}{% if not is_popup %}
-   <ul class="breadcrumb">
-      <li><a href="{% url admin:index %}"><i class="icon-home" ></i>{% trans "Home" %}</a> <span class="divider">/</span></li>
-      {% if opts.app_label == "auth" %}
-        {% if perms.auth %}
-          <li >{% if has_change_permission %}<a href="../">{{ opts.verbose_name_plural|capfirst }}</a>{% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %} <span class="divider">/</span></li> 
-        {% endif %}
-      {% else %}
-          <li >{% if has_change_permission %}<a href="../">{{ opts.verbose_name_plural|capfirst }}</a>{% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %} <span class="divider">/</span></li> 
-      {% endif %}
-      <li >{% if add %}{% trans "Add" %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}</li>
-    </ul>
-{% endif %}{% endblock %}
 
 {% block content %}<div id="content-main">
 
@@ -106,16 +77,4 @@
 {% prepopulated_fields_js %}
 </div>
 </form></div>
-{% endblock %}
-
-{% block sidebar %}
-    {% get_linegraph as line_graph %}
-    <div class="widget">
-        <div class="widget-header">
-            <i class="icon-calendar"></i> <h3 style=""> {% trans 'Amounts clicks' %} </h3>
-        </div>
-        <div class="widget-content">
-            {{ line_graph }}
-        </div>
-    </div>
 {% endblock %}

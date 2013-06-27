@@ -69,7 +69,20 @@
                                   {% for app in apps_settings_list %} 
                                         {% for model in app.models %}
                                             {% if model.perms.change %}
-                                                <li><a href="{{ model.admin_url }}"><i class="icon-user"></i> {{ model.name }}</a></li>
+                                            <li><a href="{{ model.admin_url }}">
+                                               {% if model.module_name == 'user' %}
+                                                    <i class="icon-user"></i>
+                                                {% endif %}
+                                                {% if model.module_name == 'group' %}
+                                                {% endif %}
+                                                {% if model.module_name == 'termvisit' %}
+                                                    <i class="icon-book"></i>
+                                                {% endif %}
+                                                {% if model.module_name == 'site' %}
+                                                    <i class="icon-briefcase"></i>
+                                                {% endif %}
+                                                {{ model.name }}
+                                            </a></li>
                                             {% endif %}
                                         {% endfor %}
                                   {% endfor %}
@@ -88,7 +101,20 @@
                               {% for app in apps_settings_list %} 
                                     {% for model in app.models %}
                                         {% if model.perms.change %}
-                                            <li><a href="{{ model.admin_url }}"><i class="icon-user"></i> {{ model.name }}</a></li>
+                                            <li><a href="{{ model.admin_url }}">
+                                                {% if model.module_name == 'user' %}
+                                                    <i class="icon-user"></i>
+                                                {% endif %}
+                                                {% if model.module_name == 'group' %}
+                                                {% endif %}
+                                                {% if model.module_name == 'termvisit' %}
+                                                    <i class="icon-book"></i>
+                                                {% endif %}
+                                                {% if model.module_name == 'site' %}
+                                                    <i class="icon-briefcase"></i>
+                                                {% endif %}
+                                                {{ model.name }}
+                                            </a></li>
                                         {% endif %}
                                     {% endfor %}
                               {% endfor %}

@@ -30,7 +30,7 @@ class NewsAdmin(RealEstateAppPopUpModelAdmin):
 			),
 		}
 		js = (
-			  MEDIA_REAL_ESTATE+'admin/js/tiny_mce/tiny_mce.js',
+			  MEDIA_REAL_ESTATE+'admin/js/tiny_mce/tinymce.min.js',
 		      MEDIA_REAL_ESTATE+'admin/js/tiny_mce/textarea.js',
 		      MEDIA_REAL_ESTATE+'admin/js/ajax_csrf.js',
 			  MEDIA_REAL_ESTATE+'admin/js/facebox.js',
