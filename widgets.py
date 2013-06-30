@@ -5,7 +5,8 @@ from itertools import chain
 from django.contrib.admin import widgets
 from django.conf import settings 
 from django.core.urlresolvers import reverse, NoReverseMatch
-from django.forms.widgets import TextInput, CheckboxSelectMultiple, CheckboxInput, SelectMultiple
+from django.forms.widgets import TextInput, CheckboxSelectMultiple, CheckboxInput,\
+								 SelectMultiple, FileInput
 from django.forms.util import flatatt
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
@@ -70,6 +71,68 @@ class CelphoneInputWidget(TextInput):
 			# Only add the 'value' attribute if a value is non-empty.
 			final_attrs['value'] = force_unicode(self._format_value(value))
 		return mark_safe(u'<input%s alt="celphone" />' % flatatt(final_attrs) )
+
+class ImageInputWidget(FileInput):
+
+	def __init__(self,width=200,height=150,attrs=None):
+		self.width=width
+		self.height=height
+		super(ImageInputWidget,self).__init__(attrs=attrs)
+
+	def render(self, name, value, attrs=None):
+		"""
+			This custom ImageInputWidget works only with bootstrap-fileupload and bootstrap.
+		"""
+		output=[]
+		file_extists=''
+		file_extists_id=''
+		class_file = value and 'fileupload-exists' or 'fileupload-new'
+
+		if value is None:
+			value = ''
+		final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
+		if value != '':
+			
+			final_attrs['value'] = force_unicode(self._format_value(value))
+			
+			from sorl.thumbnail import get_thumbnail
+			size = str(self.width)+'x'+str(self.height)
+			try:
+				img = get_thumbnail(value, size, crop='center', quality=99)
+				file_extists = """<img src="%s" />""" % img.url
+			except:
+				# When get error on form return no image.
+				file_extists = """<img src="http://www.placehold.it/%sx%s/EFEFEF/AAAAAA&text=no+image" />""" % (self.width,self.height)
+
+			file_extists_id='-'.join(final_attrs['name'].split('-')[:-1])
+			final_attrs['data-target']=u"#%s" % file_extists_id
+			
+			
+
+		input_file=mark_safe(u'<input%s />' % flatatt(final_attrs))
+
+		output.append("""<script type="text/javascript" src="%sbootstrap2/plugins/bootstrap-fileupload.min.js" ></script> \
+						 <script type="text/javascript" src="%sadmin/js/real_estate_app_fileupload.js" ></script> \
+						 <link media="screen" rel="stylesheet" href="%sbootstrap2/plugins/bootstrap-fileupload.min.css">""" % (MEDIA_PREFIX, MEDIA_PREFIX, MEDIA_PREFIX) )
+		output.append("""<div class="fileupload %s" data-provides="fileupload" >""" % (class_file) )
+		output.append("""		<div class="fileupload-new thumbnail" style="width: %spx; height: %spx;">
+									<img src="http://www.placehold.it/%sx%s/EFEFEF/AAAAAA&text=no+image" />
+								</div>""" % (self.width,self.height,self.width,self.height))
+		output.append("""	<div class="fileupload-preview fileupload-exists thumbnail" style="max-width: %spx; max-height: %spx; line-height: 20px;"> \
+								%s \
+							</div> \
+							<div class="photos-btn"> \
+								<span class="btn btn-file"> \
+									<span class="fileupload-new">Select image</span> \
+									<span class="fileupload-exists">Change</span> \
+									%s \
+								</span> \
+								<a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a> \
+							</div> \
+						</div>"""  % (self.width, self.height, file_extists, input_file))
+		
+		return mark_safe(u''.join(output))
+
 
 class FaceBoxFieldWrapper(widgets.RelatedFieldWidgetWrapper):
 

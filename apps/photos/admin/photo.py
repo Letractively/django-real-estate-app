@@ -8,12 +8,13 @@ from real_estate_app.apps.photos.admin.forms import PhotoAdminForm
 
 class PhotoInlineAdmin(admin.StackedInline):
 
-	prepopulated_fields = {"slug": ("photo",)}
+	prepopulated_fields = {'slug': ('photo',)}
 	exclude=('create_date',)
 	model = Photo
 	extra = 0
 	form = PhotoAdminForm 
 	template = 'admin/photos/photo/edit_inline/stacked.html'
+	fields = ('photo','slug','description','pub_date','image_destaque','enable_publish')
 
 	def _media(self):
 		from django.conf import settings
@@ -26,5 +27,7 @@ class PhotoInlineAdmin(admin.StackedInline):
 			js.extend(['js/SelectBox.js' , 'js/SelectFilter2.js'])
 		admin=['%s%s' % (settings.ADMIN_MEDIA_PREFIX, url) for url in js]
 		admin.append('%s%s' %(MEDIA_REAL_ESTATE,'admin/js/custom-inlines.js'))
-		return forms.Media(js=admin)
+		admin.append('%s%s' %(MEDIA_REAL_ESTATE,'bootstrap2/plugins/bootstrap-tooltip.min.js'))
+		admin_css={'all':['%s%s' %(MEDIA_REAL_ESTATE,'bootstrap2/plugins/bootstrap-tooltip.min.css')]}
+		return forms.Media(js=admin,css=admin_css)
 	media = property(_media)

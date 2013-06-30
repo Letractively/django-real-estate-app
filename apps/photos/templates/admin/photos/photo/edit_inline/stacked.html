@@ -8,11 +8,13 @@
         <div class="inline-related {% if forloop.last %} empty-form last-related {% else %} collapse {% endif %} {% if inline_admin_form.form.errors %} {{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% endif %}-erros{% endif %}" 
              id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
             <div class="breadcrumb">
-                {% if forloop.last %}{% blocktrans with inline_admin_formset.opts.verbose_name|lower as verbose_name %} New {{ verbose_name }}{% endblocktrans %}:{% endif %} 
-                <span class="inline_label">
-                {% if inline_admin_form.original %}{{ inline_admin_form.original }}{% else %}#{{ forloop.counter }}{% endif %}
-                </span>
-                {% if inline_admin_formset.formset.can_delete and inline_admin_form.original %}<span class="delete">{{ inline_admin_form.deletion_field.field }} {{ inline_admin_form.deletion_field.label_tag }}</span>{% endif %}
+
+                {% if forloop.last %}
+                    {% blocktrans with inline_admin_formset.opts.verbose_name|lower as verbose_name %}New {{ verbose_name }}{% endblocktrans %}
+                {% else %}
+                    {% blocktrans with inline_admin_formset.opts.verbose_name as verbose_name %}{{ verbose_name }}{% endblocktrans %}
+                {% endif %}
+                : #{{ forloop.counter }}
             </div>
           {% if inline_admin_form.form.non_field_errors %}{{ inline_admin_form.form.non_field_errors }}{% endif %}
           {% for fieldset in inline_admin_form %}
@@ -49,10 +51,14 @@
     {% endfor %}
     
 </div>
-
 <script type="text/javascript">
 (function($) {
     $(document).ready(function() {
+        // init bootstrap-toltip.js
+        $('#{{ inline_admin_formset.formset.prefix }}-group .thumbnails').tooltip({
+            selector: "img[data-toggle=tooltip]"
+        });
+
         var rows = "#{{ inline_admin_formset.formset.prefix }}-group .inline-related";
 
         var updateInlineLabel = function(row) {

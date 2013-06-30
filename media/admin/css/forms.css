@@ -365,3 +365,11 @@ div.errors {
 .text label[for=id_text] {
     float: none;
 }
+
+/* Custom for bootstrap-fileupload */
+.photos-btn {
+    margin-left: 9.6em;
+}
+.inline-related .breadcrumb .btn {
+    margin-top: -0.4em;
+}

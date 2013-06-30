@@ -1,4 +1,4 @@
-{% load thumbnail %}
+{% load thumbnail i18n %}
 {% if forloop.parentloop.last and forloop.parentloop.first %}
     <li id="{{ inline_admin_formset.formset.prefix }}-empty" class="span2  add-row ">
         <div class="thumbnail">
@@ -23,9 +23,7 @@
                 </div>
             </li>
             {% endif %}
-            <li 
-                class="span2" 
-                
+            <li class="span2" 
                 {% if not forloop.parentloop.parentloop.last %}
                 data-toggle="collapse" data-target="#{{ inline_admin_formset.formset.prefix }}-{% if not forloop.parentloop.parentloop.last %}{{ forloop.parentloop.parentloop.counter0 }}{% else %}empty{% endif %}"
                 {% endif %}
@@ -33,20 +31,12 @@
                 <div class="thumbnail">
         {% endif %}
         {% for field in line %}
-
             {% if field.field.value %}
                 {% if field.field.name == 'photo' %}
                     {% thumbnail field.field.value "160x120" crop="center" as img %}
-                        <img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}" />
+                        <img data-toggle="tooltip" data-placement="bottom" title="{{ inline_admin_form.form.description.value }}" src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}" />
                     {% endthumbnail %}
                     
-                {% endif %}
-                {% if field.field.name == 'description' %}
-                <div class="caption">
-                    <h5>
-                        {{ field.field.value }}
-                    </h5>
-                </div>
                 {% endif %}
             {% endif %}
             
