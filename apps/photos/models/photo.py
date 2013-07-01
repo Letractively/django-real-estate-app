@@ -12,7 +12,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import permalink
 
 from real_estate_app.models import RealEstateAppBaseModel
-from real_estate_app.utils import radomstring 
 
 GET_THUMB_PATTERN = re.compile(r'^get_photo_(\d+)x(\d+)_(thumb_url|thumb_filename|resize_url)$')
 GET_THUMBNAIL = re.compile(r'get_(sorlthumbnail_crop)_(\d+)x(\d+)$')
@@ -189,10 +188,3 @@ class Photo(RealEstateAppBaseModel):
 
 	def in_future(self):
 		return self.pub_date > datetime.now()
-	
-	def clean(self):
-		"""
-		Use clean because a slug is target as unique, and maybe user can add a photo with 
-		same name.
-		"""
-		self.slug = '%s%s' %(self.slug, radomstring())

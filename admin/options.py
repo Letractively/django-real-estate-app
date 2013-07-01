@@ -1,5 +1,6 @@
 import dateutil.parser
 
+from django import forms
 from django import template
 from django.conf import settings
 from django.contrib.admin import ModelAdmin, helpers
@@ -32,6 +33,25 @@ from real_estate_app.apps.propertys.models import Property
 csrf_protect_m = method_decorator(csrf_protect)
 
 class FaceBoxModelAdmin(ModelAdmin):
+
+    def _media(self):
+
+        from django.conf import settings
+        from real_estate_app.conf.settings import MEDIA_REAL_ESTATE
+        js = ['js/core.js', 'js/admin/RelatedObjectLookups.js',
+              'js/jquery.min.js', 'js/jquery.init.js']
+        jscustom = []
+        if self.actions is not None:
+            js.extend(['js/actions.min.js'])
+        if self.prepopulated_fields:
+            js.append('js/urlify.js')
+            jscustom.append('%s%s' %(MEDIA_REAL_ESTATE,'admin/js/prepopulatecustom.min.js'))
+        if self.opts.get_ordered_objects():
+            js.extend(['js/getElementsBySelector.js', 'js/dom-drag.js' , 'js/admin/ordering.js'])
+        admin_js=['%s%s' % (settings.ADMIN_MEDIA_PREFIX, url) for url in js]
+        admin_js+=jscustom
+        return forms.Media(js=admin_js)
+    media = property(_media)
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         """  

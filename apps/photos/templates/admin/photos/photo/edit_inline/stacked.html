@@ -15,6 +15,11 @@
                     {% blocktrans with inline_admin_formset.opts.verbose_name as verbose_name %}{{ verbose_name }}{% endblocktrans %}
                 {% endif %}
                 : #{{ forloop.counter }}
+                {% if not forloop.last %}
+                    <a href="javascript:void(0)" class="btn btn-danger pull-right inline-removelink"><i class="icon-remove icon-white"></i>  </a>
+                    <a data-target="#{{ inline_admin_formset.formset.prefix }}-{{ forloop.counter0 }}" data-toggle="collapse" href="#" class="btn btn-primary pull-right"><i class=" icon-chevron-down icon-white"></i>  </a>
+
+                {% endif %}
             </div>
           {% if inline_admin_form.form.non_field_errors %}{{ inline_admin_form.form.non_field_errors }}{% endif %}
           {% for fieldset in inline_admin_form %}
@@ -97,7 +102,7 @@
                   dependencies.push('#' + row.find(field_name).find('input, select, textarea').attr('id'));
                 });
                 if (dependencies.length) {
-                    input.prepopulate(dependencies, input.attr('maxlength'));
+                    input.prepopulatecustom(dependencies, input.attr('maxlength'));
                 }
             });
         }

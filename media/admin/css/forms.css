@@ -359,6 +359,10 @@ div.errors {
 .add-row .caption {
     text-align: center;
 }
+
+div.form-row + .slug {
+    display: none !important;
+}
 /* Custom for tinymce */
 .description label[for=id_description],
 .content label[for=id_content],

@@ -22,10 +22,10 @@ class PhotoInlineAdmin(admin.StackedInline):
 		js = ['js/jquery.min.js', 'js/jquery.init.js']
 		if self.prepopulated_fields:
 			js.append('js/urlify.js')
-			js.append('js/prepopulate.min.js')
 		if self.filter_vertical or self.filter_horizontal:
 			js.extend(['js/SelectBox.js' , 'js/SelectFilter2.js'])
 		admin=['%s%s' % (settings.ADMIN_MEDIA_PREFIX, url) for url in js]
+		admin.append('%s%s' %(MEDIA_REAL_ESTATE,'admin/js/prepopulatecustom.min.js'))
 		admin.append('%s%s' %(MEDIA_REAL_ESTATE,'admin/js/custom-inlines.js'))
 		admin.append('%s%s' %(MEDIA_REAL_ESTATE,'bootstrap2/plugins/bootstrap-tooltip.min.js'))
 		admin_css={'all':['%s%s' %(MEDIA_REAL_ESTATE,'bootstrap2/plugins/bootstrap-tooltip.min.css')]}
