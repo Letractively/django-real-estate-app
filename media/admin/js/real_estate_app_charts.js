@@ -1,3 +1,10 @@
+/*=============================================================
+ * This plugin needed bootstrap-datetimepicker and google chart.
+ *
+ ==============================================================
+ *
+ *
+ =============================================================*/
 google.load('visualization',  '1', {'packages':['corechart']});
 (function($){
 	$.fn.realcharts= function(options) {		
@@ -10,7 +17,7 @@ google.load('visualization',  '1', {'packages':['corechart']});
 				'title': "{{ title_chart }}",
 			},
 			'select_chart':[
-				['custom','Custom: <input type="text" id="date_init" value="" /> - <input id="date_end" type="text" value="" /> '],
+				['custom','Custom <div id="dates"><div class="input-append" id="date_init_datetimepicker"> <input data-format="yyyy-MM-dd" type="text" id="date_init" value="" /> <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span> </div> - <div class="input-append" id="date_end_datetimepicker"><input data-format="yyyy-MM-dd" id="date_end" type="text" value="" /><span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span></div></div>'],
 				['week','Week'],
 				['today','Today'],
 				['month','Month'],
@@ -68,43 +75,57 @@ google.load('visualization',  '1', {'packages':['corechart']});
 				html+='</ul></div>';
 				$(containerId).before(html);
 
-				$('#'+select_id+' ul.dropdown-menu li').click(function(e){
-				 	e.preventDefault();
-				 	params ={}
+				// When containerId gets ready call connect events and others.
+				$(containerId).ready(function(){
+					$('#date_init_datetimepicker, #date_end_datetimepicker')
+					.datetimepicker({
+      							pickTime: false
+    				});
 
-					if( $(this).attr('selected') != 'selected' && $(this).attr('value')!='none') {
-						//Clean selected object and set seleceted
-						$(this).parent().find('li[selected]')
-				 		.removeAttr('selected').find('span.icon-ok').detach();
+					//hide custom date.
+    				$('#'+select_id+' #dates').hide();
+    			
+					$('#'+select_id+' ul.dropdown-menu li').on('click',function(e){
+					 	e.preventDefault();
+					 	params ={}
+					 	
+						if( $(this).attr('selected') != 'selected' && $(this).attr('value')!='none') {
+							//Clean selected object and set seleceted
+							$(this).parent().find('li[selected]')
+							.removeAttr('selected').find('span.icon-ok').detach();
 
-						$(this).children().first().prepend('<span class="icon-ok"></span> ')
-						$(this).attr('selected','selected');
-						
-					}
+							$(this).children().first().prepend('<span class="icon-ok"></span> ')
+							$(this).attr('selected','selected');
+							//alert($(this).attr('value'))
+							$('#'+select_id+' #dates').hide();
+							if ($(this).attr('value') === 'custom' ) $('#dates').show(); 
+						}
 
-					if ($(this).attr('value') === 'none'){
-						// Get selected object
-						selected = $(this).parent().find('li[selected]')
-						params=$.extend(params,{'type':selected.attr('value')})
-						
-						if (selected.attr('value') === 'custom' ) {
-							var date_init=selected.find('#date_init').val();
-							var date_end=selected.find('#date_end').val();
-							params=$.extend(params,{
-								'date_init':date_init,
-								'date_end':date_end
-						    });
-						} 
+						if ($(this).attr('value') === 'none'){
+							// Get selected object
+							selected = $(this).parent().find('li[selected]')
+							params=$.extend(params,{'type':selected.attr('value')})
+							
+							if (selected.attr('value') === 'custom' ) {
+								var date_init=selected.find('#date_init').val();
+								var date_end=selected.find('#date_end').val();
+								params=$.extend(params,{
+									'date_init':date_init,
+									'date_end':date_end
+							    });
+							} 
 
-						//Get data from url and refresh graph with new data.
-						dataTable=tableDataRequest(params);
-						$(this).trigger('changeValueChartOnSelect',dataTable);
-						$('#'+select_id).removeClass('open');
-						return true;
-					}
+							//Get data from url and refresh graph with new data.
+							dataTable=tableDataRequest(params);
+							$(this).trigger('changeValueChartOnSelect',dataTable);
+							$('#'+select_id).removeClass('open');
+							
+							return true;
+						}
 
-					return false;
-				})
+						return false;
+					});
+				});
 
 			}
 

@@ -1,11 +1,8 @@
 {% load thumbnail i18n %}
 {% if forloop.parentloop.last and forloop.parentloop.first %}
-    <li id="{{ inline_admin_formset.formset.prefix }}-empty" class="span2  add-row ">
+    <li id="{{ inline_admin_formset.formset.prefix }}-empty" class="span2 add-row">
         <div class="thumbnail">
-            <img src="/media-real/img/camera.png" class="img-circle">
-            <div class="caption">
-                <h5>Add new</h5>
-            </div>
+            <img src="http://www.placehold.it/160x120/EFEFEF/AAAAAA&text={% trans 'Add new' %}" >
         </div>
     </li>
 {% endif %}
@@ -14,18 +11,17 @@
     {% for line in fieldset %}
         {% if forloop.first %}
             {% if forloop.parentloop.parentloop.first %}
-            <li id="{{ inline_admin_formset.formset.prefix }}-empty" class="span2  add-row ">
+            <li id="{{ inline_admin_formset.formset.prefix }}-empty" class="span2 add-row">
                 <div class="thumbnail">
-                    <img src="/media-real/img/camera.png" class="img-circle">
-                    <div class="caption">
-                        <h5>Add new</h5>
-                    </div>
+                    <img src="http://www.placehold.it/160x120/EFEFEF/AAAAAA&text={% trans 'Add new' %}">
                 </div>
             </li>
             {% endif %}
             <li class="span2" 
                 {% if not forloop.parentloop.parentloop.last %}
-                data-toggle="collapse" data-target="#{{ inline_admin_formset.formset.prefix }}-{% if not forloop.parentloop.parentloop.last %}{{ forloop.parentloop.parentloop.counter0 }}{% else %}empty{% endif %}"
+                rel="tooltip" data-placement="bottom" title="{{ inline_admin_form.form.description.value }}"
+                data-toggle="collapse" 
+                data-target="#{{ inline_admin_formset.formset.prefix }}-{% if not forloop.parentloop.parentloop.last %}{{ forloop.parentloop.parentloop.counter0 }}{% else %}empty{% endif %}"
                 {% endif %}
             >
                 <div class="thumbnail">
@@ -34,17 +30,10 @@
             {% if field.field.value %}
                 {% if field.field.name == 'photo' %}
                     {% thumbnail field.field.value "160x120" crop="center" as img %}
-                        <img data-toggle="tooltip" data-placement="bottom" title="{{ inline_admin_form.form.description.value }}" src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}" />
+                        <img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}" />
                     {% endthumbnail %}
                     
                 {% endif %}
-            {% endif %}
-            
-            {% if forloop.parentloop.last and 'prefix' in field.field.html_name %}
-                <img class="img-circle" src="{{ MEDIA_REAL_ESTATE }}img/camera.png" />
-                <div class="caption">
-                    <h5>Add new</h5>
-                </div>
             {% endif %}
 
         {% endfor %}

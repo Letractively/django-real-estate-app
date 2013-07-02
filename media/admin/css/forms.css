@@ -351,16 +351,8 @@ div.errors {
     background: #CCC;
 }
 
-.add-row img {
-    margin:10% auto 10% auto;
-}
-.add-row .caption h5,
-.add-row .caption div,
-.add-row .caption {
-    text-align: center;
-}
-
-div.form-row + .slug {
+div.form-row + .slug,
+span.delete {
     display: none !important;
 }
 /* Custom for tinymce */
@@ -376,4 +368,8 @@ div.form-row + .slug {
 }
 .inline-related .breadcrumb .btn {
     margin-top: -0.4em;
+}
+
+.accordion-body.in {
+  overflow:visible;
 }

@@ -30,11 +30,12 @@
 					    	center:default_position(),
 					     	zoom:12,
 					    },
-					    events: {
-					    	rightclick: function(event) {
-					    		alert('fazer menu');
-					    	}
-					    }
+					    // TODO: Better the mark with some options on right click.
+					    // events: {
+					    // 	rightclick: function(event) {
+					    // 		alert('fazer menu');
+					    // 	}
+					    // }
 					 },
 					 marker:{
 					 	options:{draggable:true},
@@ -47,8 +48,8 @@
 							},
 					 	},
 					},
-					height:300,
-					width:300,
+					height:400,
+					width:400,
 				});
 
 				return this.each( function() {

@@ -1,0 +1,20 @@
+.dropdown-menu > li > span {
+    clear: both;
+    color: #333333;
+    display: block;
+    font-weight: normal;
+    line-height: 20px;
+    padding-bottom: 3px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 3px;
+    white-space: nowrap;
+}
+
+.dropdown-menu > li > span:hover {
+    cursor: pointer;
+}
+
+#chart-items li input {
+    width: 76px;
+}

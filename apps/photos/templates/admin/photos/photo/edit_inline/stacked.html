@@ -16,9 +16,9 @@
                 {% endif %}
                 : #{{ forloop.counter }}
                 {% if not forloop.last %}
-                    <a href="javascript:void(0)" class="btn btn-danger pull-right inline-removelink"><i class="icon-remove icon-white"></i>  </a>
-                    <a data-target="#{{ inline_admin_formset.formset.prefix }}-{{ forloop.counter0 }}" data-toggle="collapse" href="#" class="btn btn-primary pull-right"><i class=" icon-chevron-down icon-white"></i>  </a>
-
+                    <a title="{% trans 'Delete image' %}" href="javascript:void(0)" class="btn btn-danger pull-right inline-removelink"><i class="icon-remove icon-white"></i>  </a>
+                    <a title="{% trans 'Minimize image' %}" data-target="#{{ inline_admin_formset.formset.prefix }}-{{ forloop.counter0 }}" data-toggle="collapse" href="#" class="btn btn-primary pull-right"><i class=" icon-chevron-down icon-white"></i>  </a>
+                    {% if inline_admin_formset.formset.can_delete and inline_admin_form.original %}<span class="delete">{{ inline_admin_form.deletion_field.field }} {{ inline_admin_form.deletion_field.label_tag }}</span>{% endif %}
                 {% endif %}
             </div>
           {% if inline_admin_form.form.non_field_errors %}{{ inline_admin_form.form.non_field_errors }}{% endif %}
@@ -59,9 +59,11 @@
 <script type="text/javascript">
 (function($) {
     $(document).ready(function() {
-        // init bootstrap-toltip.js
-        $('#{{ inline_admin_formset.formset.prefix }}-group .thumbnails').tooltip({
-            selector: "img[data-toggle=tooltip]"
+        // init bootstrap-toltip.js for imgs
+        $('#{{ inline_admin_formset.formset.prefix }}-group').tooltip({
+            selector: "[rel=tooltip]",
+            container: 'body'
+
         });
 
         var rows = "#{{ inline_admin_formset.formset.prefix }}-group .inline-related";
@@ -118,6 +120,22 @@
             });
         }
 
+        var click2Delete = function(row) {
+            $(rows).find('.inline-removelink').click(function(){
+                // Check input to delete objects.
+                var input = $(this).parent().find('input');
+                if ( $(this).hasClass('active') && input.prop('checked') ) {
+                    $(this).find('i').removeClass('icon-ok').addClass('icon-remove');
+                    $(this).removeClass('active');
+                    input.prop('checked',false)
+                    return 
+                }
+                input.prop('checked', true);
+                $(this).addClass('active');
+                $(this).find('i').removeClass('icon-remove').addClass('icon-ok');
+            });
+        }
+
         var init = function(row){
             $(rows).on('show',function(){
                 //Close all open edited forms inline when add one.
@@ -157,6 +175,7 @@
             inited: (function(row){
                 initWithErrors(row);
                 init(row);
+                click2Delete(row);
             }),
         })
 
