@@ -5,6 +5,7 @@ from itertools import chain
 from django.contrib.admin import widgets
 from django.conf import settings 
 from django.core.urlresolvers import reverse, NoReverseMatch
+from django.forms import MultiWidget, DateInput, TimeInput, SplitDateTimeWidget
 from django.forms.widgets import TextInput, CheckboxSelectMultiple, CheckboxInput,\
 								 SelectMultiple, FileInput
 from django.forms.util import flatatt
@@ -394,4 +395,37 @@ class AdminAjaxSelectMultipleInputWidget(SelectMultiple):
 	def value_from_datadict(self, data, files, name):
 		return [long(val) for val in data.get(name,'').split('|') if val]
 
+class CustomAdminDateWidget(DateInput):
+    class Media:
+        js = (MEDIA_PREFIX + "bootstrap2/plugins/bootstrap-datetimepicker.min.js",
+              MEDIA_PREFIX + "admin/js/DateTime.js")
 
+    def __init__(self, attrs={}, format=None):
+        super(CustomAdminDateWidget, self).__init__(attrs={'class': 'vDateField', 'size': '10'}, format=format)
+	
+	def render(self, name, value, attrs=None):
+		if value is None:
+			value = ''
+		final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
+		if value != '':
+			# Only add the 'value' attribute if a value is non-empty.
+			final_attrs['value'] = force_unicode(self._format_value(value))
+		return mark_safe(u'<input%s />' % flatatt(final_attrs))
+
+class CustomAdminTimeWidget(TimeInput):
+    class Media:
+        js = (MEDIA_PREFIX + "bootstrap2/plugins/bootstrap-datetimepicker.min.js",
+              MEDIA_PREFIX + "admin/js/DateTime.js")
+
+    def __init__(self, attrs={}, format=None):
+        super(CustomAdminTimeWidget, self).__init__(attrs={'class': 'vTimeField', 'size': '8'}, format=format)
+
+class CustomAdminSplitDateTime(SplitDateTimeWidget):
+    """
+    A SplitDateTime Widget that has some admin-specific styling.
+    """
+    def __init__(self, attrs=None):
+        widgets = [CustomAdminTimeWidget, CustomAdminTimeWidget]
+        # Note that we're calling MultiWidget, not SplitDateTimeWidget, because
+        # we want to define widgets.
+        MultiWidget.__init__(self, widgets, attrs)

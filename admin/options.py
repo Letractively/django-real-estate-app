@@ -4,6 +4,7 @@ from django import forms
 from django import template
 from django.conf import settings
 from django.contrib.admin import ModelAdmin, helpers
+from django.contrib.admin.options import FORMFIELD_FOR_DBFIELD_DEFAULTS
 from django.contrib.admin.util import unquote, get_deleted_objects
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core import serializers
@@ -31,6 +32,15 @@ from real_estate_app.apps.propertys.models import Property
 #TODO: make a wrapp function for delete elements with Property references.
 
 csrf_protect_m = method_decorator(csrf_protect)
+
+FORMFIELD_FOR_DBFIELD_DEFAULTS.update({
+    models.DateTimeField: {
+        'form_class': forms.SplitDateTimeField,
+        'widget': widgets.CustomAdminSplitDateTime
+    },
+    models.DateField: {'widget':widgets.CustomAdminDateWidget},
+})
+
 
 class FaceBoxModelAdmin(ModelAdmin):
 
@@ -205,6 +215,12 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
     list_filter=['logical_exclude',]
 
     exclude = ('create_date',)
+
+    def __init__(self, *args,**kwargs):
+        super(RealEstateAppPopUpModelAdmin,self).__init__(*args,**kwargs)
+        overrides = FORMFIELD_FOR_DBFIELD_DEFAULTS.copy()
+        overrides.update(self.formfield_overrides)
+        self.formfield_overrides = overrides
 
 
     def delete_model(self, request, obj):
