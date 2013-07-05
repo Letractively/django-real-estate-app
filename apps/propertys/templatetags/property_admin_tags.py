@@ -3,13 +3,18 @@ from datetime import datetime, timedelta
 
 from django import template
 from django.conf import settings
-from django.db.models import Q
+from django.contrib.admin.templatetags.admin_list import result_hidden_fields
+from django.contrib.admin.util import lookup_field, display_for_field, label_for_field 
+from django.contrib.admin.views.main import ALL_VAR, EMPTY_CHANGELIST_VALUE
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
+from django.forms.forms import pretty_name
 from django.http import  HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_unicode, smart_unicode, force_unicode 
+from django.utils.html import escape, conditional_escape 
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import ungettext, ugettext as _
 
 from real_estate_app.admin import site
 from real_estate_app.apps.propertys.models import Property, District, StatusProperty
@@ -28,7 +33,7 @@ class PropertyWillExpiredNode(template.Node):
 
     def render(self,context):
             last_days = datetime.now()+timedelta(days=5)
-            propertys = Property.objects.all_enabled().filter(Q(pub_date_end__lte=last_days))
+            propertys = Property.objects.all_enabled().filter(models.Q(pub_date_end__lte=last_days))
             context[self.var_name] = propertys[:self.num]
             return ''
 

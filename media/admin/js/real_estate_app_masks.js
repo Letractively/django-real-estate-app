@@ -23,7 +23,7 @@
 			})
 		});
 
-		$('td[alt="price"]').each( function () {
+		$('*[alt="price"]').each( function () {
 			$(this).html('R$ '+$.mask.string($(this).text(),'money'));
 		});
 

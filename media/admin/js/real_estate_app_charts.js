@@ -17,7 +17,7 @@ google.load('visualization',  '1', {'packages':['corechart']});
 				'title': "{{ title_chart }}",
 			},
 			'select_chart':[
-				['custom','Custom <div id="dates"><div class="input-append" id="date_init_datetimepicker"> <input data-format="yyyy-MM-dd" type="text" id="date_init" value="" /> <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span> </div> - <div class="input-append" id="date_end_datetimepicker"><input data-format="yyyy-MM-dd" id="date_end" type="text" value="" /><span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span></div></div>'],
+				['custom','Custom <div id="dates"><div class="input-append" id="date_init_datetimepicker"> <input disabled data-format="yyyy-MM-dd" type="text" id="date_init" value="" /> <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span> </div> - <div class="input-append" id="date_end_datetimepicker"><input data-format="yyyy-MM-dd" id="date_end" type="text" value="" disabled /><span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span></div></div>'],
 				['week','Week'],
 				['today','Today'],
 				['month','Month'],

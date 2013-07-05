@@ -1,0 +1,152 @@
+{% load thumbnail i18n admin_list %}
+{% if cl.result_list %}
+<table id="result-list" class="table table-striped table-bordered" >
+<thead>
+	<tr>
+		<th class="action-checkbox-column"> 
+			<input id="action-toggle" type="checkbox">
+		</th>
+		<th>
+		</th>
+	</tr>
+</thead>
+<tbody>
+	{% for property in cl.result_list %}
+			<tr>
+				<td>
+					<input class="action-select" type="checkbox" name="_selected_action" value="{{ property.id }}" />
+				</td>
+				<td>
+					<div class="media">
+						{% thumbnail property.get_random_photo "160x120" crop="center" as img %}
+						<ul class="thumbnails pull-left">
+							<li>
+								<a href="#" class="thumbnail">
+									<img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}" />
+								</a>
+							</li>
+						</ul>
+						{% endthumbnail %}
+						<div class="media-body">
+							
+							<div class="pull-left">
+								<div class="btn-group">
+									<!-- <a class="btn" href="{{ property.id }}/view/"> <i class="icon-eye-open"></i> {% trans 'View' %}</a> -->
+									{% url admin:propertys_property_change property.id as edit_property %}
+								    <a class="btn" href="{{ edit_property }}"> <i class="icon-edit"></i> {% trans 'Edit' %}</a>
+							    </div>
+							</div>
+							<div class="pull-right">
+								<div class="btn-group">
+								{% url admin:admin_visitcalendar_list_property_visit property.slug as edit_visitcalendar %}
+								<a class="btn" rel="tooltip" data-placement="bottom" title="{% trans 'Agenda property' %}" href="{{ edit_visitcalendar }}"><i class="icon-calendar"></i></a>
+								{% if property.gmap %}
+									<a class="btn" rel="tooltip" data-placement="bottom" title="{% trans 'Map property' %}" href="#" ><i class="icon-map-marker"></i></a>
+								{% endif %}
+								{% if property.enable_publish %}
+									<a rel="tooltip" data-placement="bottom" title="{% trans 'Property is published' %}" href="#" class="btn btn-success disabled"><i class="icon-ok-sign icon-white"></i></a>
+								{% else %}
+									<a rel="tooltip" data-placement="bottom" title="{% trans 'Property is unpublished' %}" class="btn btn-danger disabled"><i class="icon-remove-circle icon-white"></i></a>
+								{% endif %}
+								</div>
+							</div>
+							<p class="clearfix"> </p>
+							<div class="span8 pull-left">
+								<div class="span9">
+									<h4 class="media-heading">
+										{{ property.statusproperty_fk }}:
+										<span alt="price">{{ property.price }}</span>
+									</h4>
+								</div>
+								<p class="clearfix"></p>
+								<div class="span9">
+									<div class="span3"><strong>{% trans 'State' %}:</strong></div>
+									<div class="span9">{{ property.state }}</div>
+								</div>
+								{% if property.district_fk %}
+								<div class="span9">
+									<div class="span3"><strong>{% trans 'District'%}:</strong></div>
+									<div class="span9">{{ property.district_fk.district }}</div>
+								</div>
+								{% endif %}
+								{% comment %}
+								This is doesn't used yet because of we didn't finded icons.
+								{% if property.rooms or property.baths or property.garage or property.elevator %}
+								<div class="span9 visible-desktop">
+									{% if property.rooms %}
+										<div class="span2">{{ property.rooms }}</div>
+									{% endif %}
+									{% if property.baths %}
+										<div class="span2">{{ property.baths }}</div>
+									{% endif %}
+									{% if property.garage %}
+										<div class="span2">{{ property.garage }}</div>
+									{% endif %}
+									{% if property.elevator %}
+										<div class="span2">{{ property.elevator }}</div>
+									{% endif %}
+								</div>
+								{% endif %}
+								{% endcomment %}
+								{% if property.realtor_fk.all %}
+								<div class="span9 visible-desktop">
+									<div class="span3"><strong>{% trans 'Realtor' %}:</strong></div>
+									<div class="span9">
+										{% for realtor in property.realtor_fk.all %}
+											<span id="corretor{{ forloop.counter0 }}" rel="tooltip" data-html="true" data-placement="bottom" 
+												  title="
+												  		<div class='pull-left'>
+												  			<ul class='thumbnails'>
+											  					<li>
+											 						<a href='#'>
+											 							{% thumbnail realtor.photo '60x60' crop='center' as img_realtor %}
+											 								<img src='{{ img_realtor.url }}' />
+											 							{% endthumbnail %}
+												  					</a>
+												  				</li>
+												  			</ul>
+												  		</div>
+												  		<div class='pull-right'>
+												  		{% if realtor.photo %}
+												  		{% endif %}
+												        {% if realtor.phone %}{% trans 'Phone'%}: {{ realtor.phone }}<br />{% endif %}
+												  	    {% if realtor.celphone %} {% trans 'Celphone'%}: {{ realtor.celphone }}<br />{% endif %}
+												  	    {% if realtor.email %}{% trans 'Email' %}: {{ realtor.email }}{% endif %}
+												  		</div>
+												  		<p class='clearfix'></p>
+												  	     ">
+												  	     {{ realtor }}
+											</span>
+											{% if not forloop.last %}, <br /> {% endif %}
+										{% endfor %}
+									</div>
+								</div>
+								{% endif %}
+								
+							</div>
+							<div class="span4 pull-right">
+								<div class="span12 text-right">
+									<h4 class="media-heading">
+										{% trans 'Code' %}: {{ property.code_property }}
+									</h4>
+								</div>
+								<p class="clearfix"></p>
+								{% if property.condominio %}
+									<div class="span12 visible-desktop">
+										<div class="span6"><strong>Condominio:</strong></div>
+										<div class="offset6" alt="price">{{ property.condominio }}</div>
+									</div>
+								{% endif %}
+								{% if property.iptu %}
+									<div class="span12 visible-desktop">
+										<div class="span6"><strong>IPTU:</strong></div>
+										<div class="offset6" alt="price">{{ property.iptu }}</div>
+									</div>
+								{% endif %}
+							</div>
+				</td>
+			</tr>
+	{% endfor %}
+</tbody>
+</table>
+{% endif %}

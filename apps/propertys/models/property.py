@@ -248,7 +248,10 @@ class Property(RealEstateAppBaseModel):
 		queryset = self.photo_set.all().filter(enable_publish=True)
 		if queryset:
 			return queryset.order_by('?')[0]
-		return None
+		return ''
+	get_random_photo.short_description=_('Photo')
+	get_random_photo.allow_tags=True
+
 
 	def _get_all_photos(self):
 		photos =self.photo_set.all().filter(enable_publish=True)
@@ -270,6 +273,11 @@ class Property(RealEstateAppBaseModel):
 		return state.get(self.state) or ''
 
 	state_name=property(_state)
+
+	def _gmap(self):
+		return  (str(self.gmap_point_x) != GMAP_DEFAULT[0] or str(self.gmap_point_y) != GMAP_DEFAULT[1]) \
+		 		or (str(self.gmap_point_x) != GMAP_DEFAULT[0] and str(self.gmap_point_y) != GMAP_DEFAULT[1])
+	gmap=property(_gmap)
 
 	def admin_link(self):
 		if self.pk:

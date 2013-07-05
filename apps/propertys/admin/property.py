@@ -40,7 +40,7 @@ class PropertyAdmin(RealEstateAppPopUpModelAdmin):
 	
 	date_hierarchy = 'pub_date'
 	
-	list_display = ('code_property','agenda','address','district_fk','statusproperty_fk','pub_date','pub_date_end',)
+	list_display = ('get_random_photo','code_property','agenda','address','district_fk','statusproperty_fk','pub_date','pub_date_end',)
 	
 	list_filter = ('classification_fk','statusproperty_fk','enable_publish','logical_exclude',)
 	
@@ -53,13 +53,14 @@ class PropertyAdmin(RealEstateAppPopUpModelAdmin):
 	)
 	actions=[duplicate_object,make_unpublished,make_published]
 
-	change_form_template = 'admin/propertys/property/property_change_form.html'
+	ordering = ['-create_date','-pub_date',]
 
 	class Media:
 		css = {
 			'all':(
 					MEDIA_PREFIX_REAL_ESTATE+"admin/css/facebox.css",
 					MEDIA_PREFIX_REAL_ESTATE+"admin/css/gmaps.css",
+					MEDIA_PREFIX_REAL_ESTATE+'bootstrap2/plugins/bootstrap-tooltip.min.css',
 			),
 		}
 		js = (
@@ -72,6 +73,7 @@ class PropertyAdmin(RealEstateAppPopUpModelAdmin):
 		      'http://maps.google.com/maps/api/js?sensor=false&amp;language=en',
 		      MEDIA_PREFIX_REAL_ESTATE+'js/gmap3.js',
 		      MEDIA_PREFIX_REAL_ESTATE+'admin/js/real_estate_app_gmaps.js',
+		      MEDIA_PREFIX_REAL_ESTATE+'bootstrap2/plugins/bootstrap-tooltip.min.js',
 		)
 
 admin.site.register(Property, PropertyAdmin)

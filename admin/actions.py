@@ -206,8 +206,6 @@ def delete_selected_popup(modeladmin, request, queryset):
             deletable_objects=[format_link_callback(obj,modeladmin.admin_site) for obj in deletable_objects]
         except:
             pass
-
-    import pdb;pdb.set_trace()
     
     context = {
         "title": title,

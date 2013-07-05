@@ -259,7 +259,7 @@
       							}
       						});
       					}
-                if (settings.type_field == 'checkbox') {
+                if (settings.type_field == 'checkbox' || settings.type_field == 'radio') {
       					//if( id == 'id_aditionalthings'){
       						var count=0;
       						var checked = [];
@@ -282,19 +282,21 @@
       							count+=1;
       							var id_r=id+'_fk_'+count.toString();
       							var name=id.replace(/id_(.+)/,'$1');
+
       							name=name+'_fk';
-                                label = getLabel(labels,item)
+                    label = getLabel(labels,item);
+
       							if ( count == 1  ) {
-      								$('div.aditionalthings_fk div').append('<ul style="float: left" rel="'+id_r+'" id="'+id+'"></ul>');
+      								$('div.'+name).append('<ul style="float: left" rel="'+id_r+'" id="'+id+'"></ul>');
       								id_ul = id_r;
       							}
       							if ( item.pk in oc(checked)) {
-      								$('ul[rel="'+id_ul+'"]').append('<li><label for='+id_r+'> <input id='+id_r+' type="checkbox" checked="checked" value="'+item.pk+'" name="'+name+'" >'+label);
+      								$('ul[rel="'+id_ul+'"]').append('<li><label for='+id_r+'> <input id='+id_r+' type="'+settings.type_field+'" checked="checked" value="'+item.pk+'" name="'+name+'" >'+label);
       							} else {
-      								$('ul[rel="'+id_ul+'"]').append('<li><label for='+id_r+'> <input id='+id_r+' type="checkbox" value="'+item.pk+'" name="'+name+'" >'+label);
+      								$('ul[rel="'+id_ul+'"]').append('<li><label for='+id_r+'> <input id='+id_r+' type="'+settings.type_field+'" value="'+item.pk+'" name="'+name+'" >'+label);
       							}
       							if ( count % max_li == 0) {
-      								$('div.aditionalthings_fk div').append('<ul style="float: left" rel="'+id_r+'" id="'+id+'"></ul>');
+      								$('div.'+name).append('<ul style="float: left" rel="'+id_r+'" id="'+id+'"></ul>');
       								id_ul = id_r;
       							}
       						});
