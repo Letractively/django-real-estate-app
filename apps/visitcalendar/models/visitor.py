@@ -29,7 +29,7 @@ class Visitor(RealEstateAppBaseModel):
 
 		cpf = models.CharField(
 			u'CPF',
-			max_length=11,
+			max_length=14,
 			unique=True,
 		)
 

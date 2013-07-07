@@ -17,7 +17,7 @@ from django.utils.html import conditional_escape
 from django.utils.translation import ugettext_lazy as _
 
 from real_estate_app.conf.settings import MEDIA_PREFIX, REAL_ESTATE_APP_AJAX_SEARCH
-from real_estate_app.utils import AutoCompleteObject
+from real_estate_app.utils import AutoCompleteObject, radomstring
 
 class MoneyInputWidget(TextInput):
 
@@ -395,14 +395,9 @@ class AdminAjaxSelectMultipleInputWidget(SelectMultiple):
 	def value_from_datadict(self, data, files, name):
 		return [long(val) for val in data.get(name,'').split('|') if val]
 
-class CustomAdminDateWidget(DateInput):
-    class Media:
-        js = (MEDIA_PREFIX + "bootstrap2/plugins/bootstrap-datetimepicker.min.js",
-              MEDIA_PREFIX + "admin/js/DateTime.js")
+class CustomDateInput(DateInput):
 
-    def __init__(self, attrs={}, format=None):
-        super(CustomAdminDateWidget, self).__init__(attrs={'class': 'vDateField', 'size': '10'}, format=format)
-	
+
 	def render(self, name, value, attrs=None):
 		if value is None:
 			value = ''
@@ -410,22 +405,58 @@ class CustomAdminDateWidget(DateInput):
 		if value != '':
 			# Only add the 'value' attribute if a value is non-empty.
 			final_attrs['value'] = force_unicode(self._format_value(value))
-		return mark_safe(u'<input%s />' % flatatt(final_attrs))
+		return mark_safe(u"""<div id="date-widget" class="input-append"> \
+			                    <input%s data-format="%s" /> \
+			                    <span class="add-on"> \
+			                          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> \
+			                    </span> \
+			                </div>""" % (flatatt(final_attrs), 'yyyy-MM-dd'))
 
-class CustomAdminTimeWidget(TimeInput):
+class CustomAdminDateWidget(CustomDateInput):
     class Media:
         js = (MEDIA_PREFIX + "bootstrap2/plugins/bootstrap-datetimepicker.min.js",
               MEDIA_PREFIX + "admin/js/DateTime.js")
 
     def __init__(self, attrs={}, format=None):
-        super(CustomAdminTimeWidget, self).__init__(attrs={'class': 'vTimeField', 'size': '8'}, format=format)
+        super(CustomAdminDateWidget, self).__init__(attrs={'class': 'vDateField', 'size': '10'}, format=format)
+
+class CustomTimeInput(TimeInput):
+
+	def render(self, name, value, attrs=None):
+		if value is None:
+			value = ''
+		final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
+		if value != '':
+			# Only add the 'value' attribute if a value is non-empty.
+			final_attrs['value'] = force_unicode(self._format_value(value))
+		return mark_safe(u"""<div id="time-widget" class="input-append"> \
+			                    <input%s data-format="%s" /> \
+			                    <span class="add-on"> \
+			                          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> \
+			                    </span> \
+			                </div>""" % (flatatt(final_attrs), 'hh:mm:ss'))
+
+class CustomAdminTimeWidget(CustomTimeInput):
+	
+    class Media:
+        js = (MEDIA_PREFIX + "bootstrap2/plugins/bootstrap-datetimepicker.min.js",
+              MEDIA_PREFIX + "admin/js/DateTime.js")
+
+
+	def __init__(self, attrs={}, format=None):
+		super(CustomAdminTimeWidget, self).__init__(attrs={'class': 'vTimeField', 'size': '8'}, format=format)
 
 class CustomAdminSplitDateTime(SplitDateTimeWidget):
     """
     A SplitDateTime Widget that has some admin-specific styling.
     """
     def __init__(self, attrs=None):
-        widgets = [CustomAdminTimeWidget, CustomAdminTimeWidget]
+    	widgets = [CustomAdminDateWidget, CustomAdminTimeWidget]
         # Note that we're calling MultiWidget, not SplitDateTimeWidget, because
         # we want to define widgets.
         MultiWidget.__init__(self, widgets, attrs)
+
+    def format_output(self, rendered_widgets):
+        return mark_safe(u'%s %s<br />%s %s' % \
+            (_('Date:'), rendered_widgets[0], _('Time:'), rendered_widgets[1]))
+        

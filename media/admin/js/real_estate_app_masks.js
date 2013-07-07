@@ -14,12 +14,12 @@
 
 		$('input:text').setMask();
 
-		$('#property_form').submit(function() {
+		$('form').submit(function() {
 			$('input:text').each(function (){
 				if ($(this).attr('alt')==='money' || $(this).attr('alt') === 'area') {
 					var val =$(this).val();
 					$(this).val($.mask.string(val,'decimal'));
-				}
+				} 
 			})
 		});
 

@@ -60,7 +60,7 @@ class Realtor(RealEstateAppBaseModel):
 
 		cpf = models.CharField(
 								u'CPF',
-								max_length=17,
+								max_length=14,
 								blank=True,
 								unique=True
 		)
