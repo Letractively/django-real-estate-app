@@ -29,6 +29,7 @@ class VisitEventCalendarAdmin(RealEstateAppPopUpModelAdmin):
 		css = {
 			'all':(
 					MEDIA_PREFIX_REAL_ESTATE+"admin/css/facebox.css",
+					MEDIA_PREFIX_REAL_ESTATE+"admin/css/visitcalendar/fullcalendar-admin.css",
 			),
 		}
 		js = (

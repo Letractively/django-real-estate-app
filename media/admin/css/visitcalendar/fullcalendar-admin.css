@@ -20,3 +20,7 @@ custom fullcalendar widget admin
 	float:left;
 	width: 100%;
 }
+
+.fc-event .fc-event-icons {
+	float: right;
+}
