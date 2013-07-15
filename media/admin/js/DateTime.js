@@ -1,14 +1,10 @@
 (function($){
 	$(document).ready(function(){
-		$('div#time-widget').each(function() {
-			$(this).datetimepicker({
+		$('div#time-widget').datetimepicker({
       			pickDate: false
-    		})
-		});
-    	$('div#date-widget').each(function() {
-			$(this).datetimepicker({
-      			pickTime: false
-      		});
     	});
+    	$('div#date-widget').datetimepicker({
+      			pickTime: false
+      	});
 	})
 })(jQuery);

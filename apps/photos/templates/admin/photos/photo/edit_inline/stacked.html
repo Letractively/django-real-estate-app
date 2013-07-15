@@ -115,7 +115,6 @@
             $(fieldsets_group).find('.inline-related').each(function(i) {
                 if ($(this).attr('class').match(id_regex)) {
                     $(this).addClass('in');
-                    //$(fieldsets_group).find('.thumbnails').hide();
                 }
             });
         }
@@ -137,9 +136,10 @@
         }
 
         var init = function(row){
-            $(rows).on('show',function(){
+            $('.thumbnails li').on('click',function(e){
                 //Close all open edited forms inline when add one.
-                $('#{{ inline_admin_formset.formset.prefix }}-group').find('.in').collapse('hide')
+                $('#{{ inline_admin_formset.formset.prefix }}-group')
+                .find('.in').collapse('hide');
 
                 // Close all added forms inline when edit one.
                 $('#{{ inline_admin_formset.formset.prefix }}-group')
@@ -179,7 +179,7 @@
             }),
         })
 
-    });
+    }); 
 })(jQuery);
 </script>
 
