@@ -1,0 +1,112 @@
+{% load thumbnail i18n admin_list %}
+{% if cl.result_list %}
+<table id="result-list" class="table table-striped table-bordered" >
+<thead>
+	<tr>
+		<th class="action-checkbox-column"> 
+			<input id="action-toggle" type="checkbox">
+		</th>
+		<th>
+		</th>
+	</tr>
+</thead>
+<tbody>
+	{% for realtor in cl.result_list %}
+			{% url admin:realtors_realtor_change realtor.id as edit_realtor %}
+			<tr>
+				<td>
+					<input class="action-select" type="checkbox" name="_selected_action" value="{{ realtor.id }}" />
+				</td>
+				<td>
+					<div class="media">
+						
+									{% if realtor.photo %}
+									<ul class="thumbnails pull-left">
+										<li>
+											<a href="{{ edit_realtor }}" class="thumbnail" >
+												<img src="{{ realtor.get_sorlthumbnail_crop_120x100 }}" />
+											</a>
+										</li>
+									</ul>
+									{% else %}
+										{% thumbnail realtor.unknow_img "120x100" crop="center" as img %}
+										<ul class="thumbnails pull-left">
+											<li>
+												<a href="{{ edit_realtor }}" class="thumbnail" >
+													<img src="{{ img.url }}" />
+												</a>
+											</li>
+										</ul>
+										{% endthumbnail %}
+									{% endif %}
+	
+						<div class="media-body">
+							
+							<div class="pull-left title">
+								<div class="btn-group visible-desktop">
+									<!-- <a class="btn" href="{{ property.id }}/view/"> <i class="icon-eye-open"></i> {% trans 'View' %}</a> -->
+								    <a class="btn" href="{{ edit_realtor }}"> <i class="icon-edit"></i> {% trans 'Edit' %}</a>
+							    </div>
+							    <div class="span9 hidden-desktop">
+							    	<h4 class="media-heading">
+										{{ realtor.name }}
+									</h4>
+								</div>
+							</div>
+							<div class="pull-right buttons">
+								<div class="btn-group hidden-desktop">
+								<a class="btn " href="{{ edit_realtor }}"> <i class="icon-edit"></i> </a>
+								{% if not realtor.logical_exclude %}
+									<a rel="tooltip" data-placement="bottom" title="{% trans 'Property is enabled' %}" href="#" class="btn btn-success disabled"><i class="icon-ok-sign icon-white"></i></a>
+								{% else %}
+									<a rel="tooltip" data-placement="bottom" title="{% trans 'Property is disabled' %}" class="btn btn-danger disabled"><i class="icon-remove-circle icon-white"></i></a>
+								{% endif %}
+								</div>
+								<div class="visible-desktop">
+									{% if not realtor.logical_exclude %}
+										<a rel="tooltip" data-placement="bottom" title="{% trans 'Property is enabled' %}" href="#" class="btn btn-success disabled"><i class="icon-ok-sign icon-white"></i></a>
+									{% else %}
+										<a rel="tooltip" data-placement="bottom" title="{% trans 'Property is disabled' %}" class="btn btn-danger disabled"><i class="icon-remove-circle icon-white"></i></a>
+									{% endif %}
+								</div>
+							</div>
+							<p class="clearfix"> </p>
+							<div class="span12">
+									<h4 class="media-heading visible-desktop">
+										{% trans 'Realtor' %}: {{ realtor.name }}
+									</h4>
+							</div>
+							<div class="span8 pull-left">
+								{% if realtor.celphone %}
+								<div class="span9 line-label">
+									<div class="span5"><strong>{% trans 'Phone' %}:</strong></div>
+									<div class="span7">{{ realtor.phone }}</div>
+								</div>
+								{% endif %}
+								{% if realtor.celphone %}
+									<div class="span9 line-label">
+										<div class="span5"><strong>{% trans 'Celphone'%}:</strong></div>
+										<div class="span7">{{ realtor.celphone }}</div>
+									</div>
+								{% endif %}
+
+								{% if realtor.creci %}
+									<div class="span9 line-label">
+										<div class="span5"><strong>{% trans 'CRECI'%}:</strong></div>
+										<div class="span7">{{ realtor.creci }}</div>
+									</div>
+								{% endif %}
+								{% if realtor.tipo_pessoa %}
+									<div class="span9 line-label">
+										<div class="span5"><strong>{% trans 'Tipo pessoa'%}:</strong></div>
+										<div class="span7">{{ realtor.tipo_pessoa }}</div>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+				</td>
+			</tr>
+	{% endfor %}
+</tbody>
+</table>
+{% endif %}

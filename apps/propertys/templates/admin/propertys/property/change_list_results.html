@@ -12,17 +12,19 @@
 </thead>
 <tbody>
 	{% for property in cl.result_list %}
+			{% url admin:propertys_property_change property.id as edit_property %}
+			{% url admin:admin_visitcalendar_list_property_visit property.slug as edit_visitcalendar %}
 			<tr>
 				<td>
 					<input class="action-select" type="checkbox" name="_selected_action" value="{{ property.id }}" />
 				</td>
 				<td>
 					<div class="media">
-						{% thumbnail property.get_random_photo "160x120" crop="center" as img %}
+						{% thumbnail property.get_random_photo "120x100" format="PNG" crop="center" as img %}
 						<ul class="thumbnails pull-left">
 							<li>
-								<a href="#" class="thumbnail">
-									<img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}" />
+								<a href="{{ property.id }}/" class="thumbnail">
+											<img src="{{ img.url }}" />
 								</a>
 							</li>
 						</ul>
@@ -30,18 +32,22 @@
 						<div class="media-body">
 							
 							<div class="pull-left">
-								<div class="btn-group">
+								<div class="btn-group visible-desktop">
 									<!-- <a class="btn" href="{{ property.id }}/view/"> <i class="icon-eye-open"></i> {% trans 'View' %}</a> -->
-									{% url admin:propertys_property_change property.id as edit_property %}
 								    <a class="btn" href="{{ edit_property }}"> <i class="icon-edit"></i> {% trans 'Edit' %}</a>
 							    </div>
+							    <div class="span9 hidden-desktop">
+							    	<h4 class="media-heading">
+										{% trans 'Code' %}: {{ property.code_property }}
+									</h4>
+								</div>
 							</div>
 							<div class="pull-right">
 								<div class="btn-group">
-								{% url admin:admin_visitcalendar_list_property_visit property.slug as edit_visitcalendar %}
+								<a class="btn hidden-desktop" href="{{ edit_property }}"> <i class="icon-edit"></i> </a>
 								<a class="btn" rel="tooltip" data-placement="bottom" title="{% trans 'Agenda property' %}" href="{{ edit_visitcalendar }}"><i class="icon-calendar"></i></a>
 								{% if property.gmap %}
-									<a class="btn" rel="tooltip" data-placement="bottom" title="{% trans 'Map property' %}" href="#" ><i class="icon-map-marker"></i></a>
+									<a class="btn hidden-desktop" rel="tooltip" data-placement="bottom" title="{% trans 'Map property' %}" href="#" ><i class="icon-map-marker"></i></a>
 								{% endif %}
 								{% if property.enable_publish %}
 									<a rel="tooltip" data-placement="bottom" title="{% trans 'Property is published' %}" href="#" class="btn btn-success disabled"><i class="icon-ok-sign icon-white"></i></a>
@@ -53,20 +59,20 @@
 							<p class="clearfix"> </p>
 							<div class="span8 pull-left">
 								<div class="span9">
-									<h4 class="media-heading">
-										{{ property.statusproperty_fk }}:
-										<span alt="price">{{ property.price }}</span>
+									<h4 class="media-heading line-label">
+										<div class="span5">{{ property.statusproperty_fk }}:</div>
+										<div class="span7" alt="price">{{ property.price }}</div>
 									</h4>
 								</div>
 								<p class="clearfix"></p>
-								<div class="span9">
-									<div class="span3"><strong>{% trans 'State' %}:</strong></div>
-									<div class="span9">{{ property.state }}</div>
+								<div class="span9 line-label">
+									<div class="span5"><strong>{% trans 'State' %}:</strong></div>
+									<div class="span7">{{ property.state }}</div>
 								</div>
 								{% if property.district_fk %}
-								<div class="span9">
-									<div class="span3"><strong>{% trans 'District'%}:</strong></div>
-									<div class="span9">{{ property.district_fk.district }}</div>
+								<div class="span9 line-label">
+									<div class="span5"><strong>{% trans 'District'%}:</strong></div>
+									<div class="span7">{{ property.district_fk.district }}</div>
 								</div>
 								{% endif %}
 								{% comment %}
@@ -125,7 +131,7 @@
 								
 							</div>
 							<div class="span4 pull-right">
-								<div class="span12 text-right">
+								<div class="span12 text-right visible-desktop">
 									<h4 class="media-heading">
 										{% trans 'Code' %}: {{ property.code_property }}
 									</h4>

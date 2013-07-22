@@ -157,6 +157,12 @@
   content: "";
   line-height: 0;
 }
+@media (max-width: 1024px) {
+  .widget-right #chart-items {
+    left: auto;
+    right: 0
+  }
+}
 .widget .widget-content:after {
   clear: both;
 }

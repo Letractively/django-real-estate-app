@@ -1,15 +1,65 @@
 from django.contrib.admin.util import lookup_field, display_for_field, label_for_field 
-from django.contrib.admin.views.main import ALL_VAR, EMPTY_CHANGELIST_VALUE
+from django.contrib.admin.views.main import (ALL_VAR, EMPTY_CHANGELIST_VALUE, ORDER_VAR, ORDER_TYPE_VAR)
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.forms.forms import pretty_name
-from django.contrib.admin.templatetags.admin_list import result_hidden_fields, result_headers 
+from django.contrib.admin.templatetags.admin_list import result_hidden_fields#, result_headers 
 from django.utils.html import escape, conditional_escape 
 from django.utils.safestring import mark_safe
 from django.utils.encoding import smart_unicode, force_unicode 
 from django.template import Library
 
+from real_estate_app.utils import addHtmlAttr
+
 register = Library()
+
+def result_headers(cl):
+    """
+    Generates the list column headers.
+    """
+    lookup_opts = cl.lookup_opts
+
+    for i, field_name in enumerate(cl.list_display):
+        header, attr = label_for_field(field_name, cl.model,
+            model_admin = cl.model_admin,
+            return_attr = True
+        )
+        if attr:
+            # if the field is the action checkbox: no sorting and special class
+            if field_name == 'action_checkbox':
+                yield {
+                    "text": header,
+                    "class_attrib": mark_safe(' class="action-checkbox-column"')
+                }
+                continue
+
+            # It is a non-field, but perhaps one that is sortable
+            admin_order_field = getattr(attr, "admin_order_field", None)
+            if not admin_order_field:
+                yield {"text": header}
+                continue
+
+            # So this _is_ a sortable non-field.  Go to the yield
+            # after the else clause.
+        else:
+            admin_order_field = None
+
+        th_classes = []
+        new_order_type = 'asc'
+        if field_name == cl.order_field or admin_order_field == cl.order_field:
+            th_classes.append('sorted %sending' % cl.order_type.lower())
+            new_order_type = {'asc': 'desc', 'desc': 'asc'}[cl.order_type.lower()]
+
+        # This is used to write a class hidden-phone for bootstrap2
+        if i > 3: th_classes.append('hidden-phone')
+
+        yield {
+            "text": header,
+            "sortable": True,
+            "url": cl.get_query_string({ORDER_VAR: i, ORDER_TYPE_VAR: new_order_type}),
+            "class_attrib": mark_safe(th_classes and ' class="%s"' % ' '.join(th_classes) or '')
+        }
+
 
 def items_for_result(cl, result, form,is_tag):
     """
@@ -18,7 +68,7 @@ def items_for_result(cl, result, form,is_tag):
     first = True
     pk = cl.lookup_opts.pk.attname
     opts=cl.opts
-    for field_name in cl.list_display:
+    for ct ,field_name in enumerate(cl.list_display):
         row_class = ''
         try:
             f, attr, value = lookup_field(field_name, result, cl.model_admin)
@@ -69,7 +119,6 @@ def items_for_result(cl, result, form,is_tag):
                 attr = pk
             value = result.serializable_value(attr)
             result_id = repr(force_unicode(value))[1:]
-
             yield mark_safe(u'<%s%s><a href="%s"%s>%s</a></%s>' % \
                 (table_tag, row_class, url, '', conditional_escape(result_repr), table_tag))
         else:
@@ -81,6 +130,8 @@ def items_for_result(cl, result, form,is_tag):
                 result_repr = mark_safe(force_unicode(bf.errors) + force_unicode(bf))
             else:
                 result_repr = conditional_escape(result_repr)
+            # This is used to write a class hidden-phone for bootstrap2
+            if ct >3: row_class = addHtmlAttr(row_class,'class','hidden-phone')
             yield mark_safe(u'<td%s>%s</td>' % (row_class, result_repr))
     if form and not form[cl.model._meta.pk.name].is_hidden:
         yield mark_safe(u'<td>%s</td>' % force_unicode(form[cl.model._meta.pk.name]))

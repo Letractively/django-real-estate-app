@@ -54,7 +54,7 @@
 {% block content_title %}
   {% if title %}<h4 class="span8">{{ title }}</h4>{% endif %}
   {% if has_add_permission %}
-  <div class="offset8 text-right">
+  <div class="offset7 text-right">
     <div class="btn-group">
       <a title="{% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}" 
          {% if is_popup %} href="add/?_popup=1" {% else %} href="add/" {% endif %} 
@@ -109,25 +109,20 @@
           </div>
           
           {% block filters %}
-            <div class="span3 container real_apps">
               {% if cl.has_filters %}
-                <a data-target=".filterbar" data-toggle="collapse" class="btn btn-navbar btn-left">
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                </a>
-                <div class="nav-collapse collapse filterbar">
-                  <div class="widget">
-                      <div class="widget-header">
-                        <i class="icon-filter"></i><h3 id="filter">{% trans 'Filter' %}</h3>
-                      </div>
-                      <div id="changelist-filter-content" class="widget-content">
-                        {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
-                      </div>
+                <div class="span3 container real_apps">
+                  <div class="nav-collapse collapse visible-desktop">
+                    <div class="widget">
+                        <div class="widget-header">
+                          <i class="icon-filter"></i><h3 id="filter">{% trans 'Filter' %}</h3>
+                        </div>
+                        <div id="changelist-filter-content" class="widget-content">
+                          {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
+                        </div>
+                    </div>
                   </div>
                 </div>
               {% endif %}
-            </div>
           {% endblock %}
         </div>
 {% endblock %}
@@ -138,7 +133,7 @@
         <div class="widget-header">
             <i class="icon-calendar"></i> <h3 style=""> {% trans 'Amounts clicks' %} </h3>
         </div>
-        <div class="widget-content">
+        <div class="widget-content widget-right">
             {{ line_graph }}
         </div>
     </div>

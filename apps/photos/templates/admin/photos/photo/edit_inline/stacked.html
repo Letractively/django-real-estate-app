@@ -137,23 +137,25 @@
 
         var init = function(row){
             $('.thumbnails li').on('click',function(e){
-                //Close all open edited forms inline when add one.
-                $('#{{ inline_admin_formset.formset.prefix }}-group')
-                .find('.in').collapse('hide');
+                if (! $(e.currentTarget).hasClass('add-row')) {
+                    //Close all open edited forms inline when add one.
+                    $('#{{ inline_admin_formset.formset.prefix }}-group')
+                    .find('.in').collapse('hide');
 
-                // Close all added forms inline when edit one.
-                $('#{{ inline_admin_formset.formset.prefix }}-group')
-                .find('.dynamic-{{ inline_admin_formset.formset.prefix }}')
-                .each(function(d){
-                    // if is not template empty form
-                    if ($(this).attr('id') != undefined) {
-                        $(this).find('a.inline-deletelink')
-                        .each(function(){
-                            $(this).trigger('click');
-                        }) 
-                    }
-                });
-                return true;
+                    // Close all added forms inline when edit one.
+                    $('#{{ inline_admin_formset.formset.prefix }}-group')
+                    .find('.dynamic-{{ inline_admin_formset.formset.prefix }}')
+                    .each(function(d){
+                        //if is not template empty form
+                        if ($(this).attr('id') != undefined) {
+                            $(this).find('a.inline-deletelink')
+                            .each(function(){
+                                $(this).trigger('click');
+                            }) 
+                        }
+                    });
+                    return true;
+                }
             })
         }
 

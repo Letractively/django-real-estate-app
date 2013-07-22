@@ -15,6 +15,7 @@ from fields import District, Classification, StatusProperty, AditionalThings, Po
 from real_estate_app.apps.propertys.manager import PropertyManager
 from real_estate_app.apps.propertys.utils import make_dv
 from real_estate_app.apps.realtors.models import Realtor
+from real_estate_app.conf.settings import REAL_ESTATE_PROPERTY_UNKNOW_IMG
 from real_estate_app.models import RealEstateAppBaseModel
 
 # TODO: better import STATE_CHOICE based on LANGUAGE_CODE
@@ -24,6 +25,7 @@ LANGUAGE_CODE=getattr(settings,'LANGUAGE_CODE')
 GMAP_DEFAULT=getattr(settings,'GMAP_DEFAULT',('-15.793905','-47.882395'))
 
 class Property(RealEstateAppBaseModel):
+
 	code_property=models.CharField(
 							_('code property'),
 							max_length=8,
@@ -248,7 +250,7 @@ class Property(RealEstateAppBaseModel):
 		queryset = self.photo_set.all().filter(enable_publish=True)
 		if queryset:
 			return queryset.order_by('?')[0]
-		return ''
+		return REAL_ESTATE_PROPERTY_UNKNOW_IMG
 	get_random_photo.short_description=_('Photo')
 	get_random_photo.allow_tags=True
 

@@ -3,8 +3,6 @@ import re, Image
 from datetime import datetime
 from os import path
 
-from sorl.thumbnail import get_thumbnail
-
 from django.db import models
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -12,6 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import permalink
 
 from real_estate_app.models import RealEstateAppBaseModel
+from real_estate_app.conf.settings import REAL_ESTATE_PROPERTY_UNKNOW_IMG
 
 GET_THUMB_PATTERN = re.compile(r'^get_photo_(\d+)x(\d+)_(thumb_url|thumb_filename|resize_url)$')
 GET_THUMBNAIL = re.compile(r'get_(sorlthumbnail_crop)_(\d+)x(\d+)$')
@@ -24,6 +23,8 @@ def get_album(instance, filename):
 		return 'real_estate_app/photos/'+instance.album_property.slug+datetime.now().strftime('/%Y/%m/%d/')+filename
 
 class Photo(RealEstateAppBaseModel):
+
+	unknow_img=REAL_ESTATE_PROPERTY_UNKNOW_IMG
 	
 	album_property = models.ForeignKey(
 		 'propertys.Property',
@@ -110,9 +111,21 @@ class Photo(RealEstateAppBaseModel):
 			methodd, widthh, heightt = matchh.groups()
 
 			def get_thumbnail_crop():
-				my_file=self.photo.file.name
-				size = widthh+'x'+heightt
-				return get_thumbnail(my_file, size, crop='center', quality=99)
+				from sorl.thumbnail import get_thumbnail
+				size=widthh+'x'+heightt
+				attrs={
+					'crop':'center',
+					'quality':99,
+				}
+
+				try:
+					my_file=self.photo.file.name
+				except ValueError:
+					# TODO: discover why get error when try to pass 
+					#       self.unknow_img to get_thumbnail
+					return self.unknow_img
+				
+				return get_thumbnail(my_file,size, **attrs).url
 
 			if methodd == "sorlthumbnail_crop":
 				return get_thumbnail_crop

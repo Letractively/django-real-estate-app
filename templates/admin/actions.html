@@ -1,7 +1,9 @@
 {% load i18n %}
 <div class="actions input-append">
-{% for field in action_form %}{% if field.label %}<label class="pull-left">{{ field.label }}</label>{% endif %}{{ field }}{% if field.label %}{% endif %}{% endfor %}
-<button type="submit" class="btn" title="{% trans "Run the selected action" %}" name="index" value="{{ action_index|default:0 }}">{% trans "Go" %}</button>
+{% for field in action_form %}{% if field.label %}<label class="pull-left visible-desktop">{{ field.label }}</label>{% endif %}{{ field }}{% if field.label %}{% endif %}{% endfor %}
+<button type="submit" class="btn" title="{% trans "Run the selected action" %}" name="index" value="{{ action_index|default:0 }}">
+<i class="icon-play"></i>
+</button>
 </div>
 {% if actions_selection_counter %}
     <script type="text/javascript">var _actions_icnt="{{ cl.result_list|length|default:"0" }}";</script>

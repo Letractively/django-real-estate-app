@@ -107,6 +107,7 @@ class PropertyChageListAdminNode(template.Node):
             'actions_on_top': PropertyAdmin.actions_on_top,
             'actions_on_bottom': PropertyAdmin.actions_on_bottom,
             'actions_selection_counter': PropertyAdmin.actions_selection_counter,
+            'media':PropertyAdmin.media,
         }
         context.update(new_context or {})
         context[self.var_name]= template.loader.get_template(self.template).render(context)

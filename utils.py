@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import operator
 from functools import wraps
 
@@ -241,3 +242,19 @@ class AutoCompleteObject(object):
 			return tmp_fields_values
 
 		raise "Error"
+
+def addHtmlAttr(string, attr, attr_value=''):
+
+	attributes=string.split(' ')
+	new_attr=''
+	value=''
+	for ct,attrs in enumerate(attributes):
+		splited=attrs.split('=')
+		if splited[0] == attr:
+			value=splited[1].replace('"','')
+			attributes.pop(ct)
+			
+		new_attr=''.join([' ',attr,'="',value,' ',attr_value,'"'])
+
+	attributes.append(new_attr)
+	return ''.join(attributes)

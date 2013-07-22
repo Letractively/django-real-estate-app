@@ -89,10 +89,11 @@
 				row.insertBefore($(template));
 				// Update number of total forms
 				$(totalForms).val(parseInt(totalForms.val()) + 1);
+
 				nextIndex += 1;
 				// Hide add button in case we've hit the max, except we want to add infinitely
 				if ((maxForms.val() != '') && (maxForms.val()-totalForms.val()) <= 0) {
-					addButton.parent().hide();
+					addButton.hide();
 				}
 
 				// The delete button of each row triggers a bunch of other things
@@ -111,7 +112,7 @@
 					$("#id_" + options.prefix + "-TOTAL_FORMS").val(forms.length);
 					// Show add button again once we drop below max
 					if ((maxForms.val() == '') || (maxForms.val()-forms.length) > 0) {
-						addButton.parent().show();
+						addButton.show();
 					}
 					// Also, update names and ids for all remaining form controls
 					// so they remain in sequence:

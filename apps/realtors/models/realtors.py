@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
+from real_estate_app.conf.settings import REAL_ESTATE_REALTOR_UNKNOW_IMG
 from real_estate_app.managers import RealEstateManager
 from real_estate_app.models import RealEstateAppBaseModel
 
@@ -19,12 +20,15 @@ SEX=(
 )
 
 GET_THUMB_PATTERN = re.compile(r'^get_photo_(\d+)x(\d+)_(thumb_url|thumb_filename|resize_url)$')
+GET_THUMBNAIL = re.compile(r'get_(sorlthumbnail_crop)_(\d+)x(\d+)$')
 
 def get_realtor_directory(instance, filename):
 		return 'real_estate_app/photos/realtor/'+instance.name+'/'+datetime.now().strftime('%Y/%m/%d/')+'/'+filename
 
 
 class Realtor(RealEstateAppBaseModel):
+
+	unknow_img = REAL_ESTATE_REALTOR_UNKNOW_IMG
 
 	user = models.ForeignKey(User, unique=True)
 
@@ -217,59 +221,90 @@ class Realtor(RealEstateAppBaseModel):
 	    >>> u"/srv/media/photos/2008/02/26/example_320x240.jpg"
 		"""
 		match = re.match(GET_THUMB_PATTERN, name)
-		if match is None:
+		matchh = re.match(GET_THUMBNAIL,name)
+		if match is None and matchh is None:
 			raise AttributeError, name
-		width, height, method = match.groups()
-		size = int(width), int(height)
 
-		def get_photo_thumbnail_filename():
-			file, ext = path.splitext(self.photo.file.name)
-			return file + '_%sx%s' % size + ext
+		try:
+			methodd, widthh, heightt = matchh.groups()
 
-		def get_photo_thumbnail_url():
-			url, ext = path.splitext(self.photo.url)
-			return url + '_%sx%s' % size + ext	
+			def get_thumbnail_crop():
+				from sorl.thumbnail import get_thumbnail
+				size=widthh+'x'+heightt
+				attrs={
+					'crop':'center',
+					'quality':99,
+				}
+
+				try:
+					my_file=self.photo.file.name
+				except ValueError:
+					# TODO: discover why get error when try to pass 
+					#       self.unknow_img to get_thumbnail
+					return self.unknow_img
+				
+				return get_thumbnail(my_file,size, **attrs).url
+
+			if methodd == "sorlthumbnail_crop":
+				return get_thumbnail_crop
+
+		except AttributeError:
+			pass
+		### All others methods different of get_thumbnail_crop or get_thumbnail will
+		### be deprecated.
+		try:
+			width, height, method = match.groups()
+			size = int(width), int(height)
+			def get_photo_thumbnail_filename():
+				file, ext = path.splitext(self.photo.file.name)
+				return file + '_%sx%s' % size + ext
+
+			def get_photo_thumbnail_url():
+				url, ext = path.splitext(self.photo.url)
+				return url + '_%sx%s' % size + ext	
 
 
-		def get_photo_thumbnail_resize_filename():
-			file, ext = path.splitext(self.photo.file.name)
-			return file + '_%sx%s_' % size + method + ext
+			def get_photo_thumbnail_resize_filename():
+				file, ext = path.splitext(self.photo.file.name)
+				return file + '_%sx%s_' % size + method + ext
 
-		def get_photo_thumbnail_resize_url():
-			url, ext = path.splitext(self.photo.url)
-			return url + '_%sx%s_' % size + method + ext	
+			def get_photo_thumbnail_resize_url():
+				url, ext = path.splitext(self.photo.url)
+				return url + '_%sx%s_' % size + method + ext	
 
-		if method == "thumb_url" or method=="thumb_filename":	
-			thumbnail = get_photo_thumbnail_filename()
-		else:
-			thumbnail = get_photo_thumbnail_resize_filename()
-
-		if not path.exists(thumbnail):
-			img = Image.open(self.photo.file.name)
-
-			if method =="thumb_url" or method == "thumb_filename":
-				img.thumbnail(size, Image.ANTIALIAS)
-				img.save(thumbnail)
+			if method == "thumb_url" or method=="thumb_filename":	
+				thumbnail = get_photo_thumbnail_filename()
 			else:
-				(img_width,img_height)=img.size
-				
-				wpercent=(size[0]/float(img_width))
-				HSIZE=int((float(img_height)*float(wpercent)))
+				thumbnail = get_photo_thumbnail_resize_filename()
 
-				y_crop=int((float((HSIZE/2.0))-float((size[1]/2.0))))
-				height_crop=(HSIZE-y_crop)				
-				
-				box=(0,y_crop,size[0],height_crop)
+			if not path.exists(thumbnail):
+				img = Image.open(self.photo.file.name)
 
-				new_img = img.resize((size[0],HSIZE),Image.ANTIALIAS)
+				if method =="thumb_url" or method == "thumb_filename":
+					img.thumbnail(size, Image.ANTIALIAS)
+					img.save(thumbnail)
+				else:
+					(img_width,img_height)=img.size
+					
+					wpercent=(size[0]/float(img_width))
+					HSIZE=int((float(img_height)*float(wpercent)))
 
-				crop=new_img.crop(box)
-				crop.load()
-				crop.save(thumbnail)
+					y_crop=int((float((HSIZE/2.0))-float((size[1]/2.0))))
+					height_crop=(HSIZE-y_crop)				
+					
+					box=(0,y_crop,size[0],height_crop)
 
-		if method == "thumb_url":
-			return get_photo_thumbnail_url
-		elif method == "resize_url":
-			return get_photo_thumbnail_resize_url
-		else:
-			return get_photo_thumbnail_filename
+					new_img = img.resize((size[0],HSIZE),Image.ANTIALIAS)
+
+					crop=new_img.crop(box)
+					crop.load()
+					crop.save(thumbnail)
+
+			if method == "thumb_url":
+				return get_photo_thumbnail_url
+			elif method == "resize_url":
+				return get_photo_thumbnail_resize_url
+			else:
+				return get_photo_thumbnail_filename
+		except AttributeError:
+			pass

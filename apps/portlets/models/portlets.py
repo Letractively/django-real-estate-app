@@ -34,6 +34,12 @@ class Portlet(RealEstateAppCompleteModel):
 							default='news'
 	)
 
+	def _get_type_portlets(self):
+		if self.type_portlet:
+			return dict(TYPES)[self.type_portlet]
+		return None
+	typeportlet=property(_get_type_portlets)
+
 
 	def __unicode__(self):
 		return u'%s' % self.title

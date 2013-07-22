@@ -1,3 +1,9 @@
+1 - Better the marketing.
+2 - Problem with calendar on view phone and tablet.
+2 - Doc new modules dependecy.
+3 - Take printscreens to marketing.
+4 - Test on new instalation.
+
 PRIORIDADE:
 	Utilizar bootstrap twitter.
 	Reescrever SQL migration.

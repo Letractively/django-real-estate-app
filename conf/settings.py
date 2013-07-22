@@ -3,9 +3,14 @@ import os
 
 from django.conf import settings
 from django.db.models import get_app
+from django.utils.translation import ugettext as _
 
 # Where is the media directory of app real_estate_app
-MEDIA_PATH=os.path.join(os.path.abspath(os.path.dirname(__file__)),'..','media')
+MEDIA_PATH=getattr(
+	settings,
+	'REAL_APP_MEDIA_PATH',
+	os.path.join(os.path.abspath(os.path.dirname(__file__)),'..','media')
+)
 
 # Create a media prefix for real_estate_app media.
 MEDIA_REAL_ESTATE = MEDIA_PREFIX=getattr(settings,'REAL_APP_MEDIA_PREFIX','/media-real/')
@@ -131,3 +136,6 @@ if CUSTOM_REAL_ESTATE_APP_SETTINGS:
 # Get the MANAGERS of site for real_estate_app
 MANAGERS = getattr(settings,'MANAGERS')
 MANAGERS=list(MANAGERS)
+
+REAL_ESTATE_PROPERTY_UNKNOW_IMG=getattr(settings,'REAL_ESTATE_PROPERTY_UNKNOW_IMG', '' )
+REAL_ESTATE_REALTOR_UNKNOW_IMG=getattr(settings,'REAL_ESTATE_REALTOR_UNKNOW_IMG', '' )
