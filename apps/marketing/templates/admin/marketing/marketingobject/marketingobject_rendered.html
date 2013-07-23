@@ -1,0 +1,11 @@
+{% if not is_swf %}
+	<img  src="{{ metadata.url }}" title="{{ metadata.title }}" class="{{ metadata.class }}" />
+{% else %}
+	<object id='marketing-object'
+			class='{{ metadata.class }}' 
+			width="{{ metadata.width }}" 
+			height="{{ metadata.height }}"
+			title="{{ metadata.title }}"
+			data="{{ metadata.url }}"
+			type="application/x-shockwave-flash" />
+{% endif %}

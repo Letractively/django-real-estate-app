@@ -15,11 +15,7 @@
 
 	{% if portlet_objects %}
 		{% for obj in portlet_objects %}
-			<p>
-				<strong><a href="{{ obj.get_absolute_url }}">{{ obj.title }} </a></strong> <br />
-				{{ obj.content|striptags|safe|truncatewords:20 }} 
-				<a href="{{ obj.get_absolute_url }}"> {% trans "Read more" %} </a>
-			</p>
+			{{ obj.render }}
 		{% endfor %}
 	{% endif %}
 

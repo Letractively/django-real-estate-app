@@ -16,7 +16,7 @@ class PortletsNode(template.Node):
         def __init__(self, var_name, type_portlet):
                 self.var_name=var_name
                 self.type_portlet=type_portlet
-                self.real_estate_node_template="admin/portlets/real_estate_node_list.html"
+                self.real_estate_node_template="admin/portlets/templatetags/portelt_templatetags_list.html"
 
         def render(self, context):
                 """
@@ -49,8 +49,8 @@ class PortletsNode(template.Node):
                         )
 
                 return template.loader.get_template(self.real_estate_node_template or [
-                "admin/real_estate_app/real_estate_node_list.html",
-                "admin/real_estate_node_list.html"
+                "admin/portlets/portlet_templatetags_list.html",
+                "admin/portlet_templatetags_list.html"
                 ]).render(context)
 
 def do_get_portlets(parser, token):

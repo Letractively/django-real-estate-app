@@ -9,6 +9,10 @@ try:
 	import captcha
 except ImportError:
 	raise ImproperlyConfigured("You need install django-simple-captcha app")
+try:
+	import hexagonit.swfheader
+except ImportError:
+	raise ImproperlyConfigured("You need install hexagonit.swfheader python module")
 
 def get_apps():
 	return [

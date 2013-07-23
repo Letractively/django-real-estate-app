@@ -1,4 +1,4 @@
-1 - Better the marketing.
+1 - Problem change_form for phone and tablet.
 2 - Problem with calendar on view phone and tablet.
 2 - Doc new modules dependecy.
 3 - Take printscreens to marketing.

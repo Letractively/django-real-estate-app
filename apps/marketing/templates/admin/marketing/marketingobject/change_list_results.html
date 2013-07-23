@@ -1,0 +1,87 @@
+{% load thumbnail i18n admin_list %}
+{% if cl.result_list %}
+<table id="result-list" class="table table-striped table-bordered" >
+<thead>
+	<tr>
+		<th class="action-checkbox-column"> 
+			<input id="action-toggle" type="checkbox">
+		</th>
+		<th>
+		</th>
+	</tr>
+</thead>
+<tbody>
+	{% for marketingobject in cl.result_list %}
+			{% url admin:marketing_marketingobject_change marketingobject.id as edit_marketingobject %}
+			<tr>
+				<td>
+					<input class="action-select" type="checkbox" name="_selected_action" value="{{ marketingobject.id }}" />
+				</td>
+				<td>
+					<div class="media">
+						
+						<div class="media-body">
+							
+							<div class="pull-left title">
+								<div class="btn-group visible-desktop">
+									<!-- <a class="btn" href="{{ property.id }}/view/"> <i class="icon-eye-open"></i> {% trans 'View' %}</a> -->
+								    <a class="btn" href="{{ edit_marketingobject }}"> <i class="icon-edit"></i> {% trans 'Edit' %}</a>
+							    </div>
+							    <div class="span9 hidden-desktop">
+							    	<h4 class="media-heading">
+										{{ marketingobject.title }}
+									</h4>
+								</div>
+							</div>
+							<div class="pull-right buttons">
+								<div class="btn-group hidden-desktop">
+								<a class="btn " href="{{ edit_marketingobject }}"> <i class="icon-edit"></i> </a>
+								{% if not marketingobject.logical_exclude %}
+									<a rel="tooltip" data-placement="bottom" title="{% trans 'Marketing Object is enabled' %}" href="#" class="btn btn-success disabled"><i class="icon-ok-sign icon-white"></i></a>
+								{% else %}
+									<a rel="tooltip" data-placement="bottom" title="{% trans 'Marketing Object is disabled' %}" class="btn btn-danger disabled"><i class="icon-remove-circle icon-white"></i></a>
+								{% endif %}
+								</div>
+								<div class="visible-desktop">
+									{% if not marketingobject.logical_exclude %}
+										<a rel="tooltip" data-placement="bottom" title="{% trans 'Marketing Object is enabled' %}" href="#" class="btn btn-success disabled"><i class="icon-ok-sign icon-white"></i></a>
+									{% else %}
+										<a rel="tooltip" data-placement="bottom" title="{% trans 'Marketing Object is disabled' %}" class="btn btn-danger disabled"><i class="icon-remove-circle icon-white"></i></a>
+									{% endif %}
+								</div>
+							</div>
+							<p class="clearfix"> </p>
+							<div class="span12">
+									<h4 class="media-heading visible-desktop">
+										{% trans 'Marketing Object' %}: {{ marketingobject.title }}
+									</h4>
+							</div>
+							<div class="span8 pull-left">
+								{% if marketingobject.pub_date %}
+									<div class="span9 line-label">
+										<div class="span5"><strong>{% trans 'Date init' %}:</strong></div>
+										<div class="span7">{{ marketingobject.pub_date }}</div>
+									</div>
+								{% endif %}
+
+								{% if marketingobject.pub_date_end %}
+									<div class="span9 line-label">
+										<div class="span5"><strong>{% trans 'Date end' %}:</strong></div>
+										<div class="span7">{{ marketingobject.pub_date_end }}</div>
+									</div>
+								{% endif %}
+								{% if marketingobject.create_date %}
+									<div class="span9 line-label">
+										<div class="span5"><strong>{% trans 'Creation date' %}:</strong></div>
+										<div class="span7">{{ marketingobject.create_date }}</div>
+									</div>
+								{% endif %}
+
+							</div>
+						</div>
+				</td>
+			</tr>
+	{% endfor %}
+</tbody>
+</table>
+{% endif %}

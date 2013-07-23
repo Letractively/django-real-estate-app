@@ -12,7 +12,7 @@
 </thead>
 <tbody>
 	{% for portlet in cl.result_list %}
-			{% url admin:portlets_portlet_change portlet.id as edt_portlet %}
+			{% url admin:portlets_portlet_change portlet.id as edit_portlet %}
 			<tr>
 				<td>
 					<input class="action-select" type="checkbox" name="_selected_action" value="{{ portlet.id }}" />
@@ -25,7 +25,7 @@
 							<div class="pull-left title">
 								<div class="btn-group visible-desktop">
 									<!-- <a class="btn" href="{{ property.id }}/view/"> <i class="icon-eye-open"></i> {% trans 'View' %}</a> -->
-								    <a class="btn" href="{{ edt_portlet }}"> <i class="icon-edit"></i> {% trans 'Edit' %}</a>
+								    <a class="btn" href="{{ edit_portlet }}"> <i class="icon-edit"></i> {% trans 'Edit' %}</a>
 							    </div>
 							    <div class="span9 hidden-desktop">
 							    	<h4 class="media-heading">
@@ -35,7 +35,7 @@
 							</div>
 							<div class="pull-right buttons">
 								<div class="btn-group hidden-desktop">
-								<a class="btn " href="{{ edt_portlet }}"> <i class="icon-edit"></i> </a>
+								<a class="btn " href="{{ edit_portlet }}"> <i class="icon-edit"></i> </a>
 								{% if not portlet.logical_exclude %}
 									<a rel="tooltip" data-placement="bottom" title="{% trans 'Portlet is enabled' %}" href="#" class="btn btn-success disabled"><i class="icon-ok-sign icon-white"></i></a>
 								{% else %}
