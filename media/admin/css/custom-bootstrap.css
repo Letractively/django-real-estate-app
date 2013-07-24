@@ -121,25 +121,12 @@ div.tab-content.errors {
 .add-row .thumbnail {
 	border-style: dashed;
 	border-width: 2px;
+	width: 160px;
 }
 .media .thumbnails > li {
 	margin-left: 0;
 }
 
-
-
-/*.ui-helper-clearfix span {
-  color: #ffffff;
-  text-decoration: none;
-  background-color: #0081c2;
-  background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
-  background-image: -webkit-linear-gradient(top, #0088cc, #0077b3);
-  background-image: -o-linear-gradient(top, #0088cc, #0077b3);
-  background-image: linear-gradient(to bottom, #0088cc, #0077b3);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
-}*/
 
 @media (max-width: 979px) {
 
@@ -222,6 +209,18 @@ div.tab-content.errors {
 	.content_title {
 		margin-bottom: 10px;
 	}
+	#myTab li:first-child,
+	#myTab li:first-child + li {
+		width: 100px;
+	}
+
+	.thumbnails [class*="span"]:first-child,
+	.tab-pane ul.thumbnails > li[class*="span"] {
+		margin-left: 0;
+		padding-left: 2.5641%;
+		width: 180px;
+	}
+
 }
 
 @media (max-width: 480px) {
@@ -234,8 +233,14 @@ div.tab-content.errors {
 		width: auto;
 	}
 }
-
+@media (min-width: 320px) and (max-width: 600px) {
+#myTab li:first-child + li + li,
+#myTab li:first-child + li + li + li,
+#myTab li:first-child + li + li + li + li {
+	margin-top: 20px;
+}
 @media (max-width: 320px) {
+
 	h4.media-heading {
 		font-size: 13.5px;
 	}

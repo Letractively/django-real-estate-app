@@ -154,13 +154,14 @@ $.fn.extend({
 
 											function addItem(value, pk) {
 												if (options.multiple) {
-										 			var span=$('<span>').html(value.value);
-										 			var a=$("<a>").addClass("remove").attr({
+										 			var span=$('<div class="btn-group" >').html(value.value);
+										 			var a=$("<a>").addClass("remove btn btn-danger").attr({
 										 				href:"javascript:",
 										 				title:"Remove "+value.real_value,
 										 				value:pk
-										 			}).text("x").appendTo(span);
+										 			}).html("<i class='icon-remove icon-white'></i>").appendTo(span);
 										 			span.insertBefore($text);
+										 			$('<p class="clearfix">').insertBefore($text);
 									 			}
 									 			return false;
 											}

@@ -1,0 +1,39 @@
+/*
+ * This is for autocomplete multiple fields 
+*/
+.ui-autocomple-multiple .btn-group  {
+	height: 50px;
+}
+.ui-autocomple-multiple .btn-group #results-ajax,
+.ui-autocomple-multiple .btn-group .remove {
+	height: 40px;
+}
+.ui-autocomple-multiple .btn-group .remove .icon-remove {
+	margin-top: 10px;
+}
+@media (max-width: 480px) {
+	.ui-autocomple-multiple .btn-group {
+		width: 300px;
+	}
+    .ui-autocomple-multiple .btn-group #results-ajax {
+        width: 230px;
+        overflow: hidden;
+    }
+
+    .ui-autocomple-multiple .btn-group {
+    	white-space: normal;
+    }
+}
+@media (max-width: 320px) {
+	.ui-autocomple-multiple .btn-group {
+		width: 200px;
+	}
+    .ui-autocomple-multiple .btn-group #results-ajax {
+        width: 130px;
+        overflow: hidden;
+    }
+
+    .ui-autocomple-multiple .btn-group {
+    	white-space: normal;
+    }
+}

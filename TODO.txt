@@ -1,24 +1,12 @@
-1 - Problem change_form for phone and tablet.
-2 - Problem with calendar on view phone and tablet.
-2 - Doc new modules dependecy.
-3 - Take printscreens to marketing.
-4 - Test on new instalation.
-
-PRIORIDADE:
-	Utilizar bootstrap twitter.
-	Reescrever SQL migration.
-	
-	- PORTLET: este deve ser o mais complicado devido aos tipos.
-    - PORTLETPROPAGANDAIMAGE: migrar para portlet e migrar para marketing caso exista
-    - Avisar que o images deixou de ser suportado por conta do real_estate_files.
-	Testar toda aplicacao
+NEW VERSION:
+1 - Problem with calendar on view phone and tablet.
+2 - Rewrite SQL migration.
+3 - Alert about images has no more supported on real_estate_files.
+4 - Doc new modules dependecy.
+5 - Take printscreens to marketing.
+6 - Test on new instalation.
 
 NORMAL:
-	Criar um app para construir locales.
-	Melhorar os exemplos.
-	Problema do meio.mask com ie7.
-	Criar a busca por geoprocessamento.
-	Utilizar bootstrap twitter.
-	Error de encoding na apresentacao do calendario de visita. TRANS Pt-BR
-	Migrar todas funcoes de get_photo_... para solr-thumbnail.
-	Informar que será descontinuado o get_photos_..., habilitando somente um.
+	- Create app to build locales.
+	- Problem javascript meio.mask with IE7.
+	- Create a app geolocation for Property.

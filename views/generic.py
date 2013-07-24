@@ -57,13 +57,12 @@ def create_update_object(request, model=None, object_id=None,template_name=None,
                 obj=formset.save(commit=False)
                 if hasattr(form_opts,'module_name') and hasattr(obj,form_opts.module_name+'_fk_id'):
                     setattr(obj,form_opts.module_name+'_fk',new_object)
-                    formset.save()
                 else:
                     raise Exception('Error the model %s must has a ForeignKey named %s_fk' % (obj._meta.module_name, form_opts.module_name) )
-
-                msg = ugettext("The %(verbose_name)s was created successfully.") %\
-                                {"verbose_name": model._meta.verbose_name}
+                
+                msg = ugettext("The %s was created successfully.") % model._meta.verbose_name
                 messages.success(request, msg, fail_silently=True)
+                formset.save()
                 return redirect(post_save_redirect, new_object)
 
     else:
