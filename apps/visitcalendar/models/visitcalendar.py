@@ -44,9 +44,9 @@ class VisitEvent(RealEstateAppBaseModel):
 
 	def __unicode__(self):
 		try:
-			return '%s' % self.date_visit.strftime(settings.DATETIME_INPUT_FORMATS[0])
+			return u'%s' % self.date_visit.strftime(settings.DATETIME_INPUT_FORMATS[0])
 		except IndexError:
-			return '%s' % self.date_visit.strftime('%Y-%m-%d %H:%M:%S')
+			return u'%s' % self.date_visit.strftime('%Y-%m-%d %H:%M:%S')
 		else:
 			raise
 

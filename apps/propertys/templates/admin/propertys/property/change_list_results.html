@@ -59,10 +59,18 @@
 							<p class="clearfix"> </p>
 							<div class="span8 pull-left">
 								<div class="span9">
-									<h4 class="media-heading line-label">
-										<div class="span5">{{ property.statusproperty_fk }}:</div>
-										<div class="span7" alt="price">{{ property.price }}</div>
+									<h4 class="media-heading line-label hidden-phone">
+										<div class="span5">{% trans 'Address' %}:</div>
+										<div class="span7" > {{ property.address }}</div>
 									</h4>
+									<h4 class="media-heading line-label visible-phone">
+										{{ property.address }}
+									</h4>
+								</div>
+								<p class="clearfix"> </p>
+								<div class="span9 line-label">
+									<div class="span5"><strong>{{ property.statusproperty_fk }}:</strong></div>
+									<div class="span7" alt="price">{{ property.price }}</div>
 								</div>
 								<p class="clearfix"></p>
 								<div class="span9 line-label">

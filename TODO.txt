@@ -1,10 +1,10 @@
 NEW VERSION:
-1 - Problem with calendar on view phone and tablet.
-2 - Rewrite SQL migration.
-3 - Alert about images has no more supported on real_estate_files.
-4 - Doc new modules dependecy.
-5 - Take printscreens to marketing.
-6 - Test on new instalation.
+1 - Problem with new Photo date-wiget and time-widget
+    doesn't displaed before button date and time.
+2 - Problem with calendar on view phone and tablet.
+3 - Doc new modules dependecy.
+4 - Take printscreens to marketing.
+5 - Test on new instalation.
 
 NORMAL:
 	- Create app to build locales.

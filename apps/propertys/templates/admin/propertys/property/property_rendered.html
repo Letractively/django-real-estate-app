@@ -1,0 +1,34 @@
+{% load i18n %}
+<div class="span9">
+        <strong><a href="{{ obj.get_absolute_url }}">{{ obj.address }} </a></strong> <br />
+        <div class="pull-left"> <img src="{{ obj.get_sorlthumbnail_crop_160x120 }}" /></div>
+        <div class="pull-right">
+	        {% trans 'Price' %}: {{ obj.price }}<br />
+	        {% trans 'State' %}: {{ obj.state }}<br />
+	        {% trans 'District' %}: {{ obj.district_fk.district }}<br />
+	        {% for realtor in property.realtor_fk.all %}
+		  		<div class='pull-left'>
+		  			<ul class='thumbnails'>
+	  					<li>
+	 						<a href='#'>
+	 							{% thumbnail realtor.photo '60x60' crop='center' as img_realtor %}
+	 								<img src='{{ img_realtor.url }}' />
+	 							{% endthumbnail %}
+		  					</a>
+		  				</li>
+		  			</ul>
+		  		</div>
+		  		<div class='pull-right'>
+		  		{% if realtor.photo %}
+		  		{% endif %}
+		        {% if realtor.phone %}{% trans 'Phone'%}: {{ realtor.phone }}<br />{% endif %}
+		  	    {% if realtor.celphone %} {% trans 'Celphone'%}: {{ realtor.celphone }}<br />{% endif %}
+		  	    {% if realtor.email %}{% trans 'Email' %}: {{ realtor.email }}{% endif %}
+		  		</div>
+		  		<p class='clearfix'></p>
+				{% if not forloop.last %}, <br /> {% endif %}
+			{% endfor %}
+    	</div>
+        <a href="{{ obj.get_absolute_url }}"> {% trans "Read more" %} </a>
+</div>
+<p class="clearfix"></p>

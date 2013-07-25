@@ -397,7 +397,6 @@ class AdminAjaxSelectMultipleInputWidget(SelectMultiple):
 
 class CustomDateInput(DateInput):
 
-
 	def render(self, name, value, attrs=None):
 		if value is None:
 			value = ''

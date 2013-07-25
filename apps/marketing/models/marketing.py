@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-from django import template
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -37,8 +36,11 @@ class MarketingObject(RealEstateAppCompleteModel):
 			Render a MarketingObject to portlet
 		"""
 		import hexagonit.swfheader
+		
+		from django import template
 		from django.utils.safestring import mark_safe
 		from django.template.defaultfilters import slugify
+
 		
 		is_swf=False
 		metadata={

@@ -68,7 +68,7 @@ class Photo(RealEstateAppBaseModel):
 						           pagina inicial')
 
 	def __unicode__(self):
-		return '%s' % self.photo
+		return u'%s' % self.photo
 
 	class Meta:
 		app_label = 'photos'
@@ -125,7 +125,7 @@ class Photo(RealEstateAppBaseModel):
 				
 				return get_thumbnail(my_file,size, **attrs).url
 
-			if methodd == "sorlthumbnail_crop":
+			if method == "sorlthumbnail_crop":
 				return get_thumbnail_crop
 
 		except AttributeError:

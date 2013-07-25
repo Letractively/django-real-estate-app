@@ -7,6 +7,10 @@ from django.utils.translation import ugettext_lazy as _
 from real_estate_app.managers import RealEstateManager, RealEstateCompleteModelManager
 
 class RealEstateAppBaseModel(models.Model):
+	def __init__(self,*args, **kwargs):
+		super(RealEstateAppBaseModel,self).__init__(*args,**kwargs)
+		self.template = "admin/%s/%s/%s_rendered.html" % (self._meta.app_label,self._meta.object_name.lower(),self._meta.object_name.lower())
+
 
 	logical_exclude = models.NullBooleanField(
 					_('Logical exclude'),
@@ -29,9 +33,33 @@ class RealEstateAppBaseModel(models.Model):
 	objects = RealEstateManager()
 	
 	class Meta:
-		abstract       = True
+		abstract = True
+
+	def _render_object(self):
+		"""
+			Render a object to portlet
+		"""
+		from django import template
+		object_name=self._meta.object_name.lower()
+		app_label=self._meta.app_label
+
+		context=template.Context({
+			'obj':self,
+		})
+		
+		return template.loader.get_template(self.template or [
+                "admin/%s/%s_rendered.html" % (app_label,object_name),
+                "admin/%s_rendered.html" % object_name
+        ]).render(context)
+
+	render=property(_render_object)
+
 
 class RealEstateAppCompleteModel(models.Model):
+
+	def __init__(self,*args, **kwargs):
+		super(RealEstateAppCompleteModel,self).__init__(*args,**kwargs)
+		self.template = "admin/%s/%s/%s_rendered.html" % (self._meta.app_label,self._meta.object_name.lower(),self._meta.object_name.lower())
 
 	title = models.CharField(
 					_('Title'),
@@ -76,6 +104,7 @@ class RealEstateAppCompleteModel(models.Model):
 
 	objects = RealEstateCompleteModelManager()
 
+
 	def in_future(self):
 		return self.pub_date > datetime.now()
 
@@ -86,3 +115,22 @@ class RealEstateAppCompleteModel(models.Model):
 		abstract       = True
 		get_latest_by  = 'pub_date'
 		ordering       = ('-pub_date',)
+
+	def _render_object(self):
+		"""
+			Render a object to portlet
+		"""
+		from django import template
+		object_name=self._meta.object_name.lower()
+		app_label=self._meta.app_label
+
+		context=template.Context({
+			'obj':self,
+		})
+		
+		return template.loader.get_template(self.template or [
+                "admin/%s/%s_rendered.html" % (app_label,object_name),
+                "admin/%s_rendered.html" % object_name
+        ]).render(context)
+
+	render=property(_render_object)

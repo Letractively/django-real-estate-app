@@ -1,3 +1,18 @@
+
+2.0.0                  YYYY-MM-DD
+---------------------------------
+
+- Change the archicteture from real_estate_app to suport apps,
+  now all content on they is a app.
+- Remove method get_photo_[width]x[height]... from Photo object. 
+- Better the Marketing app, to render object and identify files to marketing. Initial files is image and *.swf files.
+- Better the Portlet app.
+- All Photos and ImagesFiles uses sorl-thumbnails.
+- All template admin uses Twiter Bootstrap.
+- All templates is resposive.
+- Add app Visitclick, responseble to collect all clicked pages.
+- Uses Google Chart on Visitclick app.
+
 1.3.0                  2013-04-13
 ---------------------------------
 - Run sql "alter-db-v1.3.0.sql".

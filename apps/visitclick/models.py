@@ -59,6 +59,9 @@ class Click(models.Model):
 		verbose_name=_('Click')
 		verbose_name_plural=_('Clicks')
 
+	def __unicode__(self):
+		return u'%s :%s' % (self.url, self.date)
+
 class UntrackBoots(models.Model):
 
 	keyword = models.CharField(
@@ -74,6 +77,9 @@ class UntrackBoots(models.Model):
 		verbose_name = _('Untracked Boots')
 		verbose_name_plural = _('Untracked Boots')
 
+	def __unicode__(self):
+		return u'%s' % self.keyword
+
 class BannedIP(models.Model):
 
 	ip= models.IPAddressField(
@@ -87,5 +93,5 @@ class BannedIP(models.Model):
 		verbose_name = _('Baned IP')
 		verbose_name_plural = _('Baned IPs')
 
-
-
+	def __unicode__(self):
+		return u'%s' % self.ip

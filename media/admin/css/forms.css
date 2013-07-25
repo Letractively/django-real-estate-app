@@ -204,10 +204,6 @@ fieldset.monospace textarea {
     border: none;
 }
 
-.vDateField, .vTimeField {
-    margin-right: 2px;
-}
-
 
 .flatpages-flatpage #id_content {
     height: 40.2em;
@@ -381,7 +377,25 @@ span.delete {
 .accordion-body.in {
   overflow:visible;
 }
+.thumbnail {
+    width: 160px;
+}
+
+@media (max-width: 800px) {
+    .fileupload > .thumbnail {
+        width: 160px !important;
+        height: 120px !important;
+    }
+
+}
 @media (min-width: 320px){
+    #time-widget input, 
+    #date-widget input {
+    width: 106px;
+    }
+}
+
+@media (max-width: 320px){
 
     form .aligned p.help {
         padding-left: 0;
@@ -400,5 +414,26 @@ span.delete {
     .ui-helper-clearfix {
         display: inline-block;
     }
-
+    .photos-btn {
+        margin-left: 0;
+    }
+    #date-widget input {
+        width: 140px !important;
+    }
+    .aligned label {
+        padding-right: 78px;
+    }
+    .bootstrap-datetimepicker-widget.pull-right:after,
+    .bootstrap-datetimepicker-widget:after {
+        right: 51px !important;
+    }
+    .bootstrap-datetimepicker-widget.pull-right:before
+    .bootstrap-datetimepicker-widget:before {
+        right: 50px !important;
+    }
+    .bootstrap-datetimepicker-widget.pull-right,
+    .bootstrap-datetimepicker-widget{
+        left: 16px !important;
+    }
+    
 }

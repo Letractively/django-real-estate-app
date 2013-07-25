@@ -1,0 +1,6 @@
+{% load i18n %}
+<p>
+        <strong><a href="{{ obj.get_absolute_url }}">{{ obj.title }} </a></strong> <br />
+        {{ obj.content|striptags|safe|truncatewords:20 }}
+        <a href="{{ obj.get_absolute_url }}"> {% trans "Download" %} </a>
+</p>

@@ -36,15 +36,6 @@
             <ul class="thumbnails" >
         {% endif %}
 
-    
-        {% comment %}
-            <span class="inline_label">
-            {% if inline_admin_form.original %}{{ inline_admin_form.original }}{% else %}#{{ forloop.counter }}{% endif %}
-            </span>
-            {% if inline_admin_formset.formset.can_delete and inline_admin_form.original %}<span class="delete">{{ inline_admin_form.deletion_field.field }} {{ inline_admin_form.deletion_field.label_tag }}</span>{% endif %}
-            {% if inline_admin_form.form.non_field_errors %}{{ inline_admin_form.form.non_field_errors }}{% endif %}
-        {% endcomment %}
-
         {% for fieldset in inline_admin_form %}
             {% include "admin/photos/photo/includes/fieldset-image.html" %}
         {% endfor %}
@@ -65,7 +56,7 @@
             container: 'body'
 
         });
-
+        
         var rows = "#{{ inline_admin_formset.formset.prefix }}-group .inline-related";
 
         var updateInlineLabel = function(row) {

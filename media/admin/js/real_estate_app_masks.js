@@ -1,15 +1,15 @@
 (function($){
     $(document).ready(function($) {
 		$.mask.masks = $.extend($.mask.masks,{
-			'money': { mask: '99,999.999.999.999', type: 'reverse',defaultValue: '000'},
+			'money': { mask: '99,999.999.999.999', type: 'reverse',defaultValue: '000',textAlign: false},
 			'zip_code': { mask: '99999-999'},
-			'decimal': {mask:'99.999999999999',type:'reverse'},
-			'area': {mask:'99,999.999.999.999',type:'reverse',defaultValue: '000'},
+			'decimal': {mask:'99.999999999999',type:'reverse',textAlign: false},
+			'area': {mask:'99,999.999.999.999',type:'reverse',defaultValue: '000',textAlign: false},
 			'phone':{mask:'(99)9999-9999'},
 			'celphone':{mask:'(99)9999-9999'},
 			'cpf':{mask:'999.999.999-99'},
 			'cnpj':{mask:'99.999.999/9999-99'},
-			'rg': { mask: '999.999.999.999.999',type:'reverse'},
+			'rg': { mask: '999.999.999.999.999',type:'reverse',textAlign: false},
 		});
 
 		$('input:text').setMask();
