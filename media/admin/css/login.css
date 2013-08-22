@@ -22,3 +22,15 @@
 	margin-bottom: 15px;
 	padding: 7px 9px;
 } 
+
+ul.errorlist {
+    color: red;
+    list-style-image: none;
+    list-style-position: outside;
+    list-style-type: none;
+	margin-left: 0px;
+}
+.errors input#id_username,
+.errors input#id_password {
+    border-color: red !important;
+}

@@ -5,7 +5,7 @@ from django import template
 from django.conf import settings
 from django.contrib.admin import ModelAdmin, helpers
 from django.contrib.admin.options import FORMFIELD_FOR_DBFIELD_DEFAULTS
-from django.contrib.admin.util import unquote, get_deleted_objects
+from django.contrib.admin.util import unquote, get_deleted_objects, flatten_fieldsets
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core import serializers
 from django.db import models, transaction, router
@@ -94,8 +94,14 @@ class FaceBoxModelAdmin(ModelAdmin):
             # rendered output. formfield can be None if it came from a
             # OneToOneField with parent_link=True or a M2M intermediary.
             if formfield and db_field.name not in self.raw_id_fields:
-                formfield.widget = widgets.FaceBoxFieldWrapper(formfield.widget, db_field.rel, self.admin_site)
-            
+                related_modeladmin = self.admin_site._registry.get(
+                                                            db_field.rel.to)
+                can_add_related = bool(related_modeladmin and
+                            related_modeladmin.has_add_permission(request))
+                formfield.widget = widgets.FaceBoxFieldWrapper(formfield.widget,
+                                                                db_field.rel, 
+                                                                self.admin_site,
+                                                                can_add_related=can_add_related)
             return formfield
 
         # If we've got overrides for the formfield defined, use 'em. **kwargs
@@ -201,6 +207,82 @@ class FaceBoxModelAdmin(ModelAdmin):
         context.update(extra_context or {})
         return self.render_change_form(request, context, form_url=form_url, add=True)
 
+    def get_urls(self):
+
+        from django.conf.urls.defaults import patterns, url
+
+        urlpatterns = super(FaceBoxModelAdmin,self).get_urls()
+
+        def wrap(view):
+            def wrapper(*args, **kwargs):
+                return self.admin_site.admin_view(view)(*args, **kwargs)
+            return update_wrapper(wrapper, view)
+
+        info = self.model._meta.app_label, self.model._meta.module_name
+
+        custom_urls = patterns('',
+                                url(r'^ajax/$',
+                                    wrap(self.ajax_view),
+                                    name='%s_%s_ajax_view' % info
+                                ),
+        )
+
+        return custom_urls + urlpatterns
+
+    @csrf_protect_m 
+    def ajax_view(self, request, extra_context=None):
+        """
+        Ajax interation to construct the select options
+        used a custom serialize how get some expecific fields.
+        """
+        q_value=''
+        opts=self.model._meta
+
+        model = self.model
+        model_name=model.__name__.lower()
+        if hasattr(model.objects, 'all_enabled'):
+            queryset = model.objects.all_enabled()
+        else:
+            queryset = model.objects.all()
+        module_name=opts.module_name
+        
+        #fields = REAL_ESTATE_APP_AJAX_SEARCH.get(model_name,False).get('label',False)
+        fields = [i.name for i in model._meta.fields]
+
+        if request.POST:
+            if request.POST.items():
+                
+                for query in request.POST.items():
+                    if 'csrfmiddlewaretoken' not in query:
+                        query=dict((query,))
+                        queryset=queryset.filter(**query)
+        else:
+            # This is for ajax
+            if 'term' in request.GET:
+                q_value=request.GET['term']
+                return HttpResponse(
+                                    simplejson.dumps(
+                                        AutoCompleteObject(model).render(value=q_value,logical_exclude__exact=False)
+                                    )
+                                    ,mimetype="text/javascript")
+
+        json = serializers.serialize("json", queryset,fields=fields)
+        return HttpResponse(json, mimetype="text/javascript")
+
+    class Media:
+
+        css = {
+            'all':(
+                    MEDIA_PREFIX_REAL_ESTATE+"admin/css/facebox.css",
+            ),
+        }
+
+        js = [
+            settings.ADMIN_MEDIA_PREFIX+"js/jquery.min.js",
+            settings.ADMIN_MEDIA_PREFIX+"js/jquery.init.js",
+            MEDIA_PREFIX_REAL_ESTATE+"admin/js/facebox.js",
+        ]
+
 class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
     """
         All fields with have a ForeignKey must be named with '<var_name>_fk'
@@ -280,6 +362,30 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
         if 'delete_selected' in actions:
             del actions['delete_selected']
         return actions
+
+    def get_form(self, request, obj=None, **kwargs):
+        """
+        Returns a Form class for use in the admin add view. This is used by
+        add_view and change_view.
+        """
+        from django.db.models.loading import get_model
+
+        form = super(RealEstateAppPopUpModelAdmin,self).get_form(request,obj,**kwargs)
+        
+        for key, field in form.base_fields.items():
+            if isinstance(field.widget,(widgets.AdminAjaxSelectMultipleInputWidget,widgets.CheckboxSelectMultipleCustom)):
+                if hasattr(field.widget,'model'):
+                    model = field.widget.model
+                elif hasattr(field.widget,'module_name') and hasattr(field.widget,'app_label'):
+                    model = get_model(app_label=app_label,module_name=module_name)
+
+                related_modeladmin = self.admin_site._registry.get(model)
+                can_add_related = bool(related_modeladmin and
+                            related_modeladmin.has_add_permission(request))
+                
+                field.widget.can_add_related=can_add_related
+        return form
+
 
     def response_add(self, request, obj, post_url_continue='../%s/'):
         opts = obj._meta
@@ -386,14 +492,14 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
                                     wrap(self.delete_view_popup),
                                     name='%s_%s_delete_popup' % info
                                 ),
-                                url(r'^ajax/$',
-                                    wrap(self.get_item_model_fk),
-                                    name='%s_%s_ajax_view' % info
-                                ),
         )
 
         return custom_urls + urlpatterns
 
+    @csrf_protect_m
+    def changelist_view(self, request, extra_context={}):
+        extra_context.update({'has_change_permission':self.has_change_permission(request)})
+        return super(RealEstateAppPopUpModelAdmin,self).changelist_view(request, extra_context=extra_context)
 
     @csrf_protect_m
     @transaction.commit_on_success
@@ -402,16 +508,18 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
 
     @csrf_protect_m
     @transaction.commit_on_success
-    def change_view_popup(self, request, object_id=None, extra_context=None):
+    def change_view_popup(self, request, object_id=None, extra_context={}):
+        extra_context=extra_context.update({'has_change_permission':self.has_change_permission(request)})
         return super(RealEstateAppPopUpModelAdmin,self).change_view(request, object_id, extra_context=extra_context)
 
     @csrf_protect_m
-    def changelist_view_popup(self, request, extra_context=None):
+    def changelist_view_popup(self, request, extra_context={}):
         if not request.GET.has_key('logical_exclude__exact'):
             get=request.GET.copy()
             get['logical_exclude__exact']='0'
             request.GET = get
             request.META['QUERY_STRING']=request.GET.urlencode()
+            extra_context=extra_context.update({'has_change_permission':self.has_change_permission(request)})
         return super(RealEstateAppPopUpModelAdmin,self).changelist_view(request, extra_context=extra_context)
 
     @csrf_protect_m
@@ -480,43 +588,6 @@ class RealEstateAppPopUpModelAdmin(FaceBoxModelAdmin):
             "admin/delete_confirmation.html"
         ], context, context_instance=context_instance)
 
-    @csrf_protect_m 
-    def get_item_model_fk(self, request, extra_context=None):
-        """
-        Ajax interation to construct the select options
-        used a custom serialize how get some expecific fields.
-        """
-        q_value=''
-        opts=self.model._meta
-
-        model = self.model
-        model_name=model.__name__.lower()
-        queryset = model.objects.all_enabled()
-        module_name=opts.module_name
-        
-        #fields = REAL_ESTATE_APP_AJAX_SEARCH.get(model_name,False).get('label',False)
-        fields = [i.name for i in model._meta.fields]
-
-        if request.POST:
-            if request.POST.items():
-                
-                for query in request.POST.items():
-                    if 'csrfmiddlewaretoken' not in query:
-                        query=dict((query,))
-                        queryset=queryset.filter(**query)
-        else:
-            # This is for ajax
-            if 'term' in request.GET:
-                q_value=request.GET['term']
-                return HttpResponse(
-                                    simplejson.dumps(
-                                        AutoCompleteObject(model).render(value=q_value,logical_exclude__exact=False)
-                                    )
-                                    ,mimetype="text/javascript")
-
-        json = serializers.serialize("json", queryset,fields=fields)
-        return HttpResponse(json, mimetype="text/javascript")
-
     class Media:
 
         js = [
@@ -567,6 +638,8 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
         Custom get_form function to returns a revert form class for use in the admin add view. 
         This is used by add_view and change_view.
         """
+        from django.db.models.loading import get_model
+
         if self.declared_fieldsets:
             fields = flatten_fieldsets(self.declared_fieldsets)
         else:
@@ -587,7 +660,22 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
             "formfield_callback": curry(self.formfield_for_dbfield, request=request),
         }
         defaults.update(kwargs)
-        return modelform_factory(self.revert_model, **defaults)
+        form = modelform_factory(self.revert_model, **defaults)
+        
+        for key, field in form.base_fields.items():
+            if isinstance(field.widget,(widgets.AdminAjaxSelectMultipleInputWidget,widgets.CheckboxSelectMultipleCustom)):
+                if hasattr(field.widget,'model'):
+                    model = field.widget.model
+                elif hasattr(field.widget,'module_name') and hasattr(field.widget,'app_label'):
+                    model = get_model(app_label=app_label,module_name=module_name)
+
+                related_modeladmin = self.admin_site._registry.get(model)
+                can_add_related = bool(related_modeladmin and
+                            related_modeladmin.has_add_permission(request))
+                
+                field.widget.can_add_related=can_add_related
+
+        return form
 
     @csrf_protect_m
     @transaction.commit_on_success
@@ -790,6 +878,7 @@ class RealEstateAppRevertInlineModelAdmin(RealEstateAppPopUpModelAdmin):
             'errors': helpers.AdminErrorList(form, formsets),
             'root_path': self.admin_site.root_path,
             'app_label': opts.app_label,
+            'has_change_permission':self.has_change_permission(request)
         }
         context.update(extra_context or {})
         return self.render_change_form(request, context, change=True, obj=obj)

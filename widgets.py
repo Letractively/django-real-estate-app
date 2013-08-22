@@ -156,8 +156,10 @@ class FaceBoxFieldWrapper(widgets.RelatedFieldWidgetWrapper):
 			output = [self.widget.render(name, value, *args, **kwargs)]
 
 			module_name = rel_to._meta.module_name
-
-			field=','.join(REAL_ESTATE_APP_AJAX_SEARCH[module_name]['label'])
+			try:
+				field=','.join(REAL_ESTATE_APP_AJAX_SEARCH[module_name]['label'])
+			except KeyError:
+				raise Exception("Error you need configure REAL_ESTATE_APP_AJAX_SEARCH for module name: %s" % module_name)
 			## TO DO: Fazer tratamento para pegar se o campo e select 
 			##        para ser utilizado no facebox.
 			if self.can_add_related:
@@ -184,10 +186,12 @@ class FaceBoxFieldWrapper(widgets.RelatedFieldWidgetWrapper):
 
 class CheckboxSelectMultipleCustom(CheckboxSelectMultiple):
 	#TODO: change to SelectMultiple and try to make like RelatedFieldWidgetWrapper
-	def __init__(self, module_name=None,field=None, app_name=None,*args,**kwargs):
+	def __init__(self, module_name=None,field=None, app_name=None,can_add_related=False,*args,**kwargs):
 		self.module_name=module_name
 		self.field=field
 		self.app_name=app_name
+		self.can_add_related = can_add_related
+
 		return super(CheckboxSelectMultipleCustom,self).__init__(*args,**kwargs)
 
 	def render(self, name, value, attrs=None, choices=()):
@@ -205,22 +209,23 @@ class CheckboxSelectMultipleCustom(CheckboxSelectMultiple):
 
 		if not self.field and self.module_name:
 			field=','.join(REAL_ESTATE_APP_AJAX_SEARCH[self.module_name]['label'])
-		
-		output.append(u'''
-				<script type="text/javascript">
-					django.jQuery(document).ready(function($) {
-						$('a[rel="facebox-check"]').facebox({
-						loadingImage : '%simg/loading.gif',
-						closeImage   : '%simg/closelabel.png',
-						id: '%s',
-						ajax_url: '%s',
-						type_field:'checkbox',
-						field:'%s',
+
+		if self.can_add_related:
+			output.append(u'''
+					<script type="text/javascript">
+						django.jQuery(document).ready(function($) {
+							$('a[rel="facebox-check"]').facebox({
+							loadingImage : '%simg/loading.gif',
+							closeImage   : '%simg/closelabel.png',
+							id: '%s',
+							ajax_url: '%s',
+							type_field:'checkbox',
+							field:'%s',
+							})
 						})
-					})
-				</script>''' % (MEDIA_PREFIX, MEDIA_PREFIX,'id_'+self.module_name, ajax_url, field) )
-		output.append(u'<a href="%s" class="add-another btn" id="id_%s" rel="facebox-check" rev="iframe" > ' %(related_url, name_db))
-		output.append(u'<i class="icon-plus-sign"></i>  </a>')
+					</script>''' % (MEDIA_PREFIX, MEDIA_PREFIX,'id_'+self.module_name, ajax_url, field) )
+			output.append(u'<a href="%s" class="add-another btn" id="id_%s" rel="facebox-check" rev="iframe" > ' %(related_url, name_db))
+			output.append(u'<i class="icon-plus-sign"></i>  </a>')
 		
 		if value is None: value = []
 		has_id = attrs and 'id' in attrs
@@ -331,13 +336,14 @@ class AdminAjaxSelectMultipleInputWidget(SelectMultiple):
 	"""
 		This code is based on app django-ajax-selects
 	"""
-	def __init__(self, model_fk, show_help_text=False, help_text='',*args, **kwargs):
+	def __init__(self, model_fk, show_help_text=False, help_text='',can_add_related=False,*args, **kwargs):
 		super(AdminAjaxSelectMultipleInputWidget, self).__init__(*args, **kwargs)
 		self.show_help_text=show_help_text
 		self.help_text=help_text
 		self.model=model_fk
 		self.module_name=self.model._meta.module_name
 		self.apps=self.model._meta.app_label
+		self.can_add_related = can_add_related
 		
 		try:
 			self.fields_show=REAL_ESTATE_APP_AJAX_SEARCH[self.module_name]['search_fields']
@@ -369,7 +375,7 @@ class AdminAjaxSelectMultipleInputWidget(SelectMultiple):
 			'initial': autocompleteobject.render(id__in=[str(v) for v in value]),
 			'fields':self.fields_show,
 			'ajax_url_facebox': related_url_facebox,
-			'can_add':True,
+			'can_add':self.can_add_related,
 		}
 		
 		context = {
@@ -382,7 +388,8 @@ class AdminAjaxSelectMultipleInputWidget(SelectMultiple):
 			'related_url_facebox':related_url_facebox,
 			'ADMIN_MEDIA_PREFIX':settings.ADMIN_MEDIA_PREFIX,
 			'add_text': _('Add Another'),
-			'search_value':_('Search for realtors.')
+			'search_value':_('Search for realtors.'),
+			'can_add':self.can_add_related
 
 		}
 
@@ -431,14 +438,14 @@ class CustomTimeInput(TimeInput):
 		return mark_safe(u"""<div id="time-widget" class="input-append"> \
 			                    <input%s data-format="%s" /> \
 			                    <span class="add-on"> \
-			                          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> \
+			                          <i data-time-icon="icon-time" data-date-icon="icon-time"></i> \
 			                    </span> \
 			                </div>""" % (flatatt(final_attrs), 'hh:mm:ss'))
 
 class CustomAdminTimeWidget(CustomTimeInput):
 	
     class Media:
-        js = (MEDIA_PREFIX + "bootstrap2/plugins/bootstrap-datetimepicker.min.js",
+        js = (MEDIA_PREFIX + "bootstrap2/plugins/bootstrap-datetimepicker.js",
               MEDIA_PREFIX + "admin/js/DateTime.js")
 
 

@@ -31,7 +31,7 @@ class PropertyAdminForm(ModelForm):
 									widget=CheckboxSelectMultipleCustom(
 										app_name='propertys',
 										module_name='aditionalthings',
-										field='name'
+										field='name',
 									)
 	)
 	realtor_fk = ModelMultipleChoiceField(
@@ -41,7 +41,7 @@ class PropertyAdminForm(ModelForm):
 									widget=AdminAjaxSelectMultipleInputWidget(
 											model_fk=Realtor,
 											help_text=_('Enter text to search.'),
-											show_help_text=True
+											show_help_text=True,
 									)
 	)
 

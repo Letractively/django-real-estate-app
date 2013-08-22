@@ -1,5 +1,9 @@
-<div id="navigation">	
+<div class="pagination pull-left">
+	<ul>
 	{% for page in page_range %} 
-	  <a class="button" href="?page={{ page }}">{{ page }}</a>
+		<li>
+		  <a href="?page={{ page }}">{{ page }}</a>
+		</li>
     {% endfor %}
+	</ul>
 </div>

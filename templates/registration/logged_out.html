@@ -1,0 +1,16 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block extrastyle %}{% load adminmedia %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{{ MEDIA_REAL_ESTATE }}admin/css/login.css" />{% endblock %}
+
+{% block content %}
+<div id="login-form" class="form-signin">
+	<h2 class="form-signin-heading"> {% trans "Sucessfully logout!" %} </h2>
+	<div class="control-group">
+		<p>{% trans "Thanks for spending some quality time with the Web site today." %}</p>
+	</div>
+	<div class="control-group">
+		<a class="btn btn-primary" href="../">{% trans 'Log in again' %}</a>
+	</div>
+</div>
+{% endblock %}

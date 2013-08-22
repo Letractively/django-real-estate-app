@@ -32,10 +32,12 @@
 						<div class="media-body">
 							
 							<div class="pull-left">
+								{% if has_change_permission %}
 								<div class="btn-group visible-desktop">
 									<!-- <a class="btn" href="{{ property.id }}/view/"> <i class="icon-eye-open"></i> {% trans 'View' %}</a> -->
-								    <a class="btn" href="{{ edit_property }}"> <i class="icon-edit"></i> {% trans 'Edit' %}</a>
+								    	<a class="btn" href="{{ edit_property }}"> <i class="icon-edit"></i> {% trans 'Edit' %}</a>
 							    </div>
+							    {% endif %}
 							    <div class="span9 hidden-desktop">
 							    	<h4 class="media-heading">
 										{% trans 'Code' %}: {{ property.code_property }}
@@ -44,7 +46,9 @@
 							</div>
 							<div class="pull-right">
 								<div class="btn-group">
-								<a class="btn hidden-desktop" href="{{ edit_property }}"> <i class="icon-edit"></i> </a>
+								{% if has_change_permission %}
+									<a class="btn hidden-desktop" href="{{ edit_property }}"> <i class="icon-edit"></i> </a>
+								{% endif %}
 								<a class="btn" rel="tooltip" data-placement="bottom" title="{% trans 'Agenda property' %}" href="{{ edit_visitcalendar }}"><i class="icon-calendar"></i></a>
 								{% if property.gmap %}
 									<a class="btn hidden-desktop" rel="tooltip" data-placement="bottom" title="{% trans 'Map property' %}" href="#" ><i class="icon-map-marker"></i></a>

@@ -24,3 +24,47 @@ custom fullcalendar widget admin
 .fc-event .fc-event-icons {
 	float: right;
 }
+
+@media (max-width: 600px) {
+	.fc-view-agendaWeek .fc-event-icons,
+	.fc-view-agendaWeek .fc-event-time,
+	.fc-view-agendaWeek .fc-event-title,
+	.fc-view-month .fc-event-icons,
+	.fc-view-month .fc-event-time,
+	.fc-view-month .fc-event-title {
+		display: none;
+	}
+
+}
+
+@media (min-width: 322px) and (max-width: 480px) {
+	.fc-header td {
+    	float: left;
+	}
+	.fc-header-left,
+	.fc-header-right {
+		margin-top: 40px;
+	}
+	.fc-header-right {
+		margin-left: -50px;
+	}
+	.fc-header-title {
+		margin-bottom: 40px;
+	}
+}
+
+@media (max-width: 320px) {
+
+	.fc-header td {
+    	float: left;
+	}
+	.fc-header-left {
+		width: 125px;
+	}
+	.fc-header-center {
+		width: 100%;
+		text-align: left;
+	}
+
+	
+}

@@ -65,16 +65,19 @@
 				
 				var totalForms = $("#id_" + options.prefix + "-TOTAL_FORMS");
 				var template = $("#" + options.prefix + "-empty");
+				//This active bootstrap-datetimepicker when a template is cloned.
+				template.find('div#time-widget').datetimepicker('destroy');
+				template.find('div#date-widget').datetimepicker('destroy');
 
 				var row = template.clone(true);
 
 				//This active bootstrap-datetimepicker when a template is cloned.
 				row.find('div#time-widget').datetimepicker({
-      					pickDate: false
-    			});
-    			row.find('div#date-widget').datetimepicker({
-      					pickTime: false
-      			});
+		      			pickDate: false,
+		    	});
+		    	row.find('div#date-widget').datetimepicker({
+		      			pickTime: false,
+		      	});
 
 				row.removeClass(options.emptyCssClass)
 				    .addClass(options.formCssClass)

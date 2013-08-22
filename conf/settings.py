@@ -40,62 +40,74 @@ REAL_ESTATE_APP_AJAX_SEARCH={
 									  		'return_values':['photo','pk','user__first_name','user__last_name',],
 									  		'thumbnail_ajax':'40x40',
 									  		'label':['first_name','last_name']
-										},
+							},
 							'visitor': {
 									  		'search_fields':['email',],
 									  		'return_values':['pk','first_name','last_name'],
 									  		'all_fields':True,
 									  		'thumbnail_ajax':'40x40',
 									  		'label':['first_name','last_name']
-										},
+							},
 							'property': {
 										'search_fields':['address',],
 										'return_values':['pk','address'],
 										'thumbnail_ajax':'40x40',
 										'label':['address',]
-										},
+							},
 							'district':{
 										'search_fields':['district',],
 										'return_values':['pk','district'],
 										'thumbnail_ajax':'40x40',
 										'label':['district',]
-										},
+							},
 							'classification': {
 										'search_fields':['classification',],
 										'return_values':['pk','classification'],
 										'thumbnail_ajax':'40x40',
 										'label':['classification',]
-											},
+							},
 							'statusproperty':{
 										'search_fields':['statusproperty',],
 										'return_values':['pk','statusproperty'],
 										'thumbnail_ajax':'40x40',
 										'label':['statusproperty',]
-										},
+							},
 							'aditionalthings': {
 										'search_fields':['name',],
 										'return_values':['pk','name'],
 										'thumbnail_ajax':'40x40',
 										'label':['name',]
-										},
+							},
 							'positionofsun':{ 
 										'search_fields':['position',],
 										'return_values':['pk','position'],
 										'thumbnail_ajax':'40x40',
 										'label':['position',]
-										},
+							},
 							'site':{ 
 										'search_fields':['site',],
 										'return_values':['pk','site'],
 										'thumbnail_ajax':'40x40',
 										'label':['site',]
-										},
+							},
 							'files':{ 
 										'search_fields':['files',],
 										'return_values':['pk','site'],
 										'thumbnail_ajax':'40x40',
 										'label':['files',]
-										},
+							},
+							'group':{
+										'search_fields':['name',],
+										'return_values':['pk','name'],
+										'thumbnail_ajax':'40x40',
+										'label':['name',]
+							},
+							'permission':{
+										'search_fields':['name',],
+										'return_values':['pk','name'],
+										'thumbnail_ajax':'40x40',
+										'label':['name',]
+							},
 }
 
 if CUSTOM_AJAX_SEARCH:

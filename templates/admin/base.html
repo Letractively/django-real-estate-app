@@ -6,6 +6,7 @@
         <!-- Bootstrap -->
         <link href="{{ MEDIA_REAL_ESTATE }}bootstrap2/css/bootstrap.css" rel="stylesheet" media="screen">
         <link href="{{ MEDIA_REAL_ESTATE }}bootstrap2/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+        <link href="{{ MEDIA_REAL_ESTATE }}admin/css/icons-custom.css" rel="stylesheet" media="screen">
         <link href="{{ MEDIA_REAL_ESTATE }}admin/css/custom-bootstrap.css" rel="stylesheet" media="screen">
         <link href="{{ MEDIA_REAL_ESTATE }}admin/css/widget.css" rel="stylesheet" media="screen">
         <script src="{{ MEDIA_REAL_ESTATE }}bootstrap2/js/jquery.js"></script>
@@ -74,6 +75,8 @@
                                                     <i class="icon-user"></i>
                                                 {% endif %}
                                                 {% if model.module_name == 'group' %}
+                                                    <i class="icon-hdd"></i>
+                                                    <i class="icon-group"></i>
                                                 {% endif %}
                                                 {% if model.module_name == 'termvisit' %}
                                                     <i class="icon-book"></i>
@@ -106,6 +109,7 @@
                                                     <i class="icon-user"></i>
                                                 {% endif %}
                                                 {% if model.module_name == 'group' %}
+                                                    <i class="icon-group"></i>
                                                 {% endif %}
                                                 {% if model.module_name == 'termvisit' %}
                                                     <i class="icon-book"></i>
@@ -244,12 +248,12 @@
             <div class="row-fluid">
                 <div class="span12" >
                     <p>
-                        <address>
+                        <!--address>
                         <strong>Twitter, Inc.</strong><br />
                         795 Folsom Ave, Suite 600<br />
                         San Francisco, CA 94107<br />
                         <abbr title="Phone">P:</abbr> (123) 456-7890
-                        </address>
+                        </address-->
                     </p>
                 </div>
             </div>

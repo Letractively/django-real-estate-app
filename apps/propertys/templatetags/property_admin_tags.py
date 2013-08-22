@@ -101,6 +101,7 @@ class PropertyChageListAdminNode(template.Node):
             'is_popup': cl.is_popup,
             'cl': cl,
             'has_add_permission': PropertyAdmin.has_add_permission(request),
+            'has_change_permission':PropertyAdmin.has_change_permission(request),
             'root_path': PropertyAdmin.admin_site.root_path,
             'app_label': app_label,
             'action_form': action_form,

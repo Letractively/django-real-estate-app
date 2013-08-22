@@ -13,11 +13,13 @@ django.jQuery(document).ready(function($){
 </script>
 <link media="screen" rel="stylesheet" href="{{ MEDIA_PREFIX }}/css/autocompletemultipleselect.css">
 
-<div id="custom-{{ html_id }}" class="ui-helper-clearfix ui-autocomple-multiple input-append">
+<div id="custom-{{ html_id }}" class="ui-helper-clearfix ui-autocomple-multiple {% if can_add %} input-append {% endif %}">
 	<input type="text" name="{{ name }}" id="{{ html_id }}_text" rev="iframe" href="{{ related_url_facebox }}" value="" {{ extra_attrs }} />
+	{% if can_add %}
 	<a href="{{ related_url_facebox }}" class="add-another btn" id="{{ html_id }}_add_icon" rel="facebox-input" rev="iframe" >
 		<i class="icon-plus-sign"></i> 
 	</a>
+	{% endif %}
 </div>
 
 <input type="hidden" name="{{name}}" id="{{ html_id }}" value="{{ current_ids }}" />
