@@ -1,7 +1,9 @@
 from django.conf import settings
 CACHE_KEY_UNTRACK_UA='key_untracked_uas'
 CACHE_KEY_BANED_IP='key_baned_ips'
-CACHE_TIME=3600
+CACHE_KEY_CONTENTTYPE='key_content_type'
+CACHE_TIME=getattr(settings,'REAL_ESTATE_APP_CACHE_TIME_BANNED_IPS',3600)
+CACHE_TIME_CONTENTTYPE=getattr(settings,'REAL_ESTATE_APP_CACHE_TIME_CONTENTTYPE',3600)
 VISIT_URLS_VIEW_CHECK_CLICK=getattr(settings,'REAL_VIEWS_CHECK_CLICKS',[])
 DEFAULT_VISIT_URL=[
 									 'newspapers-list''newspapers-detail','newspapers-feeds','newspapers-sitemap',

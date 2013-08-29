@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from signals import *
 
 try:
 	import user_agents

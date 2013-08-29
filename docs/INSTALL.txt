@@ -1,0 +1,189 @@
+== DEPENDENCY MODULES ==
+
+=== DJANGO APPS ===
+
+	* sorl-thumbnail
+	* django-simple-captcha
+
+=== PYTHON MODULE ===
+
+	* hexagonit.swfheader
+	* user_agents
+	* qsstats
+
+== CONFIGURATION URLS ==
+
+	* Add the real_estate_app urls:
+	{{{
+	urlpatterns+=patterns('',
+		url(r'^propertys/',include('real_estate_app.urls')),
+	)
+	}}}
+
+	* DEBUG add urls:
+	{{{
+	from real_estate_app.urls.media_real_debug import debug_media_real
+	urlpatterns+=patterns('',
+		debug_media_real
+	)
+	}}}
+
+== CONFIGURATION ON SETTINGS DJANGO PROJECT ==
+
+=== NECESSERY CONFIGURATION ===
+
+	* TEMPLATE CONTEXT PROCESSORS
+		* Add this context processors for custom conf of real_estate_app :
+		{{{
+		TEMPLATE_CONTEXT_PROCESSORS = (
+		   'django.contrib.auth.context_processors.auth',
+		   'django.core.context_processors.debug',
+		   'django.core.context_processors.i18n',
+		   'django.core.context_processors.media',
+		   'django.core.context_processors.static',
+		   'django.contrib.auth.context_processors.auth',
+		   'django.core.context_processors.request',
+		   'real_estate_app.context_processors.custom_processor',
+		) 
+		}}}
+	
+	* TEMPLATES REAL ESTATE APP
+		* Set on server media the media dir location of real_estate_app.
+		{{{
+		Exemple: 'Alias /media-real/   <localization of apps>/real_estate_app/media/'
+		}}}
+
+		* You can custom this localization of media to server, just set on settings project the val REAL_APP_MEDIA_PREFIX.
+		{{{
+		Default: '/media-real/'.
+		Exemple:
+		REAL_APP_MEDIA_PREFIX='/real/'
+		}}}
+
+	* IMPORT REAL_ESTATE_APP APPS:
+		* copy this code and put on settings.py:
+		{{{
+		from real_estate_app import get_apps
+		INSTALLED_APPS += get_apps()
+		}}}
+
+	* MIDDLEWARE TO CHECK VISIT CLICKS:
+		* Add 'real_estate_app.apps.visitclick.middleware.ClickMiddleware' at MIDDLEWARE_CLASSES at settings.py
+		{{{
+			MIDDLEWARE_CLASSES=(
+			'real_estate_app.apps.visitclick.middleware.ClickMiddleware',
+			...
+			)
+		}}}
+
+=== SITE CONFIGURATION ===
+
+	* SITE NAME
+		* Set on settings of project the val REAL_ESTATE_SITE_NAME
+		{{{
+		Default: ''
+	    Exemple: REAL_ESTATE_SITE_NAME='Test of site name'
+		}}}
+
+	* EMAIL FOR SITE
+		* Set email for site
+		{{{
+		Default:'root@localhost'
+		REAL_ESTATE_EMAIL='exemple@exemple.com'
+		}}}
+
+	* GOOGLE MAPS KEY
+		* Set Google Maps Key
+		{{{
+		Default: ''
+		EASY_MAPS_GOOGLE_KEY="<key>"
+		}}}
+
+	* MAX PROPETY SHOWING ON LIST
+		* Set on settings of project the val PROPERTY_NUM_LATEST
+		{{{
+		Default: 25
+		Exemple: PROPERTY_NUM_LATEST=10
+		}}}
+
+	* IMAGES MIN. SIZES
+		* Set on settings of project the val REAL_ESTATE_IMAGES_SIZE
+		{{{
+		Default: (626,286)
+		Exemple: REAL_ESTATE_IMAGES_SIZE=(900,300)
+		}}}
+
+	* CONFIGURE VISIT ROUND
+		* Set the visit round
+		{{{
+		Default: 2
+		REAL_ESTATE_APP_VISIT_EVENT_HOUR=1
+		}}}
+
+	* MENU ADMIN APPS CONFIGURE
+		* Showed links apps on admin site
+		{{{
+		Default: Read the real_estate_app/conf/settings.py
+		REAL_ESTATE_APP_MENU={
+			'<app_name>':['<models of app>',],
+		}
+		}}}
+
+	* MENU SETTINGS ADMIN CONFIGURE
+		* Links showed on settings menu at admin site
+		{{{
+		Default: Read the real_estate_app/conf/settings.py
+		REAL_ESTATE_APP_SETTINGS={
+			'<app_name>':['<models of app>',],
+		}
+		}}}
+
+	* IMAGES UNKOWN AT SITE
+		* Configure a image to display when has no image add
+		{{{
+		REAL_ESTATE_PROPERTY_UNKNOW_IMG='<http(s)://link-to-image/>'
+		}}}
+
+	* NUM. LAST VIEWED PROPERTY
+		* Set the max number of latest viewed property by user
+		{{{
+		Default: 10
+		REAL_ESTATE_VIEWED_PRODUCTS = 25
+	 	}}}
+
+	* CUSTOM OBJECTS FOR AJAX SEARCH
+		* Customize return values of select ajax object used on autocomplete
+		{{{
+		Default: Read the real_estate_app/conf/settings.py
+		REAL_ESTATE_APP_AJAX_SEARCH={
+						{'<model on lower case>': {
+					'search_fields':['<fields to search>',],
+					'return_values':['<return values>',],
+					'thumbnail_ajax':'40x40', # size of picture
+					'label':['<related field>',]
+				},
+		}
+		}}}
+	* URLS VISIT CHECK FOR COUNT CLICKS
+		* Customize urls for count clicks when has visit. You can pass <view-name> or <ulr>
+		{{{
+		Default: real_estate_app.urls
+		REAL_VIEWS_CHECK_CLICKS=[
+				'index-view',
+				'/corp/',
+		]
+		}}}
+
+== MIGRATION FROM VERSION 1.3.X TO 2.0.0 ==
+
+	* Fist you have to install new version without delete you old real_estate_app models:
+	{{{
+	# python manage.py syncdb
+	}}} 
+
+	* After install you have to use migrate SQL script: 'real_estate_app/docs/script/update-db-v2.0.0.sql'
+
+	* Delete the old tables for real_estate_app version 1.3.X
+
+	* Start you application
+

@@ -17,13 +17,16 @@ class AppsMenuNode(template.Node):
 
 	def render(self, context):
 
-		from real_estate_app.admin.admin_site import site as real_site
-		from django.contrib.admin.sites import site as admin_site
+		# Import only admin for real_estate_app and django
+		# because if user can customize AdminSite.
 
-		if not real_site._registry.items():
-			site = admin_site
+		from real_estate_app.admin import admin_site as real_site
+		from django.contrib import admin as django_admin
+
+		if not real_site.site._registry.items():
+			site = django_admin.site
 		else:
-			site = real_site
+			site = real_site.site
 
 		app_dict = {}
 		app_list = []

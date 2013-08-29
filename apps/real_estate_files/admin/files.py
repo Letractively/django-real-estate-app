@@ -10,7 +10,7 @@ class FilesAdmin(RealEstateAppPopUpModelAdmin):
 	search_fields=('title','files')
 
 	fieldsets = (
-		(_('files'), {
+		(_('Files'), {
 			'fields':['title','slug','files',]
 		}),
 		(_('Published'),{

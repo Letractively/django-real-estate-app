@@ -94,11 +94,11 @@ class RenderVariablesString(object):
 			variables '{{ nome }}', '{{ endereco }}' to '{{ name }}', '{{ address }}' and return the real value of variable 
 			inside of object passed.
 		"""
-		if LANGUAGE_CODE in ('pt_BR','pt-br'):
-			try:
-				code_langague=LANGUAGE_CODE.split('-')[1]
-			except IndexError:
-				code_langague='br'
+
+		try:
+			code_langague=LANGUAGE_CODE.split('-')[1]
+		except IndexError, error:
+			raise TranslateVariableObjectError, error
 
 		try:
 			obj=self.obj
@@ -110,7 +110,7 @@ class RenderVariablesString(object):
 			module=import_module(module_name,variable)
 			return getattr(module,variable)
 		except Exception, error:
-			raise TranslateVariableObjectError, error
+			raise TranslateVariableObjectError, '%s -> %s' %(self.app,error)
 
 
 	def render_variables(self):
