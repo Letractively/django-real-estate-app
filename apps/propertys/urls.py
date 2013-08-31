@@ -9,7 +9,7 @@ from models import Property
 info_dict = {'template_object_name': 'property',}
 
 feeds_property = {'rss': PropertyFeed,}
-property_info = {'queryset':Property.objects.all(),}
+property_info = {'queryset':Property.objects.all_enabled(),}
 sitemap_info = {'property':GenericSitemap(property_info,priority=0.8),}
 
 property_list = url(
