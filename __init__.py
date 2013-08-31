@@ -15,8 +15,7 @@ except ImportError:
 	raise ImproperlyConfigured("You need install hexagonit.swfheader python module")
 
 def get_apps():
-	return (
-		'real_estate_app',
+	return (		
 		'real_estate_app.apps.real_estate_files',
 		'real_estate_app.apps.realtors',
 		'real_estate_app.apps.newspapers',

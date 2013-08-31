@@ -31,18 +31,18 @@ class UntrackedBootsMiddleware(CommonMiddleware):
 				return True
 		return False
 
-	def process_response(self,request,response):
-
+	def untrackurl(self,request):
 		try:
 			match=resolve(request.path)
 			if (request.path not in VISIT_URLS_VIEW_CHECK_CLICK and match.url_name not in VISIT_URLS_VIEW_CHECK_CLICK) and \
 			   (request.path not in VISIT_URLS_VIEW_CHECK_CLICK or match.url_name not in VISIT_URLS_VIEW_CHECK_CLICK): 
-				return super(UntrackedBootsMiddleware,self).process_response(request,response)
+				return True
 		except:
-			return super(UntrackedBootsMiddleware,self).process_response(request,response)
+			return True
 
-		if self.untrackedboots(request):
-			return super(UntrackedBootsMiddleware,self).process_response(request,response)
+		return False
+
+	def countclick(self,request,response):
 
 		boots = unicode(request.META.get('HTTP_USER_AGENT', '')[:255], errors='ignore')
 		browser = get_browser(boots)
@@ -81,22 +81,23 @@ class UntrackedBootsMiddleware(CommonMiddleware):
 		
 		try:
 			click.save()
+			return click
 		except DatabaseError:
-			"""
-				TODO: make a register file clicks and get this register and try to insert again.
-			"""
-			pass
+			return False
+
+	def process_response(self,request,response):
+
+		if not self.untrackedboots(request) and not self.untrackurl(request):
+			self.countclick(request,response)
 
 		return super(UntrackedBootsMiddleware,self).process_response(request,response)
 
 	def process_request(self,request):
-
+		# Untrack requested by ajax.
 		if request.is_ajax(): return 
 
 		if self.untrackedboots(request):
 			return
-
-
 
 class ClickMiddleware(UntrackedBootsMiddleware):
 
