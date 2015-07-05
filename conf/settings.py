@@ -1,15 +1,20 @@
 # -*- coding: utf-8 -*-
 import os
+from sys import getfilesystemencoding, platform
 
 from django.conf import settings
 from django.db.models import get_app
 from django.utils.translation import ugettext as _
 
 # Where is the media directory of app real_estate_app
+TMP_REAL_PATH=os.path.join(os.path.abspath(os.path.dirname(__file__)),'..','media')
+if platform.startswith('win'):
+	TMP_REAL_PATH=unicode(TMP_REAL_PATH,getfilesystemencoding())
+
 MEDIA_PATH=getattr(
 	settings,
 	'REAL_APP_MEDIA_PATH',
-	os.path.join(os.path.abspath(os.path.dirname(__file__)),'..','media')
+	TMP_REAL_PATH
 )
 
 # Create a media prefix for real_estate_app media.

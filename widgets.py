@@ -232,7 +232,7 @@ class CheckboxSelectMultipleCustom(CheckboxSelectMultiple):
 		final_attrs = self.build_attrs(attrs, name=name)
 		
 
-		output.append(u'<ul id=id_%s style="float:left">' %name_db)
+		output.append(u'<ul id="id_%s" style="float:left">' %name_db)
 		# Normalize to strings
 		str_values = set([force_unicode(v) for v in value])
 		limit=5
@@ -254,7 +254,7 @@ class CheckboxSelectMultipleCustom(CheckboxSelectMultiple):
 			output.append(u'<li><label%s>%s %s</label></li>' % (label_for, rendered_cb, option_label))
 			
 			if ((i+1)%limit == 0) :
-				output.append(u'</ul>\n<ul id=id_%s style="float:left">' %name_db)
+				output.append(u'</ul>\n<ul id="id_%s" style="float:left">' %name_db)
 
 		output.append(u'</ul>')
 		return mark_safe(u'\n'.join(output))

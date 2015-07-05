@@ -150,7 +150,7 @@ google.load('visualization',  '1', {'packages':['corechart']});
 	  			}	
 			}
 
-			function drawChart(data,chart_type,extra_options={}){
+			function drawChart(data,chart_type,extra_options){
 
 				gdata = new google.visualization.DataTable(data);
 			    goptions = $.extend(extra_options,settigns.gchart);

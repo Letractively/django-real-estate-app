@@ -84,6 +84,20 @@ form .aligned p, form .aligned ul {
     padding-left: 30px;
 }
 
+label[for=id_aditionalthings_fk_0] {
+    display:inline;
+    width:90%;
+    float: left;
+}
+
+ul#id_aditionalthings {
+    padding-top: 15px;
+    margin-left: 0px!important;
+    padding-left: 5px!important;
+    list-style-type: none;
+}
+
+
 form .aligned table p {
     margin-left: 0;
     padding-left: 0;
@@ -377,8 +391,9 @@ span.delete {
 .accordion-body.in {
   overflow:visible;
 }
-.thumbnail {
-    width: 160px;
+.thumbnail,
+ul.thumbnails li {
+    width: 160px !important;
 }
 
 @media (max-width: 800px) {
