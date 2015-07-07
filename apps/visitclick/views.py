@@ -34,8 +34,8 @@ def visitclick_data_json(request, *args, **kwargs):
 	display='hours'
 
 	if 'week' in request.GET.values() or 'week' in request.POST.values():
-		date_init = get_first_dow(datetime.now().year, datetime.now().isocalendar()[1])
-		date_end  = date_init+timedelta(days=6)
+		date_end = get_first_dow(datetime.now().year, datetime.now().isocalendar()[1])
+		date_init = date_end-timedelta(days=6)
 		strftime='%d/%m'
 		display='days'
 
@@ -137,7 +137,7 @@ def visitclick_data_json(request, *args, **kwargs):
 						{'v':label_column,'f':value_column},
 					]
 			})			
-
+	
 	return HttpResponse(
 						simplejson.dumps(google_format,cls=DjangoJSONEncoder),
 						mimetype='application/json'
